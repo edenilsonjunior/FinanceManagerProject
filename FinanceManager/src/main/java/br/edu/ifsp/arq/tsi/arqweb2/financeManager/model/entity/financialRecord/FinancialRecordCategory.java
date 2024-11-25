@@ -8,9 +8,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FinancialRecordCategory {
 
+    private long id;
     private String name;
 
-    public FinancialRecordCategory(String name) {
+    public FinancialRecordCategory(long id, String name) {
+        this.id = id;
         this.name = name;
     }
+
 }

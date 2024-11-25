@@ -9,15 +9,17 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class FinancialRecord {
 
+    private long id;
     private FinancialRecordCategory category;
-    private double balance;
+    private double amount;
     private String transactionType;
     private LocalDate transactionDate;
     private String description;
 
-    public FinancialRecord(FinancialRecordCategory category, double balance, String transactionType, LocalDate transactionDate, String description) {
+    public FinancialRecord(long id, FinancialRecordCategory category, double amount, String transactionType, LocalDate transactionDate, String description) {
+        this.id = id;
         this.category = category;
-        this.balance = balance;
+        this.amount = amount;
         this.transactionType = transactionType;
         this.transactionDate = transactionDate;
         this.description = description;
