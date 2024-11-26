@@ -1,12 +1,14 @@
 package br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.financialRecord;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class FinancialRecord {
 
     private long id;
@@ -16,12 +18,4 @@ public class FinancialRecord {
     private LocalDate transactionDate;
     private String description;
 
-    public FinancialRecord(long id, FinancialRecordCategory category, double amount, String transactionType, LocalDate transactionDate, String description) {
-        this.id = id;
-        this.category = category;
-        this.amount = amount;
-        this.transactionType = transactionType;
-        this.transactionDate = transactionDate;
-        this.description = description;
-    }
 }

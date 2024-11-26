@@ -1,13 +1,15 @@
 package br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.wallet;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class Wallet {
 
     private long id;
@@ -18,12 +20,4 @@ public class Wallet {
     private double currentBalance;
     private List<WalletTransaction> transactions;
 
-    public Wallet(String name, String description, LocalDate createdAt, double goalAmount, double currentBalance, List<WalletTransaction> transactions) {
-        this.name = name;
-        this.description = description;
-        this.createdAt = createdAt;
-        this.goalAmount = goalAmount;
-        this.currentBalance = currentBalance;
-        this.transactions = transactions;
-    }
 }
