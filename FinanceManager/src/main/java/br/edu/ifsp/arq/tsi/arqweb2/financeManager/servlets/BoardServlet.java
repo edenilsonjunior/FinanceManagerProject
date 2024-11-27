@@ -30,16 +30,6 @@ public class BoardServlet extends HttpServlet {
 
         var list = dao.findFinancialRecordsByUserId(1);
 
-         var GSON = new GsonBuilder()
-                .setPrettyPrinting()
-                .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
-                .create();
-
-
-         try (var writer = new FileWriter("/home/aluno/Documentos/teste.json")){
-             GSON.toJson(list, writer);
-         }
-
         request.setAttribute("financialRecords", list);
 
         request.getRequestDispatcher("/WEB-INF/views/board.jsp").forward(request, response);
