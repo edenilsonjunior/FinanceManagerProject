@@ -1,0 +1,17 @@
+@charset "UTF-8";
+
+.container {
+	margin-top: 2%;
+}
+
+h1 {
+	margin-bottom: 4%;
+}
+
+button, #link {
+	width: 100%;
+}
+
+span {
+	color: red;
+}
