@@ -45,7 +45,7 @@ public class LoginServlet extends HttpServlet {
         if(user.isPresent() && user.get().getPassword().equals(password)) {
             HttpSession session = request.getSession();
             session.setMaxInactiveInterval(600);
-            session.setAttribute("user", user);
+            session.setAttribute("user", user.get());
 
             url = "/index.jsp";
         } else {
