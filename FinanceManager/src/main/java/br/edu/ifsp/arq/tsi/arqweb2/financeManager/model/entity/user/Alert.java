@@ -1,12 +1,14 @@
 package br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.user;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class Alert {
 
     private long id;
@@ -14,9 +16,4 @@ public class Alert {
     private LocalDate alertDate;
     private boolean notified;
 
-    public Alert(String message, LocalDate alertDate, boolean notified) {
-        this.message = message;
-        this.alertDate = alertDate;
-        this.notified = notified;
-    }
 }
