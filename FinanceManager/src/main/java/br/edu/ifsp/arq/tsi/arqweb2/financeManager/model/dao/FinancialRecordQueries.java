@@ -2,6 +2,13 @@ package br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao;
 
 public interface FinancialRecordQueries {
 
+    String CREATE = """
+        INSERT INTO financial_record
+        (user_id, category_id, amount, transaction_type, description)
+        VALUES
+        (?, ?, ?, ?, ?);
+        """;
+
     String SELECT = """
         SELECT fr.id,
                fr.user_id,
