@@ -25,7 +25,7 @@ CREATE TABLE category (
 CREATE TABLE financial_record (
     id INT NOT NULL AUTO_INCREMENT,
     user_id INT NOT NULL,
-    category_id INT NOT NULL,
+    category_id INT NULL,
     amount DECIMAL(10, 2) NOT NULL,
     transaction_type VARCHAR(100) NOT NULL,
     transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
