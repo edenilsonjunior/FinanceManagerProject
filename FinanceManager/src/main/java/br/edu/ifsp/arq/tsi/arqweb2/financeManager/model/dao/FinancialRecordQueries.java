@@ -17,4 +17,51 @@ public interface FinancialRecordQueries {
         WHERE fr.user_id = ?;
         """;
 
+    String UPDATE = """
+        UPDATE financial_record
+        SET category_id = ?,
+            amount = ?,
+            transaction_type = ?,
+            transaction_date = ?,
+            description = ?
+        WHERE id = ?;
+        """;
+
+    String DELETE = """
+        DELETE FROM financial_record
+        WHERE id = ?;
+        """;
+
+    String SELECT_BY_ID = """
+        SELECT fr.id,
+               fr.user_id,
+               fr.amount,
+               fr.transaction_type,
+               fr.transaction_date,
+               fr.description,
+               fr.category_id,
+        FROM financial_record fr
+        WHERE fr.id = ?;
+        """;
+
+    String SELECT_ALL_CATEGORY = """
+        SELECT id,
+               name
+        FROM category;
+        """;
+
+    String SELECT_CATEGORY_ID_BY_NAME = """
+        SELECT id,
+               name
+        FROM category
+        WHERE name = ?;
+        """;
+
+    String SELECT_CATEGORY_BY_ID = """
+        SELECT id,
+               name
+        FROM category
+        WHERE id = ?;
+        """;
+
 }
