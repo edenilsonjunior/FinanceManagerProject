@@ -1,7 +1,6 @@
-package br.edu.ifsp.arq.tsi.arqweb2.financeManager.servlets;
+package br.edu.ifsp.arq.tsi.arqweb2.financeManager.servlets.user;
 
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao.UserDao;
-import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.user.User;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.utils.DataSourceSearcher;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.utils.PasswordEncoder;
 import jakarta.servlet.RequestDispatcher;
@@ -13,7 +12,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
-import java.util.Optional;
 
 
 @WebServlet("/login")

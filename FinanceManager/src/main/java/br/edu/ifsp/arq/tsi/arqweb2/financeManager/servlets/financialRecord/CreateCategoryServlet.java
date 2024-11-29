@@ -1,7 +1,6 @@
-package br.edu.ifsp.arq.tsi.arqweb2.financeManager.servlets;
+package br.edu.ifsp.arq.tsi.arqweb2.financeManager.servlets.financialRecord;
 
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao.FinancialRecordCategoryDao;
-import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao.UserDao;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.financialRecord.FinancialRecordCategory;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.user.User;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.utils.DataSourceSearcher;
@@ -18,10 +17,10 @@ import java.io.IOException;
 
 
 @WebServlet("/category")
-public class CategoryServlet extends HttpServlet {
+public class CreateCategoryServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    public CategoryServlet() {
+    public CreateCategoryServlet() {
         super();
     }
 

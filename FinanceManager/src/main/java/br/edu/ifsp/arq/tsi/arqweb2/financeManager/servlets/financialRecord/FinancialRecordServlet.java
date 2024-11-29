@@ -1,4 +1,4 @@
-package br.edu.ifsp.arq.tsi.arqweb2.financeManager.servlets;
+package br.edu.ifsp.arq.tsi.arqweb2.financeManager.servlets.financialRecord;
 
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao.FinancialRecordCategoryDao;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao.FinancialRecordDao;
@@ -30,7 +30,22 @@ public class FinancialRecordServlet extends HttpServlet {
 
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doPost(request, response);
+
+        var financialRecordCategoryDao = new FinancialRecordCategoryDao(DataSourceSearcher.getInstance().getDataSource());
+
+        if(request.getParameter("type").equals("expense")){
+
+            var session = request.getSession(false);
+            var user = (User) session.getAttribute("user");
+
+            var categories = financialRecordCategoryDao.findFinancialRecordCategoriesByUserId(user.getId());
+            request.setAttribute("userCategories", categories);
+        }
+
+        request.setAttribute("transactionType", TransactionTypeEnum.EXPENSE.toString());
+
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/create-financial-record.jsp");
+        dispatcher.forward(request, response);
     }
 
 

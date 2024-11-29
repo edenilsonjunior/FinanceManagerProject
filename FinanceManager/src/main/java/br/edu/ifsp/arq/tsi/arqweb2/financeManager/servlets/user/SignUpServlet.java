@@ -1,4 +1,4 @@
-package br.edu.ifsp.arq.tsi.arqweb2.financeManager.servlets;
+package br.edu.ifsp.arq.tsi.arqweb2.financeManager.servlets.user;
 
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao.UserDao;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.user.User;
