@@ -3,6 +3,7 @@ package br.edu.ifsp.arq.tsi.arqweb2.financeManager.servlets;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao.UserDao;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.user.User;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.utils.DataSourceSearcher;
+import br.edu.ifsp.arq.tsi.arqweb2.financeManager.utils.PasswordEncoder;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -34,7 +35,7 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String email = request.getParameter("email");
-        String password = request.getParameter("password");
+        String password = PasswordEncoder.encode(request.getParameter("password"));
 
         String url;
 
