@@ -1,6 +1,7 @@
 package br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao;
 
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao.queries.FinancialRecordCategoryQueries;
+import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dto.CategoryDto;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.financialRecord.FinancialRecordCategory;
 
 import javax.sql.DataSource;
@@ -45,7 +46,6 @@ public class FinancialRecordCategoryDao {
             var rs = ps.executeQuery();
             if (rs.next()) {
 
-
                 category.setId(id);
                 category.setUser(new UserDao(dataSource).findUserByUserId(rs.getLong("user_id")).get());
                 category.setName(rs.getString("name"));
@@ -72,6 +72,28 @@ public class FinancialRecordCategoryDao {
                 category.setName(rs.getString("name"));
 
                 list.add(category);
+            }
+            return list;
+        } catch (SQLException sqlException) {
+            throw new RuntimeException("Erro durante a consulta no BD", sqlException);
+        }
+    }
+
+    public List<CategoryDto> getCategoryExpensesForCurrentMonthByUserId(long userId){
+
+        var list = new ArrayList<CategoryDto>();
+
+        try (var con = dataSource.getConnection();
+             var ps = con.prepareStatement(FinancialRecordCategoryQueries.GET_CATEGORY_EXPENSES_FOR_CURRENT_MONTH_BY_USER_ID)) {
+
+            ps.setLong(1, userId);
+
+            var rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add( new CategoryDto(
+                        rs.getString("category"),
+                        rs.getDouble("amount")
+                ));
             }
             return list;
         } catch (SQLException sqlException) {

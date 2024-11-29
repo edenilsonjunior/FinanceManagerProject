@@ -34,7 +34,8 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String email = request.getParameter("email");
-        String password = PasswordEncoder.encode(request.getParameter("password"));
+        //String password = PasswordEncoder.encode(request.getParameter("password"));
+        String password = request.getParameter("password");
 
         var userDao = new UserDao(DataSourceSearcher.getInstance().getDataSource());
 
@@ -49,7 +50,7 @@ public class LoginServlet extends HttpServlet {
 
         } else {
             request.setAttribute("loginErrorMessage", "Email ou Senha inválidos");
-            var dispatcher = request.getRequestDispatcher( "/login.jsp");
+            var dispatcher = request.getRequestDispatcher( "WEB-INF/views/user/login.jsp");
             dispatcher.forward(request, response);
         }
     }
