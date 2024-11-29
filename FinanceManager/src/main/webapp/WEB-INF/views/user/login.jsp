@@ -13,7 +13,7 @@
 <!-- Bootstrap CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
-<link rel="stylesheet" href="../../../assets/css/styles.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/styles.css">
 <title>IFinance - Página de Login</title>
 </head>
 <body>
@@ -45,7 +45,7 @@
 					<div class="input-group mb-3">
 						<span class="input-group-text">
 							<img alt="Campo para informar o e-mail"
-								 src="../../../assets/img/envelope.svg" width="32"
+								 src="${pageContext.request.contextPath}/assets/img/envelope.svg" width="32"
 								 height="32">
 						</span>
 						<input type="email" name="email" id="email"
@@ -56,7 +56,7 @@
 					<div class="input-group mb-3">
 						<span class="input-group-text">
 							<img alt="Campo para informar o cpf"
-								 src="../../../assets/img/file-lock.svg" width="32"
+								 src="${pageContext.request.contextPath}/assets/img/file-lock.svg" width="32"
 								 height="32">
 						</span>
 						<input type="password" name="password" id="password"

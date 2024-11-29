@@ -3,7 +3,6 @@ package br.edu.ifsp.arq.tsi.arqweb2.financeManager.servlets.user;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao.UserDao;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.utils.DataSourceSearcher;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.utils.PasswordEncoder;
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -23,9 +22,11 @@ public class LoginServlet extends HttpServlet {
     }
 
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)  
+            throws ServletException, IOException {
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/login.jsp");
+        var path = "/WEB-INF/views/user/login.jsp";
+        var dispatcher = request.getRequestDispatcher(path);
         dispatcher.forward(request, response);
     }
 
@@ -34,8 +35,6 @@ public class LoginServlet extends HttpServlet {
 
         String email = request.getParameter("email");
         String password = PasswordEncoder.encode(request.getParameter("password"));
-
-        String url;
 
         var userDao = new UserDao(DataSourceSearcher.getInstance().getDataSource());
 
@@ -46,14 +45,12 @@ public class LoginServlet extends HttpServlet {
             session.setMaxInactiveInterval(600);
             session.setAttribute("user", user.get());
 
-            url = "/index.jsp";
+            response.sendRedirect(request.getContextPath() + "/index");
+
         } else {
             request.setAttribute("loginErrorMessage", "Email ou Senha inválidos");
-            url = "/login.jsp";
+            var dispatcher = request.getRequestDispatcher( "/login.jsp");
+            dispatcher.forward(request, response);
         }
-
-        RequestDispatcher dispatcher = request.getRequestDispatcher(url);
-
-        dispatcher.forward(request, response);
     }
 }

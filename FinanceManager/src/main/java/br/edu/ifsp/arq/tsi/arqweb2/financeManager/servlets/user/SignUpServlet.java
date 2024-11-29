@@ -24,9 +24,11 @@ public class SignUpServlet extends HttpServlet {
     }
 
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+        throws ServletException, IOException {
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/signup.jsp");
+        var path = "/WEB-INF/views/user/signup.jsp";
+        var dispatcher = request.getRequestDispatcher(path);
         dispatcher.forward(request, response);
     }
 
@@ -38,7 +40,7 @@ public class SignUpServlet extends HttpServlet {
         String password = PasswordEncoder.encode(request.getParameter("password"));
         LocalDate birthDate = LocalDate.parse(request.getParameter("birth-date"));
 
-        String url;
+        var path = "/WEB-INF/views/user/signup.jsp";
 
         var userDao = new UserDao(DataSourceSearcher.getInstance().getDataSource());
 
@@ -52,13 +54,12 @@ public class SignUpServlet extends HttpServlet {
             userDao.create(user);
 
             request.setAttribute("signupSuccessMessage", "Usuário cadastrado com sucesso");
-            url = "/login.jsp";
+            path = "/WEB-INF/views/user/login.jsp";
         } else {
             request.setAttribute("signupErrorMessage", "Email já cadastrado");
-            url = "/signup.jsp";
         }
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher(url);
+        RequestDispatcher dispatcher = request.getRequestDispatcher(path);
         dispatcher.forward(request, response);
     }
 }
