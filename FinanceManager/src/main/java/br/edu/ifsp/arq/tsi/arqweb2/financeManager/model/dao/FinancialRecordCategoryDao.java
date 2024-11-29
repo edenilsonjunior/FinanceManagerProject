@@ -48,7 +48,7 @@ public class FinancialRecordCategoryDao {
 
 
                 category.setId(id);
-                category.setUser(new UserDao(dataSource).findUserByUserId(rs.getLong("user_id")).get().getFirst());
+                category.setUser(new UserDao(dataSource).findUserByUserId(rs.getLong("user_id")).get());
                 category.setName(rs.getString("name"));
             }
             return Optional.of(category);
