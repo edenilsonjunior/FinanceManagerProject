@@ -1,4 +1,4 @@
-package br.edu.ifsp.arq.tsi.arqweb2.financeManager.servlets;
+package br.edu.ifsp.arq.tsi.arqweb2.financeManager.servlets.financialRecord;
 
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao.FinancialRecordCategoryDao;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao.FinancialRecordDao;
@@ -17,20 +17,34 @@ import jakarta.servlet.http.HttpSession;
 
 import javax.sql.DataSource;
 import java.io.IOException;
-import java.util.List;
 
 
-@WebServlet("/financialRecord")
-public class FinancialRecordServlet extends HttpServlet {
+@WebServlet("/create-financial-record")
+public class CreateFinancialRecordServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    public FinancialRecordServlet() {
+    public CreateFinancialRecordServlet() {
         super();
     }
 
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doPost(request, response);
+
+        var financialRecordCategoryDao = new FinancialRecordCategoryDao(DataSourceSearcher.getInstance().getDataSource());
+
+        if(request.getParameter("type").equals("expense")){
+
+            var session = request.getSession(false);
+            var user = (User) session.getAttribute("user");
+
+            var categories = financialRecordCategoryDao.findFinancialRecordCategoriesByUserId(user.getId());
+            request.setAttribute("userCategories", categories);
+        }
+
+        request.setAttribute("transactionType", TransactionTypeEnum.EXPENSE.toString());
+
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/financial-record/create-financial-record.jsp");
+        dispatcher.forward(request, response);
     }
 
 
@@ -63,7 +77,7 @@ public class FinancialRecordServlet extends HttpServlet {
 
         FinancialRecordDao financialRecordDao = new FinancialRecordDao(dataSource);
         if(financialRecordDao.create(financialRecord) != null) {
-            dispatcher = request.getRequestDispatcher("/board");
+            dispatcher = request.getRequestDispatcher("/index");
         }else{
             dispatcher = request.getRequestDispatcher("/financialRecord");
         }

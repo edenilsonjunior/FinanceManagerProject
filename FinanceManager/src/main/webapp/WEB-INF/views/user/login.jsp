@@ -11,12 +11,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <!-- Bootstrap CSS -->
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-	rel="stylesheet"
-	integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-	crossorigin="anonymous">
-<link href="css/styles.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/styles.css">
 <title>IFinance - Página de Login</title>
 </head>
 <body>
@@ -48,8 +45,8 @@
 					<div class="input-group mb-3">
 						<span class="input-group-text">
 							<img alt="Campo para informar o e-mail"
-								src="img/envelope.svg" width="32"
-								height="32">
+								 src="${pageContext.request.contextPath}/assets/img/envelope.svg" width="32"
+								 height="32">
 						</span>
 						<input type="email" name="email" id="email"
 							placeholder="E-mail" required="required"
@@ -59,8 +56,8 @@
 					<div class="input-group mb-3">
 						<span class="input-group-text">
 							<img alt="Campo para informar o cpf"
-								src="img/file-lock.svg" width="32"
-								height="32">
+								 src="${pageContext.request.contextPath}/assets/img/file-lock.svg" width="32"
+								 height="32">
 						</span>
 						<input type="password" name="password" id="password"
 							placeholder="Senha" required="required"
@@ -80,7 +77,7 @@
 		</div>
 	</div>
 
-    <!-- Option 1: Bootstrap Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script></body>
 </body>
 </html>

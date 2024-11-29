@@ -11,11 +11,11 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/DeleteFinancialRecord")
-public class DeleteServlet extends HttpServlet {
+@WebServlet("/delete-financial-record")
+public class DeleteFinancialRecordServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    public DeleteServlet() {
+    public DeleteFinancialRecordServlet() {
         super();
     }
 

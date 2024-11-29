@@ -78,17 +78,71 @@ VALUES
 
 INSERT INTO category (user_id, name) 
 VALUES 
-    (1, 'Salary'),
-    (1, 'Savings'),
-    (2, 'Investment'),
-    (2, 'Expenses');
+    (1, 'Gastos adversos'),
+    (1, 'Divida'),
+    (1, 'Alimentação'),
+    (1, 'Transporte');
 
-INSERT INTO financial_record (user_id, category_id, amount, transaction_type, description) 
+-- Para o usuário John Doe (id 1)
+
+-- Agosto
+INSERT INTO financial_record (user_id, category_id, amount, transaction_type, description, transaction_date) 
 VALUES 
-    (1, 1, 3000.00, 'Credit', 'Salary payment for July'),
-    (1, 2, 500.00, 'Debit', 'Transferred to savings'),
-    (2, 3, 1500.00, 'Credit', 'Investment dividend'),
-    (2, 4, 200.00, 'Debit', 'Grocery shopping');
+    (1, NULL, 1500.00, 'INCOME', 'Salary payment for August', '2024-08-01'),
+    (1, 3, 350.00, 'EXPENSE', 'Grocery shopping', '2024-08-15'),
+    (1, 1, 200.00, 'EXPENSE', 'Emergency medical expenses', '2024-08-31');
+
+-- Setembro
+INSERT INTO financial_record (user_id, category_id, amount, transaction_type, description, transaction_date) 
+VALUES 
+    (1, NULL, 1700.00, 'INCOME', 'Salary payment for September', '2024-09-01'),
+    (1, 2, 400.00, 'EXPENSE', 'Car maintenance', '2024-09-15'),
+    (1, 4, 150.00, 'EXPENSE', 'Transport costs', '2024-09-30');
+
+-- Outubro
+INSERT INTO financial_record (user_id, category_id, amount, transaction_type, description, transaction_date) 
+VALUES 
+    (1, NULL, 1800.00, 'INCOME', 'Salary payment for October', '2024-10-01'),
+    (1, 3, 300.00, 'EXPENSE', 'Food delivery service', '2024-10-15'),
+    (1, 1, 450.00, 'EXPENSE', 'Unexpected health issue', '2024-10-31');
+
+-- Novembro
+INSERT INTO financial_record (user_id, category_id, amount, transaction_type, description, transaction_date) 
+VALUES 
+    (1, NULL, 2000.00, 'INCOME', 'Salary payment for November', '2024-11-01'),
+    (1, 2, 500.00, 'EXPENSE', 'Savings deposit', '2024-11-15'),
+    (1, 4, 250.00, 'EXPENSE', 'Public transportation fees', '2024-11-30');
+
+-- Para o usuário Jane Smith (id 2)
+
+-- Agosto
+INSERT INTO financial_record (user_id, category_id, amount, transaction_type, description, transaction_date) 
+VALUES 
+    (2, NULL, 1600.00, 'INCOME', 'Investment dividend for August', '2024-08-01'),
+    (2, 3, 400.00, 'EXPENSE', 'Shopping for the month', '2024-08-15'),
+    (2, 4, 100.00, 'EXPENSE', 'Bus tickets', '2024-08-31');
+
+-- Setembro
+INSERT INTO financial_record (user_id, category_id, amount, transaction_type, description, transaction_date) 
+VALUES 
+    (2, NULL, 1700.00, 'INCOME', 'Investment dividend for September', '2024-09-01'),
+    (2, 3, 350.00, 'EXPENSE', 'Buying supplies for home', '2024-09-15'),
+    (2, 2, 150.00, 'EXPENSE', 'Debt repayment', '2024-09-30');
+
+-- Outubro
+INSERT INTO financial_record (user_id, category_id, amount, transaction_type, description, transaction_date) 
+VALUES 
+    (2, NULL, 1800.00, 'INCOME', 'Investment dividend for October', '2024-10-01'),
+    (2, 1, 450.00, 'EXPENSE', 'Emergency home repairs', '2024-10-15'),
+    (2, 4, 180.00, 'EXPENSE', 'Taxi fare', '2024-10-31');
+
+-- Novembro
+INSERT INTO financial_record (user_id, category_id, amount, transaction_type, description, transaction_date) 
+VALUES 
+    (2, NULL, 1900.00, 'INCOME', 'Investment dividend for November', '2024-11-01'),
+    (2, 3, 500.00, 'EXPENSE', 'Supermarket shopping', '2024-11-15'),
+    (2, 2, 200.00, 'EXPENSE', 'Debt repayment', '2024-11-30');
+
 
 INSERT INTO wallet (user_id, name, goal_amount, current_balance, description)
 VALUES 
@@ -104,4 +158,3 @@ INSERT INTO alert (user_id, message, notified)
 VALUES 
     (1, 'Reminder: Check your savings balance', FALSE),
     (2, 'Reminder: Upcoming travel expenses for your vacation', FALSE);
-

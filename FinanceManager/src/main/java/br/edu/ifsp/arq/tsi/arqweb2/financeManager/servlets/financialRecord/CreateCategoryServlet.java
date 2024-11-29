@@ -1,7 +1,6 @@
-package br.edu.ifsp.arq.tsi.arqweb2.financeManager.servlets;
+package br.edu.ifsp.arq.tsi.arqweb2.financeManager.servlets.financialRecord;
 
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao.FinancialRecordCategoryDao;
-import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao.UserDao;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.financialRecord.FinancialRecordCategory;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.user.User;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.utils.DataSourceSearcher;
@@ -16,27 +15,26 @@ import jakarta.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import java.io.IOException;
 
-
-@WebServlet("/category")
-public class CategoryServlet extends HttpServlet {
+@WebServlet("/create-category")
+public class CreateCategoryServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    public CategoryServlet() {
+    public CreateCategoryServlet() {
         super();
     }
 
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+        throws ServletException, IOException {
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/category.jsp");
+        var path = "/WEB-INF/views/financial-record/create-category.jsp";
+        RequestDispatcher dispatcher = request.getRequestDispatcher(path);
         dispatcher.forward(request, response);
     }
 
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String name = request.getParameter("name");
-
-        RequestDispatcher dispatcher = null;
 
         DataSource dataSource = DataSourceSearcher.getInstance().getDataSource();
         FinancialRecordCategoryDao financialRecordCategoryDao = new FinancialRecordCategoryDao(dataSource);
@@ -48,12 +46,12 @@ public class CategoryServlet extends HttpServlet {
         financialRecordCategory.setName(name);
         financialRecordCategory.setUser(user);
 
-        if(financialRecordCategoryDao.create(financialRecordCategory) != null) {
-            dispatcher = request.getRequestDispatcher("/board");
-        }else{
-            dispatcher = request.getRequestDispatcher("/category.jsp");
+        var path = "/index";
+
+        if(financialRecordCategoryDao.create(financialRecordCategory) == null) {
+            path ="/WEB-INF/views/financial-record/create-category.jsp";
         }
 
-        dispatcher.forward(request, response);
+        request.getRequestDispatcher(path).forward(request, response);
     }
 }

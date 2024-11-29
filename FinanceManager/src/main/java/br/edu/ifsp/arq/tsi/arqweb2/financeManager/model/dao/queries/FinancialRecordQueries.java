@@ -1,4 +1,4 @@
-package br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao;
+package br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao.queries;
 
 public interface FinancialRecordQueries {
 

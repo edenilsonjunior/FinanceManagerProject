@@ -1,5 +1,6 @@
 package br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao;
 
+import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao.queries.UserQueries;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.user.User;
 
 import javax.sql.DataSource;
@@ -7,8 +8,6 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 public class UserDao {

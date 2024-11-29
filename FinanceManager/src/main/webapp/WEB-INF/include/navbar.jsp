@@ -14,10 +14,22 @@
                     <span class="nav_logo-name">IFinance</span>
                 </a>
                 <div class="nav_list">
-                    <a href="board" class="nav_link active">
+
+                    <a href="create-financial-record?type=income" class="nav_link">
+                        <i class='bx bxs-up-arrow-circle'></i>
+                        <span class="nav_name">Nova Receita</span>
+                    </a>
+
+                    <a href="create-financial-record?type=expense" class="nav_link">
+                        <i class='bx bxs-down-arrow-circle' ></i>
+                        <span class="nav_name">Nova Despesa</span>
+                    </a>
+                    
+                    <a href="index" class="nav_link active">
                         <i class='bx bx-grid-alt nav_icon'></i>
                         <span class="nav_name">Dashboard</span>
                     </a>
+
                     <a href="#" class="nav_link">
                         <i class='bx bx-user nav_icon'></i>
                         <span class="nav_name">Perfil</span>
@@ -26,7 +38,7 @@
                         <i class='bx bx-message-square-detail nav_icon'></i>
                         <span class="nav_name">Notificações</span>
                     </a>
-                    <a href="#" class="nav_link">
+                    <a href="/retrieve-financial-record" class="nav_link">
                         <i class='bx bx-bar-chart-alt-2 nav_icon'></i>
                         <span class="nav_name">Status</span>
                     </a>

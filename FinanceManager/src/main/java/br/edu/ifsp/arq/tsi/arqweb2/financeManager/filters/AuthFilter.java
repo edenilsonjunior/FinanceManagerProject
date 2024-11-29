@@ -9,7 +9,17 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-@WebFilter(urlPatterns = {"/index.jsp"}, filterName = "Auth")
+@WebFilter(urlPatterns = {
+        "/index",
+        "/index.jsp",
+        "/WEB-INF/views/financial-record/*",
+        "/create-category",
+        "/create-financial-record",
+        "/delete-financial-record",
+        "/retrieve-categories",
+        "/update-financial-record",
+        "/board"
+}, filterName = "Auth")
 public class AuthFilter implements Filter {
 
     @Override
@@ -21,7 +31,7 @@ public class AuthFilter implements Filter {
         HttpSession session = httpRequest.getSession();
         User user = (User) session.getAttribute("user");
         if (user == null) {
-            httpResponse.sendRedirect(httpRequest.getContextPath() + "/login.jsp");
+            httpResponse.sendRedirect(httpRequest.getContextPath() + "/login");
         } else {
             chain.doFilter(request, response);
         }
