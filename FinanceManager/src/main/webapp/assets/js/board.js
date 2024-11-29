@@ -1,6 +1,10 @@
 "use strict";
 
-document.addEventListener("DOMContentLoaded", function (event) {
+import {contextPath, submitGet } from './global.js';
+
+
+
+const loadCollapsibleNavbar = () => {
 
     const showNavbar = (toggleId, navId, bodyId, headerId) => {
         const toggle = document.getElementById(toggleId),
@@ -8,16 +12,11 @@ document.addEventListener("DOMContentLoaded", function (event) {
             bodypd = document.getElementById(bodyId),
             headerpd = document.getElementById(headerId)
 
-        // Validate that all variables exist
         if (toggle && nav && bodypd && headerpd) {
             toggle.addEventListener('click', () => {
-                // show navbar
                 nav.classList.toggle('show')
-                // change icon
                 toggle.classList.toggle('bx-x')
-                // add padding to body
                 bodypd.classList.toggle('body-pd')
-                // add padding to header
                 headerpd.classList.toggle('body-pd')
             })
         }
@@ -25,7 +24,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     showNavbar('header-toggle', 'nav-bar', 'body-pd', 'header')
 
-    /*===== LINK ACTIVE =====*/
     const linkColor = document.querySelectorAll('.nav_link')
 
     function colorLink() {
@@ -35,39 +33,23 @@ document.addEventListener("DOMContentLoaded", function (event) {
         }
     }
     linkColor.forEach(l => l.addEventListener('click', colorLink))
-
-    // Your code to run since DOM is loaded and ready
-});
-
-
-// load graphic
-
-document.addEventListener("DOMContentLoaded", getExpenseStatisticsByCategory);
-
-function getExpenseStatisticsByCategory() {
-    // Dados das despesas por categoria
-    const datalist = [
-        { "category": "Alimentação", "amount": 300 },
-        { "category": "Transporte", "amount": 150 },
-        { "category": "Saúde", "amount": 100 },
-        { "category": "Educação", "amount": 200 },
-        { "category": "Lazer", "amount": 50 },
-        { "category": "Outros", "amount": 70 }
-    ];
-
-    setChartDonut(datalist);
 }
 
-function setChartDonut(datalist) {
-    var colors = ['#ff5733', '#ffc107', '#28a745', '#17a2b8', '#6f42c1', '#e83e8c']; // Cores para as categorias
+
+
+
+const loadExpenseStatisticsByCategory = (data) => {
+
+    var categories = data.categories;
+    var colors = ['#ff5733', '#ffc107', '#28a745', '#17a2b8', '#6f42c1', '#e83e8c']; 
 
     var chartData = {
-        labels: datalist.map(data => data.category), // Categorias
+        labels: categories.map(c => c.category), 
         datasets: [
             {
-                backgroundColor: colors.slice(0, datalist.length),
+                backgroundColor: colors.slice(0, categories.length),
                 borderWidth: 0,
-                data: datalist.map(data => data.amount) // Valores das despesas
+                data: categories.map(c => c.amount) 
             }
         ]
     };
@@ -92,36 +74,42 @@ function setChartDonut(datalist) {
         cutout: '70%'
     };
 
-    const ctx = document.getElementById('chDonut1').getContext('2d');
+    const ctx = document.getElementById('expense-statistics-by-category').getContext('2d');
     new Chart(ctx, {
         type: 'doughnut',
         data: chartData,
         options: chartOptions
     });
 
+    const total = document.getElementById('total-expenses-by-mounth');
+
+    total.textContent = `R$ ${categories.reduce((acc, c) => acc + c.amount, 0).toFixed(2)}`;
 }
 
 
-document.addEventListener("DOMContentLoaded", function () {
-    const receitas = 6000; // Valor total de receitas
-    const despesas = 5350; // Valor total de despesas
-    const balanco = receitas - despesas; // Calcula o balanço
+const loadMonthlyBalance = (data) => {
 
-    // Configuração do gráfico de barras
-    const barCtx = document.getElementById('barChart').getContext('2d');
+    var monthlyBalance = data.monthlyBalance;
+
+    const totalIncome = monthlyBalance.totalIncome; 
+    const totalExpense = monthlyBalance.totalExpense; 
+    const currentBalance = monthlyBalance.currentBalance; 
+
+    const barCtx = document.getElementById('monthly-balance').getContext('2d');
     new Chart(barCtx, {
         type: 'bar',
         data: {
-            labels: ['Receitas', 'Despesas'],
+            labels: ['Saldo Atual', 'Receitas', 'Despesas'],
             datasets: [{
-                data: [receitas, despesas],
-                backgroundColor: ['#28a745', '#dc3545'], // Verde para receitas, vermelho para despesas
+                data: [currentBalance, totalIncome, totalExpense],
+                backgroundColor: ['#0079f8', '#28a745', '#dc3545'], 
                 borderRadius: 10,
                 borderSkipped: false
             }]
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: {
                 legend: { display: false }
             },
@@ -136,4 +124,29 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
     });
-});
+}
+
+const loadOverview = (data) => {
+
+    var overview = data.overview;
+    var totalIncome = overview.totalIncome;
+    var totalExpense = overview.totalExpense;
+    var currentBalance = overview.currentBalance;
+
+    document.getElementById('total-income').textContent = `R$ ${totalIncome.toFixed(2)}`;
+    document.getElementById('total-expense').textContent = `R$ ${totalExpense.toFixed(2)}`;
+    document.getElementById('current-balance').textContent = `R$ ${currentBalance.toFixed(2)}`;
+}
+
+
+document.addEventListener("DOMContentLoaded", async () => {
+
+    loadCollapsibleNavbar();
+
+    var data = await submitGet('/board');
+    console.log(data);
+
+    loadOverview(data);
+    loadExpenseStatisticsByCategory(data);
+    loadMonthlyBalance(data);
+ });

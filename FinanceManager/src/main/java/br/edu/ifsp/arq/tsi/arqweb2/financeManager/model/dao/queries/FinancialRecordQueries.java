@@ -71,4 +71,26 @@ public interface FinancialRecordQueries {
         WHERE id = ?;
         """;
 
+    String SELECT_OVERVIEW_BY_USER_ID = """
+        SELECT
+            user_id,
+            SUM(CASE WHEN transaction_type = 'INCOME' THEN amount ELSE 0 END) AS total_income,
+            SUM(CASE WHEN transaction_type = 'EXPENSE' THEN amount ELSE 0 END) AS total_expense,
+            SUM(CASE WHEN transaction_type = 'INCOME' THEN amount ELSE -amount END) AS current_balance
+        FROM financial_record
+        WHERE user_id = ?
+        GROUP BY user_id;
+        """;
+
+    String SELECT_MONTHLY_BALANCE_BY_USER_ID = """
+        SELECT
+            SUM(CASE WHEN transaction_type = 'INCOME' THEN amount ELSE 0 END) AS total_income,
+            SUM(CASE WHEN transaction_type = 'EXPENSE' THEN amount ELSE 0 END) AS total_expense,
+            SUM(CASE WHEN transaction_type = 'INCOME' THEN amount ELSE -amount END) AS current_balance
+        FROM financial_record
+        WHERE user_id = ?
+              AND MONTH(transaction_date) = MONTH(CURRENT_DATE)
+              AND YEAR(transaction_date) = YEAR(CURRENT_DATE)
+        GROUP BY user_id;
+        """;
 }

@@ -207,3 +207,20 @@ a {
 .receitas { background-color: #28a745; } /* Verde */
 .despesas { background-color: #dc3545; } /* Vermelho */
 .cartao { background-color: #17a2b8; } /* Azul Turquesa */
+
+.card {
+	height: 100%;
+}
+
+.chart-container {
+    position: relative;
+    height: 100%; 
+    width: 100%;  
+    overflow: hidden; 
+}
+
+canvas {
+    display: block;
+    max-height: 100%; 
+    max-width: 100%;
+}

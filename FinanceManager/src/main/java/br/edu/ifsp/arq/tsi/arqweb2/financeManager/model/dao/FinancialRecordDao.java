@@ -10,7 +10,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FinancialRecordDao {
 
@@ -83,7 +85,7 @@ public class FinancialRecordDao {
 
             ps.setLong(1, financialRecord.getCategory().getId());
             ps.setDouble(2, financialRecord.getAmount());
-            ps.setString(3, financialRecord.getTransactionType());
+            ps.setString(3, financialRecord.getTransactionType().toString());
             ps.setDate(4, java.sql.Date.valueOf(financialRecord.getTransactionDate()));
             ps.setString(5, financialRecord.getDescription());
             ps.setLong(6, financialRecord.getId());
@@ -125,9 +127,9 @@ public class FinancialRecordDao {
                 financialRecord.setId(rs.getLong("id"));
                 financialRecord.setCategory(category);
                 financialRecord.setAmount(rs.getDouble("amount"));
-                financialRecord.setTransactionType(rs.getString("transaction_type"));
                 financialRecord.setTransactionDate(LocalDate.parse(rs.getDate("transaction_date").toString()));
                 financialRecord.setDescription(rs.getString("description"));
+                financialRecord.setTransactionType(TransactionTypeEnum.valueOf(rs.getString("transaction_type")));
 
                 return financialRecord;
             }
@@ -192,6 +194,60 @@ public class FinancialRecordDao {
             throw new RuntimeException("Erro SQL: ", sqlException);
         }
         return null;
+    }
+
+
+    public Map<String, Double> getOverviewByUserId(long userId){
+
+        var map = new HashMap<String, Double>();
+
+        try (var con = dataSource.getConnection();
+             var ps = con.prepareStatement(FinancialRecordQueries.SELECT_OVERVIEW_BY_USER_ID)) {
+
+            ps.setLong(1, userId);
+
+            var rs = ps.executeQuery();
+            if (rs.next()) {
+                var totalIncome = rs.getDouble("total_income");
+                var totalExpense = rs.getDouble("total_expense");
+                var currentBalance = rs.getDouble("current_balance");
+
+                map.put("totalIncome", totalIncome);
+                map.put("totalExpense", totalExpense);
+                map.put("currentBalance", currentBalance);
+            }
+            return map;
+
+        } catch (SQLException sqlException) {
+            throw new RuntimeException("Erro SQL: ", sqlException);
+        }
+    }
+
+    public Map<String, Double> getMonthlyBalanceByUserId(long userId){
+
+        var map = new HashMap<String, Double>();
+
+        try (var con = dataSource.getConnection();
+             var ps = con.prepareStatement(FinancialRecordQueries.SELECT_MONTHLY_BALANCE_BY_USER_ID)) {
+
+            ps.setLong(1, userId);
+
+            var rs = ps.executeQuery();
+            if (rs.next()) {
+                var totalIncome = rs.getDouble("total_income");
+                var totalExpense = rs.getDouble("total_expense");
+                var currentBalance = rs.getDouble("current_balance");
+
+                map.put("totalIncome", totalIncome);
+                map.put("totalExpense", totalExpense);
+                map.put("currentBalance", currentBalance);
+            }
+            return map;
+
+        } catch (SQLException sqlException) {
+            throw new RuntimeException("Erro SQL: ", sqlException);
+        }
+
     }
 
 }
