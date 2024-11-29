@@ -40,9 +40,9 @@ public class UserDao {
 
     }
 
-    public Optional<List<User>> findUserByUserId(long userId) {
+    public Optional<User> findUserByUserId(long userId) {
 
-        var list = new ArrayList<User>();
+        User user = new User();
 
         try (var con = dataSource.getConnection();
              var ps = con.prepareStatement(UserQueries.SELECT)) {
@@ -50,19 +50,15 @@ public class UserDao {
             ps.setLong(1, userId);
 
             var rs = ps.executeQuery();
-            while (rs.next()) {
-
-                var user = new User();
+            if (rs.next()) {
                 user.setId(rs.getLong("id"));
                 user.setFullName(rs.getString("full_name"));
                 user.setEmail(rs.getString("email"));
                 user.setPassword(rs.getString("password"));
                 user.setBirthDate(LocalDate.parse(rs.getDate("birth_date").toString()));
                 user.setCreatedAt(LocalDate.parse(rs.getDate("created_at").toString()));
-
-                list.add(user);
             }
-            return Optional.of(list);
+            return Optional.of(user);
         } catch (SQLException sqlException) {
             throw new RuntimeException("Erro durante a consulta no BD", sqlException);
         }

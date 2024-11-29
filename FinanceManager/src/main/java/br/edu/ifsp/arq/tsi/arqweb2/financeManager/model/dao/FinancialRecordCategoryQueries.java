@@ -9,6 +9,14 @@ public interface FinancialRecordCategoryQueries {
         (?, ?);
         """;
 
+    String SELECT = """
+        SELECT c.id,
+               c.user_id,
+               c.name
+        FROM category c
+        WHERE c.id = ?;
+        """;
+
     String SELECT_BY_USER_ID = """
         SELECT c.id,
                c.user_id,

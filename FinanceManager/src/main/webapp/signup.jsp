@@ -55,9 +55,15 @@
 				</div>
 
 				<div class="mb-2">
+					<label for="confirmPassword">Confirmação de Senha*</label> <input type="password"
+						name="confirmPassword" id="confirmPassword" class="form-control" minlength="3"
+						maxlength="50" required="required"> <span id="3"></span>
+				</div>
+
+				<div class="mb-2">
                     <label for="birth-date">Data de Nascimento*</label> <input type="date"
                         name="birth-date" id="birth-date" class="form-control"
-                        required="required"> <span id="3"></span>
+                        required="required"> <span id="4"></span>
                 </div>
 
 				<div class="mb-2">
@@ -72,6 +78,6 @@
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
 		crossorigin="anonymous"></script>
-	<script src="js/user-register.js"></script>
+	<script src="signup.js"></script>
 </body>
 </html>

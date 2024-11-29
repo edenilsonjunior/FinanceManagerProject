@@ -1,5 +1,6 @@
 package br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.financialRecord;
 
+import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.user.User;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -12,9 +13,10 @@ import java.time.LocalDate;
 public class FinancialRecord {
 
     private long id;
+    private User user;
     private FinancialRecordCategory category;
     private double amount;
-    private String transactionType;
+    private TransactionTypeEnum transactionType;
     private LocalDate transactionDate;
     private String description;
 

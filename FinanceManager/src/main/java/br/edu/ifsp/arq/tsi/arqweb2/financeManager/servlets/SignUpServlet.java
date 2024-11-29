@@ -3,6 +3,7 @@ package br.edu.ifsp.arq.tsi.arqweb2.financeManager.servlets;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao.UserDao;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.user.User;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.utils.DataSourceSearcher;
+import br.edu.ifsp.arq.tsi.arqweb2.financeManager.utils.PasswordEncoder;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -34,7 +35,7 @@ public class SignUpServlet extends HttpServlet {
 
         String fullName = request.getParameter("full-name");
         String email = request.getParameter("email");
-        String password = request.getParameter("password");
+        String password = PasswordEncoder.encode(request.getParameter("password"));
         LocalDate birthDate = LocalDate.parse(request.getParameter("birth-date"));
 
         String url;
