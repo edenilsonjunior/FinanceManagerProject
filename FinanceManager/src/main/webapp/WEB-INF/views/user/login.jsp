@@ -41,9 +41,11 @@
         <div class="form-header">Login</div>
         
         <div class="form-field">
+            <label for="email">E-mail:</label>
             <input type="email" name="email" id="email" placeholder="E-mail" required="required" class="form-control">
         </div>
         <div class="form-field">
+            <label for="password">Senha:</label>
             <input type="password" name="password" id="password" placeholder="Senha" required="required" class="form-control">
         </div>
 
