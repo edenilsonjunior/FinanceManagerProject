@@ -34,9 +34,8 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String email = request.getParameter("email");
-        //String password = PasswordEncoder.encode(request.getParameter("password"));
-        String password = request.getParameter("password");
-
+        String password = PasswordEncoder.encode(request.getParameter("password"));
+        
         var userDao = new UserDao(DataSourceSearcher.getInstance().getDataSource());
 
         var user = userDao.findUserByEmail(email);

@@ -71,9 +71,10 @@ CREATE TABLE alert (
     CONSTRAINT fk_alert_user FOREIGN KEY (user_id) REFERENCES user(id)
 );
 
+-- USAR 1234 no sistema para se conectar com o user 1
 INSERT INTO user (full_name, email, password, birth_date) 
 VALUES 
-    ('John Doe', 'john.doe@example.com', 'hashed_password_1', '1985-07-12'),
+    ('John Doe', 'john.doe@example.com', '81DC9BDB52D04DC20036DBD8313ED055', '1985-07-12'),
     ('Jane Smith', 'jane.smith@example.com', 'hashed_password_2', '1990-03-25');
 
 INSERT INTO category (user_id, name) 
