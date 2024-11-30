@@ -21,14 +21,9 @@
                         <span class="nav_name">Dashboard</span>
                     </a>
 
-                    <a href="create-financial-record?type=income" class="nav_link">
-                        <i class='bx bxs-up-arrow-circle'></i>
-                        <span class="nav_name">Nova Receita</span>
-                    </a>
-
-                    <a href="create-financial-record?type=expense" class="nav_link">
-                        <i class='bx bxs-down-arrow-circle' ></i>
-                        <span class="nav_name">Nova Despesa</span>
+                    <a href="create-financial-record" class="nav_link">
+                        <i class='bx bxs-plus-square'></i>
+                        <span class="nav_name">Nova Movimentação</span>
                     </a>
 
                     <a href="create-category" class="nav_link">
