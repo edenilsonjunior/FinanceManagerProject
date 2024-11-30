@@ -88,12 +88,11 @@ const loadExpenseStatisticsByCategory = (data) => {
 
 
 const loadMonthlyBalance = (data) => {
-
     var monthlyBalance = data.monthlyBalance;
 
-    const totalIncome = monthlyBalance.totalIncome; 
-    const totalExpense = monthlyBalance.totalExpense; 
-    const currentBalance = monthlyBalance.currentBalance; 
+    const totalIncome = monthlyBalance.totalIncome;
+    const totalExpense = monthlyBalance.totalExpense;
+    const currentBalance = monthlyBalance.currentBalance;
 
     const barCtx = document.getElementById('monthly-balance').getContext('2d');
     new Chart(barCtx, {
@@ -102,7 +101,7 @@ const loadMonthlyBalance = (data) => {
             labels: ['Saldo Atual', 'Receitas', 'Despesas'],
             datasets: [{
                 data: [currentBalance, totalIncome, totalExpense],
-                backgroundColor: ['#0079f8', '#28a745', '#dc3545'], 
+                backgroundColor: ['#0079f8', '#28a745', '#dc3545'],
                 borderRadius: 10,
                 borderSkipped: false
             }]
@@ -115,16 +114,25 @@ const loadMonthlyBalance = (data) => {
             },
             scales: {
                 x: {
-                    grid: { display: false }
+                    grid: {
+                        display: true,
+                        color: 'rgba(0, 0, 0, 0.1)',
+                        lineWidth: 1
+                    }
                 },
                 y: {
                     beginAtZero: true,
-                    grid: { display: false }
+                    grid: {
+                        display: true,
+                        color: 'rgba(0, 0, 0, 0.1)',
+                        lineWidth: 1
+                    }
                 }
             }
         }
     });
 }
+
 
 const loadOverview = (data) => {
 
