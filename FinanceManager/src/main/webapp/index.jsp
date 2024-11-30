@@ -22,25 +22,25 @@
 
     <div id="overview" class="row justify-content-center mb-5">
 
-        <div class="card-overview saldo mx-3">
+        <div class="card-overview saldo mx-3 my-3">
             <div class="icon">🏦</div>
             <h5>Saldo Atual</h5>
             <p id="current-balance">R$ 1.650,00</p>
         </div>
 
-        <div class="card-overview receitas mx-3">
+        <div class="card-overview receitas mx-3 my-3">
             <div class="icon">⬆️</div>
             <h5>Receitas</h5>
             <p id="total-income">R$ 6.000,00</p>
         </div>
 
-        <div class="card-overview despesas mx-3">
+        <div class="card-overview despesas mx-3 my-3">
             <div class="icon">⬇️</div>
             <h5>Despesas</h5>
             <p id="total-expense">R$ 5.350,00</p>
         </div>
 
-        <div class="card-overview cartao mx-3">
+        <div class="card-overview cartao mx-3 my-3">
             <div class="icon">💳</div>
             <h5>Cartão de Crédito</h5>
             <p id="total-credit-card">🚧 Em construção... 🚧</p>
