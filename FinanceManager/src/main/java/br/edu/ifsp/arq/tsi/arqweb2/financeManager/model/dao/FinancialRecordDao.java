@@ -86,10 +86,8 @@ public class FinancialRecordDao {
 
             ps.setLong(1, financialRecord.getCategory().getId());
             ps.setDouble(2, financialRecord.getAmount());
-            ps.setString(3, financialRecord.getTransactionType().toString());
-            ps.setDate(4, java.sql.Date.valueOf(financialRecord.getTransactionDate()));
-            ps.setString(5, financialRecord.getDescription());
-            ps.setLong(6, financialRecord.getId());
+            ps.setString(3, financialRecord.getDescription());
+            ps.setLong(4, financialRecord.getId());
 
         return ps.executeUpdate() > 0;
     } catch (SQLException sqlException) {
@@ -115,22 +113,20 @@ public class FinancialRecordDao {
              var ps = con.prepareStatement(FinancialRecordQueries.SELECT_BY_ID)) {
 
             ps.setLong(1, id);
-
             var rs = ps.executeQuery();
+
             if (rs.next()) {
                 var financialRecord = new FinancialRecord();
                 var category = new FinancialRecordCategory();
 
-                category.setId(rs.getLong("category_id"));
-                getCategoryById(category.getId());
-                category.setName(category.getName());
-
                 financialRecord.setId(rs.getLong("id"));
+                category.setId(rs.getLong("category_id"));
+                category = getCategoryById(category.getId());
                 financialRecord.setCategory(category);
                 financialRecord.setAmount(rs.getDouble("amount"));
+                financialRecord.setTransactionType(TransactionTypeEnum.valueOf(rs.getString("transaction_type")));
                 financialRecord.setTransactionDate(LocalDate.parse(rs.getDate("transaction_date").toString()));
                 financialRecord.setDescription(rs.getString("description"));
-                financialRecord.setTransactionType(TransactionTypeEnum.valueOf(rs.getString("transaction_type")));
 
                 return financialRecord;
             }
@@ -139,6 +135,7 @@ public class FinancialRecordDao {
         }
         return null;
     }
+
 
     public List<FinancialRecordCategory> getAllCategoriesByName() {
         var list = new ArrayList<FinancialRecordCategory>();
