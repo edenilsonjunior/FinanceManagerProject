@@ -8,6 +8,7 @@ import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao.FinancialRecordDao;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.financialRecord.FinancialRecord;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.financialRecord.FinancialRecordCategory;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.utils.DataSourceSearcher;
+import com.google.gson.Gson;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -30,18 +31,18 @@ public class UpdateFinancialRecordServlet extends HttpServlet {
         FinancialRecord fr = frd.getById(id);
         List<FinancialRecordCategory> listCategories = frd.getAllCategoriesByName();
 
-        request.setAttribute("financialRecord", fr);
+        request.setAttribute("fr", fr);
         request.setAttribute("listCategories", listCategories);
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/update.jsp");
+        System.out.println(fr.getCategory().getName());
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/financial-record/update-financial.jsp");
         dispatcher.forward(request, response);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         long id = Long.parseLong(request.getParameter("id"));
-        String categoryName = request.getParameter("categoryName");
+        String categoryName = request.getParameter("categorySelect");
         double amount = Double.parseDouble(request.getParameter("amount"));
-        LocalDate transactionDate = LocalDate.parse(request.getParameter("transactionDate"));
         String description = request.getParameter("description");
 
         FinancialRecordDao frd = new FinancialRecordDao(DataSourceSearcher.getInstance().getDataSource());
@@ -51,11 +52,10 @@ public class UpdateFinancialRecordServlet extends HttpServlet {
         fr.setId(id);
         fr.setCategory(category);
         fr.setAmount(amount);
-        fr.setTransactionDate(transactionDate);
         fr.setDescription(description);
 
         frd.update(fr);
 
-        response.sendRedirect("financial-records");
+        response.sendRedirect("history");
     }
 }

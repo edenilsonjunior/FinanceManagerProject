@@ -28,8 +28,6 @@ public interface FinancialRecordQueries {
         UPDATE financial_record
         SET category_id = ?,
             amount = ?,
-            transaction_type = ?,
-            transaction_date = ?,
             description = ?
         WHERE id = ?;
         """;
@@ -42,14 +40,15 @@ public interface FinancialRecordQueries {
     String SELECT_BY_ID = """
         SELECT fr.id,
                fr.user_id,
+               fr.category_id,
                fr.amount,
                fr.transaction_type,
                fr.transaction_date,
-               fr.description,
-               fr.category_id,
+               fr.description
         FROM financial_record fr
         WHERE fr.id = ?;
         """;
+
 
     String SELECT_ALL_CATEGORY = """
         SELECT id,
