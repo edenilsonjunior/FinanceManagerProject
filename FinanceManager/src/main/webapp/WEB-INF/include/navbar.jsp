@@ -9,7 +9,7 @@
     <div class="l-navbar" id="nav-bar">
         <nav class="nav">
             <div>
-                <a href="#" class="nav_logo">
+                <a href="index" class="nav_logo">
                     <i class='bx bx-wallet nav_logo-icon'></i>
                     <span class="nav_logo-name">IFinance</span>
                 </a>
@@ -45,7 +45,7 @@
                     </a>
                     <a href="history" class="nav_link">
                         <i class='bx bx-bar-chart-alt-2 nav_icon'></i>
-                        <span class="nav_name">Status</span>
+                        <span class="nav_name">Histórico</span>
                     </a>
                 </div>
             </div>
