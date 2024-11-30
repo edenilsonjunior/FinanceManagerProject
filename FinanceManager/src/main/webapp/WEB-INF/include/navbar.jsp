@@ -15,6 +15,11 @@
                 </a>
                 <div class="nav_list">
 
+                    <a href="index" class="nav_link active">
+                        <i class='bx bx-grid-alt nav_icon'></i>
+                        <span class="nav_name">Dashboard</span>
+                    </a>
+
                     <a href="create-financial-record?type=income" class="nav_link">
                         <i class='bx bxs-up-arrow-circle'></i>
                         <span class="nav_name">Nova Receita</span>
@@ -24,12 +29,12 @@
                         <i class='bx bxs-down-arrow-circle' ></i>
                         <span class="nav_name">Nova Despesa</span>
                     </a>
-                    
-                    <a href="index" class="nav_link active">
-                        <i class='bx bx-grid-alt nav_icon'></i>
-                        <span class="nav_name">Dashboard</span>
-                    </a>
 
+                    <a href="create-category" class="nav_link">
+                        <i class='bx bxs-category-alt bx-rotate-270' ></i>
+                        <span class="nav_name">Nova Categoria</span>
+                    </a>
+                    
                     <a href="#" class="nav_link">
                         <i class='bx bx-user nav_icon'></i>
                         <span class="nav_name">Perfil</span>
