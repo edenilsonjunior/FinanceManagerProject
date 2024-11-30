@@ -86,6 +86,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="assets/js/board.js" type="module"></script>
+<script src="assets/js/navbar.js" type="module"></script>
 </body>
 
 </html>

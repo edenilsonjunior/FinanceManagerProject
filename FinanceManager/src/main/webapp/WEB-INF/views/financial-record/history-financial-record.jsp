@@ -6,19 +6,25 @@
 <%@ taglib prefix="C" uri="http://java.sun.com/jsp/jstl/core" %>
 <!doctype html>
 <html lang="pt-BR">
-<head>
+    <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/styles.css">
     <title>IFinance - Histórico de Registros financeiros</title>
 </head>
-<body>
-    <div class="container">
+
+<body id="body-pd">
+    
+    <jsp:include page="../../../WEB-INF/include/navbar.jsp" />
+    <main class="bg-light">
+
+        <h1 class="mx-2 my-5">Histórico de Registros Financeiros</h1>
+
         <c:choose>
             <c:when test="${fn:length(financialRecords) > 0}">
                 <table
@@ -31,7 +37,7 @@
                         <th scope="col" class="p-3">Data</th>
                         <th scope="col" class="p-3">Categoria</th>
                         <th scope="col" class="p-3">Descrição</th>
-                        <th scope="col" class="p-3">Outros</th>
+                        <th scope="col" colspan="2" class="p-3" style="text-align: center;">Outros</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -72,19 +78,13 @@
                                 </c:choose>
                             </td>
 
-                            <td class="p-3">
-                                <span data-bs-toggle="tooltip" data-bs-placement="top" title="Editar">
-                                    <a href="update-financial-record?id=${financialRecord.id}" >
-                                        <i class='bx bx-edit-alt'></i>
-                                    </a>
-                                </span>
+                            <td>
+                                <a href="update-financial-record?id=${financialRecord.id}" class="btn btn-warning btn-sm edit-button btn-icon-text"><i class="fas fa-edit"></i> Editar</a>
+                              </td>
+                              <td>
+                                <a href="#" class="btn btn-danger btn-sm delete-button btn-icon-text"><i class="fas fa-trash-alt"></i> Excluir</a>
+                              </td> 
 
-                                <span data-bs-toggle="tooltip" data-bs-placement="top" title="Exluir">
-                                    <a href="#" >
-                                        <i class='bx bx-trash'></i>
-                                    </a>
-                                </span>
-                            </td>
                         </tr>
                     </c:forEach>
                     </tbody>
@@ -94,8 +94,10 @@
                 <p class="text-center">Nenhum registro financeiro cadastrado.</p>
             </c:otherwise>
         </c:choose>
-    </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+</main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="assets/js/navbar.js" type="module"></script>
 </body>
 </html>
