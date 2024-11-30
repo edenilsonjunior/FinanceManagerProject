@@ -93,4 +93,21 @@ public interface FinancialRecordQueries {
               AND YEAR(transaction_date) = YEAR(CURRENT_DATE)
         GROUP BY user_id;
         """;
+
+    String SELECT_HISTORY_BY_USER_ID = """
+        SELECT
+            f.id,
+            c.name as category_name,
+            f.amount,
+            f.transaction_type,
+            f.transaction_date,
+            f.description
+        from financial_record f
+        join category c
+        on f.category_id = c.id
+        join user u
+        on f.user_id = u.id
+        where u.id = ?
+        order by f.transaction_date desc;
+        """;
 }

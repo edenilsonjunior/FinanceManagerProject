@@ -1,6 +1,7 @@
 package br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao;
 
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao.queries.FinancialRecordQueries;
+import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dto.FinancialRecordDto;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.financialRecord.FinancialRecord;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.financialRecord.FinancialRecordCategory;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.financialRecord.TransactionTypeEnum;
@@ -248,6 +249,30 @@ public class FinancialRecordDao {
             throw new RuntimeException("Erro SQL: ", sqlException);
         }
 
+    }
+
+    public List<FinancialRecordDto> findFinancialRecordHistoryByUserId(long userId){
+        var list = new ArrayList<FinancialRecordDto>();
+
+        try (var con = dataSource.getConnection();
+             var ps = con.prepareStatement(FinancialRecordQueries.SELECT_HISTORY_BY_USER_ID)) {
+
+            ps.setLong(1, userId);
+            var rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new FinancialRecordDto(
+                        rs.getLong("id"),
+                        rs.getString("category_name"),
+                        rs.getDouble("amount"),
+                        rs.getString("transaction_type"),
+                        rs.getDate("transaction_date").toLocalDate(),
+                        rs.getString("description")
+                ));
+            }
+            return list;
+        } catch (SQLException sqlException) {
+            throw new RuntimeException("Erro SQL: ", sqlException);
+        }
     }
 
 }
