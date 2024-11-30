@@ -115,9 +115,32 @@ const loadOverview = (data) => {
 document.addEventListener("DOMContentLoaded", async () => {
 
     var data = await submitGet('/board');
-    console.log(data);
 
-    loadOverview(data);
-    loadExpenseStatisticsByCategory(data);
-    loadMonthlyBalance(data);
+    var overview = data.overview;
+    if(overview.totalIncome && overview.totalExpense && overview.currentBalance) {
+        loadOverview(data);
+    }
+    
+    if(data.categories.length === 0) {
+        document.getElementById('expense-statistics-by-category').parentElement.innerHTML = 
+            `<div class="text-center">
+                <h5 class="text-muted">Nenhuma despesa cadastrada</h5>
+                <h6 class="text-muted">Cadastre uma despesa para que o gráfico de despesas por categoria seja exibido.</h6>
+            </div>`;
+            console.log('oi')
+    }
+    else {
+        loadExpenseStatisticsByCategory(data);
+    }
+
+
+    if(!data.monthlyBalance.totalIncome || !data.monthlyBalance.totalExpense || !data.monthlyBalance.currentBalance) {
+        document.getElementById('monthly-balance').parentElement.innerHTML = 
+            `<div class="text-center">
+                <h6 class="text-muted">Nenhuma movimentação cadastrada esse mês.</h6>
+            </div>`;
+    }else {
+        loadMonthlyBalance(data);
+    }
  });
+ 
