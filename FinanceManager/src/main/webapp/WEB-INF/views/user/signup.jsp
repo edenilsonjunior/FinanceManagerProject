@@ -21,7 +21,7 @@
         <h1>IFinance</h1>
     </div>
 
-    <form action="signup" method="post" class="form">
+    <form action="signup" method="post" class="form" id="signup-form">
 
 		<c:if test="${signupErrorMessage != null}">
 			<div class="alert alert-danger alert-dismissible fade show"
@@ -37,21 +37,25 @@
 		<div class="form-field">
 			<label for="full-name">Nome:</label>
 			<input type="text" name="full-name" id="full-name" placeholder="Nome" required="required" class="form-control">
+			<span id="full-name-error" class="text-danger"></span>
 		</div>
 
 		<div class="form-field">
 			<label for="birth-date">Data de Nascimento:</label>
 			<input type="date" name="birth-date" id="birth-date" required="required" class="form-control">
+			<span id="birth-date-error" class="text-danger"></span>
 		</div>
-
+		
 		<div class="form-field">
 			<label for="email">E-mail:</label>
 			<input type="email" name="email" id="email" placeholder="E-mail" required="required" class="form-control">
+			<span id="email-error" class="text-danger"></span>
 		</div>
 
 		<div class="form-field">
 			<label for="password">Senha:</label>
 			<input type="password" name="password" id="password" placeholder="Senha" required="required" class="form-control">
+			<span id="password-error" class="text-danger"></span>
 		</div>
 
 		<div class="form-field">
