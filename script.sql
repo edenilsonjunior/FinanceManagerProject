@@ -144,6 +144,12 @@ VALUES
     (2, 3, 500.00, 'EXPENSE', 'Supermarket shopping', '2024-11-15'),
     (2, 2, 200.00, 'EXPENSE', 'Debt repayment', '2024-11-30');
 
+-- Dezembro
+INSERT INTO financial_record (user_id, category_id, amount, transaction_type, description, transaction_date)
+VALUES 
+    (2, NULL, 2000.00, 'INCOME', 'Investment dividend for December', '2024-12-01'),
+    (2, 3, 600.00, 'EXPENSE', 'Christmas shopping', '2024-12-15'),
+    (2, 4, 250.00, 'EXPENSE', 'Transportation costs', '2024-12-31');
 
 INSERT INTO wallet (user_id, name, goal_amount, current_balance, description)
 VALUES 
