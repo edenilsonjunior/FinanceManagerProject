@@ -44,9 +44,9 @@
 
         <!--Categories-->
         <div class="form-field">
-            <select name="categoryId" id="categoryId" class="form-select">
+            <select name="categorySelect" id="categorySelect" class="form-select">
                 <option value="" selected disabled>Selecione uma categoria</option>
-                <c:if test="${userCategories = null}">
+                <c:if test="${userCategories != null}">
                     <c:forEach var="category" items="${userCategories}" varStatus="index">
                         <option value="${category.id}">${category.name}</option>
                     </c:forEach>  

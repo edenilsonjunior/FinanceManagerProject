@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     const transactionSwitch = document.getElementById("transactionSwitch");
     const transactionTypeInput = document.getElementById("transactionType");
-    const categorySelect = document.getElementById("categoryId");
+    const categorySelect = document.getElementById("categorySelect");
     const categoryField = categorySelect.closest(".form-field");
     const form = document.querySelector("form");
 

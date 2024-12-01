@@ -39,7 +39,7 @@ public class CreateFinancialRecordServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        var categoryId = request.getParameter("categoryId");
+        var categoryId = request.getParameter("categorySelect");
         var amount = Double.parseDouble(request.getParameter("amount"));
         var description = request.getParameter("description");
         var transactionType = TransactionTypeEnum.valueOf(request.getParameter("transactionType"));
