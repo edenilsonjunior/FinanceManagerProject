@@ -18,6 +18,13 @@
 
 <main class="bg-light">
 
+    <c:if test="${successMessage != null}">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            ${successMessage}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </c:if>
+
     <h1 class="mx-2 my-5">DashBoard</h1>
 
     <div id="overview" class="row justify-content-center mb-5">
@@ -57,8 +64,8 @@
                     <div class="chart-container " >
                         <canvas id="expense-statistics-by-category"></canvas>
                     </div>
-                    <div class="text-center mt-3">
-                        <h6 id="total-expenses-by-mounth" class="mb-0">R$ 0,00</h6>
+                    <div id="total-expenses-by-mounth" class="text-center mt-3" style="display: none;">
+                        <h6 class="mb-0">R$ 0,00</h6>
                         <small class="text-muted" >Total</small>
                     </div>
                 </div>

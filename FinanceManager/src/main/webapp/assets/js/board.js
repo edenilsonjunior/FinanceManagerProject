@@ -1,7 +1,18 @@
 "use strict";
 
-import {contextPath, submitGet } from './global.js';
+import { submitGet } from './global.js';
 
+const loadOverview = (data) => {
+
+    var overview = data.overview;
+    var totalIncome = overview.totalIncome;
+    var totalExpense = overview.totalExpense;
+    var currentBalance = overview.currentBalance;
+
+    document.getElementById('total-income').textContent = `R$ ${totalIncome.toFixed(2)}`;
+    document.getElementById('total-expense').textContent = `R$ ${totalExpense.toFixed(2)}`;
+    document.getElementById('current-balance').textContent = `R$ ${currentBalance.toFixed(2)}`;
+}
 
 const loadExpenseStatisticsByCategory = (data) => {
 
@@ -47,10 +58,10 @@ const loadExpenseStatisticsByCategory = (data) => {
     });
 
     const total = document.getElementById('total-expenses-by-mounth');
+    const h6Element = total.querySelector('h6');
 
-    total.textContent = `R$ ${categories.reduce((acc, c) => acc + c.amount, 0).toFixed(2)}`;
+    h6Element.textContent = `R$ ${categories.reduce((acc, c) => acc + c.amount, 0).toFixed(2)}`;
 }
-
 
 const loadMonthlyBalance = (data) => {
     var monthlyBalance = data.monthlyBalance;
@@ -98,49 +109,28 @@ const loadMonthlyBalance = (data) => {
     });
 }
 
-
-const loadOverview = (data) => {
-
-    var overview = data.overview;
-    var totalIncome = overview.totalIncome;
-    var totalExpense = overview.totalExpense;
-    var currentBalance = overview.currentBalance;
-
-    document.getElementById('total-income').textContent = `R$ ${totalIncome.toFixed(2)}`;
-    document.getElementById('total-expense').textContent = `R$ ${totalExpense.toFixed(2)}`;
-    document.getElementById('current-balance').textContent = `R$ ${currentBalance.toFixed(2)}`;
-}
-
-
-document.addEventListener("DOMContentLoaded", async () => {
+const loadData = async () => {
 
     var data = await submitGet('/board');
 
-    var overview = data.overview;
-    if(overview.totalIncome && overview.totalExpense && overview.currentBalance) {
-        loadOverview(data);
-    }
+
+    loadOverview(data);
     
     if(data.categories.length === 0) {
         document.getElementById('expense-statistics-by-category').parentElement.innerHTML = 
-            `<div class="text-center">
+        `<div class="d-flex justify-content-center align-items-center text-center" style="height: 100%;">
+            <div>
                 <h5 class="text-muted">Nenhuma despesa cadastrada</h5>
                 <h6 class="text-muted">Cadastre uma despesa para que o gráfico de despesas por categoria seja exibido.</h6>
-            </div>`;
-            console.log('oi')
+            </div>
+        </div>`;
     }
     else {
+        document.getElementById('total-expenses-by-mounth').parentElement.style.display = 'block';
         loadExpenseStatisticsByCategory(data);
     }
 
+    loadMonthlyBalance(data);
+}
 
-    if(!data.monthlyBalance.totalIncome || !data.monthlyBalance.totalExpense || !data.monthlyBalance.currentBalance) {
-        document.getElementById('monthly-balance').parentElement.innerHTML = 
-            `<div class="text-center">
-                <h6 class="text-muted">Nenhuma movimentação cadastrada esse mês.</h6>
-            </div>`;
-    }else {
-        loadMonthlyBalance(data);
-    }
- });
- 
+document.addEventListener("DOMContentLoaded", loadData);
