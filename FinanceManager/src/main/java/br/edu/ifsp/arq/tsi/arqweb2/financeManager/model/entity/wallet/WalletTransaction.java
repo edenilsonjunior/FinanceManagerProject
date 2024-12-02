@@ -1,12 +1,14 @@
 package br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.wallet;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class WalletTransaction {
 
     private long id;
@@ -15,10 +17,4 @@ public class WalletTransaction {
     private String description;
     private double amount;
 
-    public WalletTransaction(String transactionType, LocalDate transactionDate, String description, double amount) {
-        this.transactionType = transactionType;
-        this.transactionDate = transactionDate;
-        this.description = description;
-        this.amount = amount;
-    }
 }
