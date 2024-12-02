@@ -64,12 +64,17 @@ public class CreateFinancialRecordServlet extends HttpServlet {
             financialRecord.setCategory(category);
         }
 
+        String path = request.getContextPath() + "/index";
+
         if (financialRecordDao.create(financialRecord) == null) {
+            path = "WEB-INF/views/financial-record/create-financial-record.jsp";
             request.setAttribute("financialRecordErrorMessage", "Houve um erro ao criar o registro financeiro");
-            var dispatcher = request.getRequestDispatcher( "WEB-INF/views/user/login.jsp");
-            dispatcher.forward(request, response);
+            request.getRequestDispatcher(path).forward(request, response);
         }else{
-            request.getRequestDispatcher("/index").forward(request, response);
+            // Set success message via session because sendRedirect doesn't keep request attributes
+            // And we need to use sendRedirect to show the new url in the browser
+            request.getSession(false).setAttribute("successMessage", "Registro financeiro criado com sucesso");
+            response.sendRedirect(path);
         }
     }
 }
