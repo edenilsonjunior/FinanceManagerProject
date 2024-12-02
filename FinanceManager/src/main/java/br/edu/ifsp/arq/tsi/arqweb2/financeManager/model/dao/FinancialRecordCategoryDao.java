@@ -68,7 +68,7 @@ public class FinancialRecordCategoryDao {
             while (rs.next()) {
 
                 var category = new FinancialRecordCategory();
-                category.setId(rs.getLong("user_id"));
+                category.setId(rs.getLong("id"));
                 category.setName(rs.getString("name"));
 
                 list.add(category);
