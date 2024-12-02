@@ -10,44 +10,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/forms.css">
     <title>IFinance - Atualização de Despesa</title>
 </head>
 <body>
+
     <form action="update-financial-record" method="post">
-        <h1 class="text-center">Atualização Despesa</h1>
 
-        <c:choose>
-            <c:when test="${listCategories != null}">
-                <div class="mb-2">
-                    <label for="categorySelect">Selecionar categoria</label>
-                    <select class="form-select" name="categorySelect" id="categorySelect" required="required">
-                        <c:forEach var="category" items="${listCategories}" varStatus="index">
-                            <option
-                                <c:if test="${category.name == fr.category.name}">
-                                    selected="selected"
-                                </c:if>
-                                >${category.name}</option>
-                        </c:forEach>
-                    </select>
-                </div>
-            </c:when>
-        </c:choose>
+        <div class="form-header">Atualização Despesa</div>
 
+        <!--Categories-->
+        <div class="form-field">
 
-        <div class="mb-2">
-            <label for="amount">Amount</label>
-            <input type="text" name="amount" id="amount" class="form-control mb-3" required="required" value="${fr.amount}">
+            <label for="categorySelect">Categoria:</label>
+            <select name="categorySelect" id="categorySelect" class="form-select">
+                <c:if test="${listCategories = null}">
+                    <c:forEach var="category" items="${listCategories}" varStatus="index">
+                        <option value="${category.id}"
+                            <c:if test="${category.name == fr.category.name}">
+                                selected="selected"
+                            </c:if>
+                        >${category.name}</option>
+                    </c:forEach>  
+                </c:if>
+            </select>
         </div>
 
-        <div class="mb-2">
-            <label for="description">Description</label>
-            <input type="text" name="description" id="description" class="form-control mb-3" required="required" value="${fr.description}">
+        <!--Amount-->
+        <div class="form-field">
+            <label for="amount">Valor:</label>
+            <input placeholder="valor do registro" type="number" step="0.01" name="amount" id="amount" required="required" value="" class="form-control">
+        </div>
+        
+        <!--Description-->
+        <div class="form-field">
+            <label for="description">Descrição:</label>
+            <input type="text" name="description" id="description" placeholder="Descrição" required="required" class="form-control">
         </div>
 
-        <div class="mb-3">
-            <button type="submit" class="btn btn-primary">Atualizar</button>
+        <div class="form-submit">
+            <button type="submit">Atualizar</button>
         </div>
+
     </form>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>

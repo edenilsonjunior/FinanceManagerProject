@@ -1,14 +1,12 @@
 package br.edu.ifsp.arq.tsi.arqweb2.financeManager.servlets.financialRecord;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.List;
 
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao.FinancialRecordDao;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.financialRecord.FinancialRecord;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.financialRecord.FinancialRecordCategory;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.utils.DataSourceSearcher;
-import com.google.gson.Gson;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;

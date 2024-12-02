@@ -19,6 +19,19 @@ public class IndexServlet extends HttpServlet {
 
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        var session = request.getSession(false);
+
+        if (session != null && session.getAttribute("successMessage") != null) {
+            request.setAttribute("successMessage", session.getAttribute("successMessage"));
+            session.removeAttribute("successMessage");
+        }
+        
         request.getRequestDispatcher("/index.jsp").forward(request, response);
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doGet(request, response);
     }
 }

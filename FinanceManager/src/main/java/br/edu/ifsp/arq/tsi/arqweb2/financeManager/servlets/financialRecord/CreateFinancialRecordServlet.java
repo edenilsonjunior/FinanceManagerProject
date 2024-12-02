@@ -3,19 +3,15 @@ package br.edu.ifsp.arq.tsi.arqweb2.financeManager.servlets.financialRecord;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao.FinancialRecordCategoryDao;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao.FinancialRecordDao;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.financialRecord.FinancialRecord;
-import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.financialRecord.FinancialRecordCategory;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.financialRecord.TransactionTypeEnum;
-import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.user.User;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.utils.DataSourceSearcher;
-import jakarta.servlet.RequestDispatcher;
+import br.edu.ifsp.arq.tsi.arqweb2.financeManager.utils.Utils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
-import javax.sql.DataSource;
 import java.io.IOException;
 
 
@@ -30,58 +26,55 @@ public class CreateFinancialRecordServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        var financialRecordCategoryDao = new FinancialRecordCategoryDao(DataSourceSearcher.getInstance().getDataSource());
+        var categoryDao = new FinancialRecordCategoryDao(DataSourceSearcher.getInstance().getDataSource());
+        var user = Utils.getUser(request);
 
-        if(request.getParameter("type").equals("expense")){
+        var path = "/WEB-INF/views/financial-record/create-financial-record.jsp";
 
-            var session = request.getSession(false);
-            var user = (User) session.getAttribute("user");
+        var categories = categoryDao.findFinancialRecordCategoriesByUserId(user.getId());
+        request.setAttribute("userCategories", categories);
 
-            var categories = financialRecordCategoryDao.findFinancialRecordCategoriesByUserId(user.getId());
-            request.setAttribute("userCategories", categories);
-        }
-
-        request.setAttribute("transactionType", TransactionTypeEnum.EXPENSE.toString());
-
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/financial-record/create-financial-record.jsp");
-        dispatcher.forward(request, response);
+        request.getRequestDispatcher(path).forward(request, response);
     }
-
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        //long categoryId = Long.parseLong(request.getParameter("categoryId"));
-        String categoryId = request.getParameter("categoryId");
-        double amount = Double.parseDouble(request.getParameter("amount"));
-        TransactionTypeEnum transactionType = TransactionTypeEnum.valueOf(request.getParameter("transactionType"));
-        String description = request.getParameter("description");
+        var categoryId = request.getParameter("categorySelect");
+        var amount = Double.parseDouble(request.getParameter("amount"));
+        var description = request.getParameter("description");
+        var transactionType = TransactionTypeEnum.valueOf(request.getParameter("transactionType"));
 
-        RequestDispatcher dispatcher = null;
+        var user = Utils.getUser(request);
 
-        HttpSession session = request.getSession(false);
-        User user = (User) session.getAttribute("user");
+        var dataSource = DataSourceSearcher.getInstance().getDataSource();
+        var financialRecordCategoryDao = new FinancialRecordCategoryDao(dataSource);
+        var financialRecordDao = new FinancialRecordDao(dataSource);
 
-        DataSource dataSource = DataSourceSearcher.getInstance().getDataSource();
-        FinancialRecordCategoryDao financialRecordCategoryDao = new FinancialRecordCategoryDao(dataSource);
+        var financialRecord = new FinancialRecord() {{
+            setUser(user);
+            setAmount(amount);
+            setDescription(description);
+            setTransactionType(transactionType);
+        }};
 
-        FinancialRecord financialRecord = new FinancialRecord();
-        financialRecord.setUser(user);
-        financialRecord.setAmount(amount);
-        financialRecord.setDescription(description);
-        financialRecord.setTransactionType(transactionType);
-
-        if(!categoryId.isEmpty()){
-            FinancialRecordCategory financialRecordCategory = financialRecordCategoryDao.findFinancialRecordCategoryById(Long.parseLong(categoryId)).get();
-            financialRecord.setCategory(financialRecordCategory);
+        if(categoryId != null){
+            var category = financialRecordCategoryDao
+                    .findFinancialRecordCategoryById(Long.parseLong(categoryId))
+                    .orElseThrow(() -> new RuntimeException("Category not found"));
+            financialRecord.setCategory(category);
         }
 
-        FinancialRecordDao financialRecordDao = new FinancialRecordDao(dataSource);
-        if(financialRecordDao.create(financialRecord) != null) {
-            dispatcher = request.getRequestDispatcher("/index");
+        String path = request.getContextPath() + "/index";
+
+        if (financialRecordDao.create(financialRecord) == null) {
+            path = "WEB-INF/views/financial-record/create-financial-record.jsp";
+            request.setAttribute("financialRecordErrorMessage", "Houve um erro ao criar o registro financeiro");
+            request.getRequestDispatcher(path).forward(request, response);
         }else{
-            dispatcher = request.getRequestDispatcher("/financialRecord");
+            // Set success message via session because sendRedirect doesn't keep request attributes
+            // And we need to use sendRedirect to show the new url in the browser
+            request.getSession(false).setAttribute("successMessage", "Registro financeiro criado com sucesso");
+            response.sendRedirect(path);
         }
-
-        dispatcher.forward(request, response);
     }
 }

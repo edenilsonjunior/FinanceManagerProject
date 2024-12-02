@@ -71,9 +71,10 @@ CREATE TABLE alert (
     CONSTRAINT fk_alert_user FOREIGN KEY (user_id) REFERENCES user(id)
 );
 
+-- USAR 1234 no sistema para se conectar com o user 1
 INSERT INTO user (full_name, email, password, birth_date) 
 VALUES 
-    ('John Doe', 'john.doe@example.com', 'hashed_password_1', '1985-07-12'),
+    ('John Doe', 'john.doe@example.com', '81DC9BDB52D04DC20036DBD8313ED055', '1985-07-12'),
     ('Jane Smith', 'jane.smith@example.com', 'hashed_password_2', '1990-03-25');
 
 INSERT INTO category (user_id, name) 
@@ -143,6 +144,12 @@ VALUES
     (2, 3, 500.00, 'EXPENSE', 'Supermarket shopping', '2024-11-15'),
     (2, 2, 200.00, 'EXPENSE', 'Debt repayment', '2024-11-30');
 
+-- Dezembro
+INSERT INTO financial_record (user_id, category_id, amount, transaction_type, description, transaction_date)
+VALUES 
+    (2, NULL, 2000.00, 'INCOME', 'Investment dividend for December', '2024-12-01'),
+    (2, 3, 600.00, 'EXPENSE', 'Christmas shopping', '2024-12-15'),
+    (2, 4, 250.00, 'EXPENSE', 'Transportation costs', '2024-12-31');
 
 INSERT INTO wallet (user_id, name, goal_amount, current_balance, description)
 VALUES 

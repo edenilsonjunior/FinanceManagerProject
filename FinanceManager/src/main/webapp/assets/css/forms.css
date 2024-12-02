@@ -121,7 +121,7 @@ body {
 
 .form-field select {
     background-color: transparent;
-    color: white; /* Cor do texto dentro do select */
+    color: black;
     border: 1px solid #ccc;
     padding: 10px;
     border-radius: 4px;
@@ -159,4 +159,29 @@ body {
     .form-header {
         font-size: 28px; 
     }
+}
+
+a {
+    color: #ccc;
+    text-decoration: none;
+}
+
+/* Custom Switch Style */
+.form-check-label {
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+}
+.form-check-input {
+    background-color: #ccc;
+    border: 1px solid #ccc;
+    appearance: none;
+    outline: none;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.form-check-input:checked {
+    background-color: red;
+    border-color: red;
 }

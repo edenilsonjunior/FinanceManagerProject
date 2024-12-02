@@ -11,7 +11,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -197,24 +196,27 @@ public class FinancialRecordDao {
 
     public Map<String, Double> getOverviewByUserId(long userId){
 
-        var map = new HashMap<String, Double>();
-
         try (var con = dataSource.getConnection();
              var ps = con.prepareStatement(FinancialRecordQueries.SELECT_OVERVIEW_BY_USER_ID)) {
 
             ps.setLong(1, userId);
 
             var rs = ps.executeQuery();
-            if (rs.next()) {
-                var totalIncome = rs.getDouble("total_income");
-                var totalExpense = rs.getDouble("total_expense");
-                var currentBalance = rs.getDouble("current_balance");
+            double totalIncome = 0.0;
+            double totalExpense = 0.0;
+            double currentBalance = 0.0;
 
-                map.put("totalIncome", totalIncome);
-                map.put("totalExpense", totalExpense);
-                map.put("currentBalance", currentBalance);
+            if (rs.next()) {
+                totalIncome = rs.getDouble("total_income");
+                totalExpense = rs.getDouble("total_expense");
+                currentBalance = rs.getDouble("current_balance");
             }
-            return map;
+
+            return Map.of(
+                    "totalIncome", totalIncome,
+                    "totalExpense", totalExpense,
+                    "currentBalance", currentBalance
+            );
 
         } catch (SQLException sqlException) {
             throw new RuntimeException("Erro SQL: ", sqlException);
@@ -223,29 +225,31 @@ public class FinancialRecordDao {
 
     public Map<String, Double> getMonthlyBalanceByUserId(long userId){
 
-        var map = new HashMap<String, Double>();
-
         try (var con = dataSource.getConnection();
              var ps = con.prepareStatement(FinancialRecordQueries.SELECT_MONTHLY_BALANCE_BY_USER_ID)) {
 
             ps.setLong(1, userId);
 
             var rs = ps.executeQuery();
-            if (rs.next()) {
-                var totalIncome = rs.getDouble("total_income");
-                var totalExpense = rs.getDouble("total_expense");
-                var currentBalance = rs.getDouble("current_balance");
+            double totalIncome = 0.0;
+            double totalExpense = 0.0;
+            double currentBalance = 0.0;
 
-                map.put("totalIncome", totalIncome);
-                map.put("totalExpense", totalExpense);
-                map.put("currentBalance", currentBalance);
+            if (rs.next()) {
+                totalIncome = rs.getDouble("total_income");
+                totalExpense = rs.getDouble("total_expense");
+                currentBalance = rs.getDouble("current_balance");
             }
-            return map;
+
+            return Map.of(
+                    "totalIncome", totalIncome,
+                    "totalExpense", totalExpense,
+                    "currentBalance", currentBalance
+            );
 
         } catch (SQLException sqlException) {
             throw new RuntimeException("Erro SQL: ", sqlException);
         }
-
     }
 
     public List<FinancialRecordDto> findFinancialRecordHistoryByUserId(long userId){

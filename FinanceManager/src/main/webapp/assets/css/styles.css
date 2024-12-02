@@ -222,3 +222,22 @@ canvas {
     max-height: 100%; 
     max-width: 100%;
 }
+
+.alert {
+    border-radius: 5px;
+    padding: 15px;
+    margin-top: 20px;
+	width: 100%;
+    box-sizing: border-box;
+	text-align: center;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
