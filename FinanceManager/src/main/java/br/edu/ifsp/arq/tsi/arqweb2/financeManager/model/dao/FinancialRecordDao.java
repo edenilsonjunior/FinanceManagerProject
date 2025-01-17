@@ -1,20 +1,18 @@
 package br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao;
 
+import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.contracts.dao.IFinancialRecordDao;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao.queries.FinancialRecordQueries;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dto.FinancialRecordDto;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.financialRecord.FinancialRecord;
-import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.financialRecord.FinancialRecordCategory;
-import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.financialRecord.TransactionTypeEnum;
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class FinancialRecordDao {
+public class FinancialRecordDao implements IFinancialRecordDao {
 
     private final DataSource dataSource;
 
@@ -22,6 +20,7 @@ public class FinancialRecordDao {
         this.dataSource = dataSource;
     }
 
+    @Override
     public FinancialRecord create(FinancialRecord financialRecord) {
         try (var con = dataSource.getConnection();
              var ps = con.prepareStatement(FinancialRecordQueries.CREATE, PreparedStatement.RETURN_GENERATED_KEYS)) {
@@ -46,39 +45,7 @@ public class FinancialRecordDao {
         }
     }
 
-    public List<FinancialRecord> findFinancialRecordsByUserId(long userId){
-
-        var list = new ArrayList<FinancialRecord>();
-
-        try (var con = dataSource.getConnection();
-             var ps = con.prepareStatement(FinancialRecordQueries.SELECT)) {
-
-            ps.setLong(1, userId);
-
-            var rs = ps.executeQuery();
-            while (rs.next()) {
-
-                var category = new FinancialRecordCategory();
-                category.setId(rs.getLong("category_id"));
-                category.setName(rs.getString("category_name"));
-
-                var financialRecord = new FinancialRecord();
-                financialRecord.setId(rs.getLong("id"));
-                financialRecord.setCategory(category);
-                financialRecord.setAmount(rs.getDouble("amount"));
-                financialRecord.setTransactionType(TransactionTypeEnum.valueOf(rs.getString("transaction_type")));
-                financialRecord.setTransactionDate(LocalDate.parse(rs.getDate("transaction_date").toString()));
-                financialRecord.setDescription(rs.getString("description"));
-
-                list.add(financialRecord);
-            }
-            return list;
-        } catch (SQLException sqlException) {
-            throw new RuntimeException("Erro durante a consulta no BD", sqlException);
-        }
-
-    }
-
+    @Override
     public boolean update(FinancialRecord financialRecord) {
         try (var con = dataSource.getConnection();
              var ps = con.prepareStatement(FinancialRecordQueries.UPDATE)) {
@@ -88,112 +55,27 @@ public class FinancialRecordDao {
             ps.setString(3, financialRecord.getDescription());
             ps.setLong(4, financialRecord.getId());
 
-        return ps.executeUpdate() > 0;
-    } catch (SQLException sqlException) {
-        throw new RuntimeException("Erro SQL: ", sqlException);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException sqlException) {
+            throw new RuntimeException("Erro SQL: ", sqlException);
+        }
     }
-}
 
+    @Override
     public boolean delete (long financialRecordId) {
         try (var con = dataSource.getConnection();
              var ps = con.prepareStatement(FinancialRecordQueries.DELETE)) {
 
             ps.setLong(1, financialRecordId);
 
-        return ps.executeUpdate() > 0;
+            return ps.executeUpdate() > 0;
         } catch (SQLException sqlException) {
             throw new RuntimeException("Erro SQL: ", sqlException);
         }
 
     }
 
-    public FinancialRecord getById(long id) {
-        try (var con = dataSource.getConnection();
-             var ps = con.prepareStatement(FinancialRecordQueries.SELECT_BY_ID)) {
-
-            ps.setLong(1, id);
-            var rs = ps.executeQuery();
-
-            if (rs.next()) {
-                var financialRecord = new FinancialRecord();
-                var category = new FinancialRecordCategory();
-
-                financialRecord.setId(rs.getLong("id"));
-                category.setId(rs.getLong("category_id"));
-                category = getCategoryById(category.getId());
-                financialRecord.setCategory(category);
-                financialRecord.setAmount(rs.getDouble("amount"));
-                financialRecord.setTransactionType(TransactionTypeEnum.valueOf(rs.getString("transaction_type")));
-                financialRecord.setTransactionDate(LocalDate.parse(rs.getDate("transaction_date").toString()));
-                financialRecord.setDescription(rs.getString("description"));
-
-                return financialRecord;
-            }
-        } catch (SQLException sqlException) {
-            throw new RuntimeException("Erro SQL: ", sqlException);
-        }
-        return null;
-    }
-
-
-    public List<FinancialRecordCategory> getAllCategoriesByName() {
-        var list = new ArrayList<FinancialRecordCategory>();
-
-        try (var con = dataSource.getConnection();
-             var ps = con.prepareStatement(FinancialRecordQueries.SELECT_ALL_CATEGORY)) {
-
-            var rs = ps.executeQuery();
-            while (rs.next()) {
-                var category = new FinancialRecordCategory();
-                category.setId(rs.getLong("id"));
-                category.setName(rs.getString("name"));
-                list.add(category);
-            }
-            return list;
-        } catch (SQLException sqlException) {
-            throw new RuntimeException("Erro SQL: ", sqlException);
-        }
-    }
-
-    public FinancialRecordCategory getCategoryIdByName(String category) {
-        try (var con = dataSource.getConnection();
-             var ps = con.prepareStatement(FinancialRecordQueries.SELECT_CATEGORY_ID_BY_NAME)) {
-
-            ps.setString(1, category);
-
-            var rs = ps.executeQuery();
-            if (rs.next()) {
-                var categoryObj = new FinancialRecordCategory();
-                categoryObj.setId(rs.getLong("id"));
-                categoryObj.setName(rs.getString("name"));
-                return categoryObj;
-            }
-        } catch (SQLException sqlException) {
-            throw new RuntimeException("Erro SQL: ", sqlException);
-        }
-        return null;
-    }
-
-    public FinancialRecordCategory getCategoryById(long categoryId) {
-        try (var con = dataSource.getConnection();
-             var ps = con.prepareStatement(FinancialRecordQueries.SELECT_CATEGORY_BY_ID)) {
-
-            ps.setLong(1, categoryId);
-
-            var rs = ps.executeQuery();
-            if (rs.next()) {
-                var category = new FinancialRecordCategory();
-                category.setId(rs.getLong("id"));
-                category.setName(rs.getString("name"));
-                return category;
-            }
-        } catch (SQLException sqlException) {
-            throw new RuntimeException("Erro SQL: ", sqlException);
-        }
-        return null;
-    }
-
-
+    @Override
     public Map<String, Double> getOverviewByUserId(long userId){
 
         try (var con = dataSource.getConnection();
@@ -223,6 +105,7 @@ public class FinancialRecordDao {
         }
     }
 
+    @Override
     public Map<String, Double> getMonthlyBalanceByUserId(long userId){
 
         try (var con = dataSource.getConnection();
@@ -252,6 +135,7 @@ public class FinancialRecordDao {
         }
     }
 
+    @Override
     public List<FinancialRecordDto> findFinancialRecordHistoryByUserId(long userId){
         var list = new ArrayList<FinancialRecordDto>();
 
@@ -275,5 +159,4 @@ public class FinancialRecordDao {
             throw new RuntimeException("Erro SQL: ", sqlException);
         }
     }
-
 }

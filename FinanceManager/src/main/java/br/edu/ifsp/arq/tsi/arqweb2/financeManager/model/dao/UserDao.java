@@ -1,5 +1,6 @@
 package br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao;
 
+import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.contracts.dao.IUserDao;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao.queries.UserQueries;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.user.User;
 
@@ -10,7 +11,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Optional;
 
-public class UserDao {
+public class UserDao implements IUserDao {
 
     private final DataSource dataSource;
 
@@ -18,6 +19,7 @@ public class UserDao {
         this.dataSource = dataSource;
     }
 
+    @Override
     public void create(User user) {
 
         try (var con = dataSource.getConnection();
@@ -39,31 +41,7 @@ public class UserDao {
 
     }
 
-    public Optional<User> findUserByUserId(long userId) {
-
-        User user = new User();
-
-        try (var con = dataSource.getConnection();
-             var ps = con.prepareStatement(UserQueries.SELECT)) {
-
-            ps.setLong(1, userId);
-
-            var rs = ps.executeQuery();
-            if (rs.next()) {
-                user.setId(rs.getLong("id"));
-                user.setFullName(rs.getString("full_name"));
-                user.setEmail(rs.getString("email"));
-                user.setPassword(rs.getString("password"));
-                user.setBirthDate(LocalDate.parse(rs.getDate("birth_date").toString()));
-                user.setCreatedAt(LocalDate.parse(rs.getDate("created_at").toString()));
-            }
-            return Optional.of(user);
-        } catch (SQLException sqlException) {
-            throw new RuntimeException("Erro durante a consulta no BD", sqlException);
-        }
-
-    }
-
+    @Override
     public Optional<User> findUserByEmail(String email) {
 
         try (var con = dataSource.getConnection();
@@ -88,5 +66,10 @@ public class UserDao {
         }
 
         return Optional.empty();
+    }
+
+    @Override
+    public boolean existsUserByEmail(String email) {
+        return false;
     }
 }
