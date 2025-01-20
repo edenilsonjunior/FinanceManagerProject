@@ -4,11 +4,14 @@ import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.contracts.services.IBoar
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao.FinancialRecordCategoryDao;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao.FinancialRecordDao;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dto.BoardDto;
+import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.user.User;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.utils.DataSourceSearcher;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.utils.Utils;
-import com.google.gson.JsonObject;
+
+import com.google.gson.JsonElement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 public class BoardService implements IBoardService {
 
@@ -23,9 +26,10 @@ public class BoardService implements IBoardService {
     }
 
     @Override
-    public JsonObject handlePreview(HttpServletRequest request, HttpServletResponse response) {
+    public JsonElement handlePreview(HttpServletRequest request, HttpServletResponse response) {
 
-        var user = Utils.getUser(request);
+       HttpSession session = request.getSession(false);
+        User user = (User) session.getAttribute("user");
 
         var content = new BoardDto(
                 financialRecordDao.getOverviewByUserId(user.getId()),
@@ -33,6 +37,6 @@ public class BoardService implements IBoardService {
                 categoryDao.getCategoryExpensesForCurrentMonthByUserId(user.getId())
         );
 
-        return Utils.createResponse("content", content);
+        return Utils.toJson(content);
     }
 }
