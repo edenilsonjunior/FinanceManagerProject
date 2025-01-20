@@ -1,7 +1,7 @@
 package br.edu.ifsp.arq.tsi.arqweb2.financeManager.servlets;
 
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.utils.Utils;
-import com.google.gson.JsonObject;
+import com.google.gson.JsonElement;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -27,12 +27,15 @@ public class FrontControllerServlet extends HttpServlet {
         var user = Utils.getUser(request);
 
         if(request.getParameter("action") == null){
-            response.sendRedirect(request.getContextPath() + "/index.jsp");
+            request.getRequestDispatcher("/login").forward(request, response);
             return;
         }
 
-        if(user == null && !request.getParameter("action").equals("login") && !request.getParameter("action").equals("sign-up")){
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
+        if(user == null
+            && !request.getParameter("action").equals("login")
+            && !request.getParameter("action").equals("signup")
+        ){
+            response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
 
@@ -41,14 +44,22 @@ public class FrontControllerServlet extends HttpServlet {
         try {
             var handlerResponse = handler.handle(request, response);
 
-            if (handlerResponse instanceof JsonObject) {
+            if (handlerResponse instanceof JsonElement) {
                 response.setContentType("application/json");
-                response.getWriter().write(response.toString());
+                response.getWriter().write(handlerResponse.toString());
                 return;
             }
 
-            var dispatcher = request.getRequestDispatcher(response.toString());
-            dispatcher.forward(request, response);
+            var path = handlerResponse.toString();
+
+            if(path.contains("dispatcher:")){
+                
+                path = path.replace("dispatcher:", "");
+                request.getRequestDispatcher(path).forward(request, response);
+                return;
+            }
+
+            response.sendRedirect(request.getContextPath() + path);
 
         } catch (Exception error) {
             throw new ServletException(error);

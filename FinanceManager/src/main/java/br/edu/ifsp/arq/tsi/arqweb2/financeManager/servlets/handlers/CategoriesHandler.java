@@ -2,7 +2,6 @@ package br.edu.ifsp.arq.tsi.arqweb2.financeManager.servlets.handlers;
 
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.contracts.services.ICategoriesService;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.service.CategoriesService;
-import com.google.gson.JsonObject;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -15,7 +14,7 @@ public class CategoriesHandler implements IHandler {
     }
 
     @Override
-    public JsonObject handle(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+    public Object handle(HttpServletRequest req, HttpServletResponse resp) throws Exception {
 
         return switch (req.getParameter("action")) {
             case "create" -> categoriesService.handleCreateCategory(req, resp);

@@ -1,13 +1,23 @@
 package br.edu.ifsp.arq.tsi.arqweb2.financeManager.utils;
 
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.user.User;
+
+import java.time.LocalDate;
+
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import jakarta.servlet.http.HttpServletRequest;
 
 public class Utils {
 
-    private static Gson gson = new Gson();
+    private static Gson gson;
+    
+    static {
+        gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+                .create();
+    }
 
     public static User getUser(HttpServletRequest request) {
 
@@ -23,11 +33,7 @@ public class Utils {
         return (session != null && session.getAttribute("customer") != null);
     }
 
-    public static JsonObject createResponse(String title, Object value) {
-        var response = new JsonObject();
-        var jsonValue = gson.toJson(value);
-
-        response.addProperty(title, jsonValue);
-        return response;
+    public static JsonElement toJson(Object object) {
+        return gson.toJsonTree(object);
     }
 }
