@@ -2,9 +2,7 @@ package br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.service;
 
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.contracts.dao.IUserDao;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.contracts.services.IUsersService;
-import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao.UserDao;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.user.User;
-import br.edu.ifsp.arq.tsi.arqweb2.financeManager.utils.DataSourceSearcher;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.utils.PasswordEncoder;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,10 +13,9 @@ public class UsersService implements IUsersService {
 
     private final IUserDao userDao;
 
-    public UsersService(){
-        this.userDao = new UserDao(DataSourceSearcher.getInstance().getDataSource());
+    public UsersService(IUserDao userDao) {
+        this.userDao = userDao;
     }
-
 
     @Override
     public Object handleRegister(HttpServletRequest request, HttpServletResponse response) {

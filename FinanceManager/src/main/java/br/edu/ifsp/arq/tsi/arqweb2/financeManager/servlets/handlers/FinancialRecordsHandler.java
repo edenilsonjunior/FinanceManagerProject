@@ -1,7 +1,6 @@
 package br.edu.ifsp.arq.tsi.arqweb2.financeManager.servlets.handlers;
 
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.contracts.services.IFinancialRecordsService;
-import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.service.FinancialRecordsService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -9,8 +8,8 @@ public class FinancialRecordsHandler implements IHandler {
 
     private final IFinancialRecordsService financialRecordsService;
 
-    public FinancialRecordsHandler() {
-        this.financialRecordsService = new FinancialRecordsService();
+    public FinancialRecordsHandler(IFinancialRecordsService financialRecordsService) {
+        this.financialRecordsService = financialRecordsService;
     }
 
     @Override

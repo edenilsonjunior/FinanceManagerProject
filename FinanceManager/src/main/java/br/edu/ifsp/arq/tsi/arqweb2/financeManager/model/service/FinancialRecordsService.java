@@ -5,12 +5,9 @@ import com.google.gson.JsonElement;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.contracts.dao.IFinancialRecordCategoryDao;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.contracts.dao.IFinancialRecordDao;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.contracts.services.IFinancialRecordsService;
-import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao.FinancialRecordCategoryDao;
-import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao.FinancialRecordDao;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.financialRecord.FinancialRecord;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.financialRecord.TransactionTypeEnum;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.user.User;
-import br.edu.ifsp.arq.tsi.arqweb2.financeManager.utils.DataSourceSearcher;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.utils.Utils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,11 +19,9 @@ public class FinancialRecordsService implements IFinancialRecordsService {
     private final IFinancialRecordDao financialRecordDao;
     private final IFinancialRecordCategoryDao categoryDao;
 
-    public FinancialRecordsService(){
-        var dataSource = DataSourceSearcher.getInstance().getDataSource();
-
-        this.financialRecordDao = new FinancialRecordDao(dataSource);
-        this.categoryDao = new FinancialRecordCategoryDao(dataSource);
+    public FinancialRecordsService(IFinancialRecordDao financialRecordDao, IFinancialRecordCategoryDao categoryDao) {
+        this.financialRecordDao = financialRecordDao;
+        this.categoryDao = categoryDao;
     }
 
     @Override
