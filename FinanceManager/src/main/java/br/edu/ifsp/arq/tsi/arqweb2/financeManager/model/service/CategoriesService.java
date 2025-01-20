@@ -1,9 +1,8 @@
 package br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.service;
 
+import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.contracts.dao.IFinancialRecordCategoryDao;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.contracts.services.ICategoriesService;
-import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao.FinancialRecordCategoryDao;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.financialRecord.FinancialRecordCategory;
-import br.edu.ifsp.arq.tsi.arqweb2.financeManager.utils.DataSourceSearcher;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.utils.Utils;
 
 import com.google.gson.JsonElement;
@@ -13,10 +12,10 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public class CategoriesService implements ICategoriesService {
 
-    private final FinancialRecordCategoryDao categoryDao;
+    private final IFinancialRecordCategoryDao categoryDao;
 
-    public CategoriesService(){
-        this.categoryDao = new FinancialRecordCategoryDao(DataSourceSearcher.getInstance().getDataSource());
+    public CategoriesService(IFinancialRecordCategoryDao categoryDao) {
+        this.categoryDao = categoryDao;
     }
 
     @Override

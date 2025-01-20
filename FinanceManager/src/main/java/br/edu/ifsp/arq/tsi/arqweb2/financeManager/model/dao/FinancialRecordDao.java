@@ -2,6 +2,7 @@ package br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao;
 
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.contracts.dao.IFinancialRecordCategoryDao;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.contracts.dao.IFinancialRecordDao;
+import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.contracts.dao.IUserDao;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao.queries.FinancialRecordQueries;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dto.FinancialRecordDto;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.financialRecord.FinancialRecord;
@@ -20,12 +21,12 @@ public class FinancialRecordDao implements IFinancialRecordDao {
 
     private final DataSource dataSource;
     private final IFinancialRecordCategoryDao categoryDao;
-    private final UserDao userDao;
+    private final IUserDao userDao;
 
-    public FinancialRecordDao(DataSource dataSource) {
+    public FinancialRecordDao(DataSource dataSource, IFinancialRecordCategoryDao categoryDao, IUserDao userDao) {
         this.dataSource = dataSource;
-        this.categoryDao = new FinancialRecordCategoryDao(dataSource);
-        this.userDao = new UserDao(dataSource);
+        this.categoryDao = categoryDao;
+        this.userDao = userDao;
     }
 
     @Override

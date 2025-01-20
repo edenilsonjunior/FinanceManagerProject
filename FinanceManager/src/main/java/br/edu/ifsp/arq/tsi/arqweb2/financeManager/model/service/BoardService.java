@@ -1,11 +1,10 @@
 package br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.service;
 
+import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.contracts.dao.IFinancialRecordCategoryDao;
+import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.contracts.dao.IFinancialRecordDao;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.contracts.services.IBoardService;
-import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao.FinancialRecordCategoryDao;
-import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao.FinancialRecordDao;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dto.BoardDto;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.user.User;
-import br.edu.ifsp.arq.tsi.arqweb2.financeManager.utils.DataSourceSearcher;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.utils.Utils;
 
 import com.google.gson.JsonElement;
@@ -15,14 +14,12 @@ import jakarta.servlet.http.HttpSession;
 
 public class BoardService implements IBoardService {
 
-    private final FinancialRecordDao financialRecordDao;
-    private final FinancialRecordCategoryDao categoryDao;
+    private final IFinancialRecordDao financialRecordDao;
+    private final IFinancialRecordCategoryDao categoryDao;
 
-    public BoardService(){
-        var dataSource = DataSourceSearcher.getInstance().getDataSource();
-
-        this.financialRecordDao = new FinancialRecordDao(dataSource);
-        this.categoryDao = new FinancialRecordCategoryDao(dataSource);
+    public BoardService(IFinancialRecordDao financialRecordDao, IFinancialRecordCategoryDao categoryDao) {
+        this.financialRecordDao = financialRecordDao;
+        this.categoryDao = categoryDao;
     }
 
     @Override

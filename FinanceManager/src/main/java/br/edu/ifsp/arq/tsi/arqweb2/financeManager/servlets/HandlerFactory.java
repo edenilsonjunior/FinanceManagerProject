@@ -1,5 +1,6 @@
 package br.edu.ifsp.arq.tsi.arqweb2.financeManager.servlets;
 
+import br.edu.ifsp.arq.tsi.arqweb2.financeManager.config.Bootstrapper;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.servlets.handlers.IHandler;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -15,7 +16,7 @@ public class HandlerFactory {
 
         try {
             Class<?> clazz = Class.forName(className);
-            return (IHandler)clazz.getDeclaredConstructor().newInstance();
+            return (IHandler) Bootstrapper.resolve(clazz);
         }
         catch(Exception erro) {
             throw new RuntimeException(erro);

@@ -126,4 +126,8 @@
         <param-value>br.edu.ifsp.arq.tsi.arqweb2.financeManager.servlets.handlers.UsersHandler</param-value>
     </context-param>
 
+    <listener>
+        <listener-class>br.edu.ifsp.arq.tsi.arqweb2.financeManager.config.AppBootstrapper</listener-class>
+    </listener>
+
 </web-app>
