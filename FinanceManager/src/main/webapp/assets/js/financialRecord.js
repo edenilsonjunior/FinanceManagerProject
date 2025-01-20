@@ -1,9 +1,24 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const transactionSwitch = document.getElementById("transactionSwitch");
-    const transactionTypeInput = document.getElementById("transactionType");
-    const categorySelect = document.getElementById("categorySelect");
-    const categoryField = categorySelect.closest(".form-field");
-    const form = document.querySelector("form");
+"use strict";
+
+import { submitGet } from './global.js';
+
+const categoryId = document.getElementById("categoryId");
+const transactionSwitch = document.getElementById("transactionSwitch");
+const transactionTypeInput = document.getElementById("transactionType");
+const categoryField = categoryId.closest(".form-field");
+const form = document.querySelector("form");
+
+document.addEventListener("DOMContentLoaded", async () => {
+
+    var data = await submitGet("/controller?context=categories&action=getByUser");
+
+    data.forEach(category => {
+            const option = document.createElement("option");
+            option.value = category.id;
+            option.textContent = category.name;
+            categoryId.appendChild(option);
+        }
+    );
 
     // Initialize the form state
     function updateForm() {
@@ -20,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     form.addEventListener("submit", (event) => {
         if (transactionSwitch.checked) {
-            const selectedCategory = categorySelect.value;
+            const selectedCategory = categoryId.value;
 
             if (!selectedCategory) {
                 event.preventDefault();

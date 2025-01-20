@@ -15,19 +15,22 @@
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     <title>IFinance - Novo Registro</title>
 </head>
-<body>	
+<body>
 
     <div class="forms-page-header">
         <i class='bx bx-wallet nav_logo-icon'></i>
         <h1>IFinance</h1>
     </div>
 
-    <form action="create-financial-record" method="POST" class="form">
+    <form action="controller" method="POST" class="form">
+
+        <input type="hidden" name="context" value="financial-record">
+        <input type="hidden" name="action" value="create">
 
         <!--Error Message-->
-		<c:if test="${financialRecordErrorMessage != null}">
+		<c:if test="${error != null}">
 			<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                ${financialRecordErrorMessage}
+                ${error}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 			</div>
 		</c:if>
@@ -44,13 +47,8 @@
 
         <!--Categories-->
         <div class="form-field">
-            <select name="categorySelect" id="categorySelect" class="form-select">
+            <select name="categoryId" id="categoryId" class="form-select">
                 <option value="" selected disabled>Selecione uma categoria</option>
-                <c:if test="${userCategories != null}">
-                    <c:forEach var="category" items="${userCategories}" varStatus="index">
-                        <option value="${category.id}">${category.name}</option>
-                    </c:forEach>  
-                </c:if>
             </select>
         </div>
 
@@ -75,6 +73,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="${pageContext.request.contextPath}/assets/js/financialRecord.js"></script>
+    <script src="${pageContext.request.contextPath}/assets/js/financialRecord.js" type="module"></script>
 </body>
 </html>

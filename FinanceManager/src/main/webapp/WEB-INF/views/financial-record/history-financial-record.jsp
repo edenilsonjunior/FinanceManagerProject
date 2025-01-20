@@ -20,84 +20,31 @@
 
 <body id="body-pd">
     
-    <jsp:include page="../../../WEB-INF/include/navbar.jsp" />
+    <jsp:include page="/navbar" />
     <main class="bg-light">
-
         <h1 class="mx-2 my-5">Histórico de Registros Financeiros</h1>
+        <table id="financial-records-table" class="table table-bordered table-striped table-hover table-responsive">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Tipo de Transação</th>
+                    <th>Valor</th>
+                    <th>Data</th>
+                    <th>Categoria</th>
+                    <th>Descrição</th>
+                    <th>Editar</th>
+                    <th>Excluir</th>
+                </tr>
+            </thead>
+            <tbody id="financial-records-body">
 
-        <c:choose>
-            <c:when test="${fn:length(financialRecords) > 0}">
-                <table
-                        class="table table-bordered table-striped table-hover table-responsive">
-                    <thead>
-                    <tr>
-                        <th scope="col" class="p-3">#</th>
-                        <th scope="col" class="p-3">Tipo de Transação</th>
-                        <th scope="col" class="p-3">Valor</th>
-                        <th scope="col" class="p-3">Data</th>
-                        <th scope="col" class="p-3">Categoria</th>
-                        <th scope="col" class="p-3">Descrição</th>
-                        <th scope="col" colspan="2" class="p-3" style="text-align: center;">Outros</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <c:forEach var="financialRecord" items="${financialRecords}"
-                               varStatus="index">
-                        <tr>
-                            <td class="p-3">${financialRecord.id}</td>
-                            <td class="p-3">${financialRecord.transactionType}</td>
-                            <td class="p-3">
-                                <fmt:formatNumber value="${financialRecord.amount}" var="formattedAmount" type="text" pattern=".00"/>
-                                R$ ${formattedAmount}
-                            </td>
-                            <td class="p-3">
-                                <fmt:parseDate value="${financialRecord.transactionDate}"
-                                               pattern="yyyy-MM-dd" var="parsedDate"
-                                               type="date" />
-                                <fmt:formatDate value="${parsedDate}"
-                                                var="formattedDate" type="date"
-                                                pattern="dd/MM/yyyy"/>
-                                    ${formattedDate}
-                            </td>
-                            <td class="p-3">${financialRecord.categoryName}</td>
-                            <td class="p-3">
-                                <c:choose>
-                                    <c:when test="${fn:length(financialRecord.description) > 45}">
-                                    <span class="short-description">
-                                                        ${fn:substring(financialRecord.description, 0, 45)}...
-                                                    </span>
-                                    <a type="text/html" class="link-underline-light" data-bs-toggle="modal" data-bs-target="#completeDescriptionModal"
-                                       data-bs-text="${financialRecord.description}"> Ler Mais</a>
-
-                                </c:when>
-                                <c:otherwise>
-                                    <span class="short-description">
-                                            ${financialRecord.description}
-                                    </span>
-                                </c:otherwise>
-                                </c:choose>
-                            </td>
-
-                            <td>
-                                <a href="update-financial-record?id=${financialRecord.id}" class="btn btn-warning btn-sm edit-button btn-icon-text"><i class="fas fa-edit"></i> Editar</a>
-                              </td>
-                              <td>
-                                <a href="#" class="btn btn-danger btn-sm delete-button btn-icon-text"><i class="fas fa-trash-alt"></i> Excluir</a>
-                              </td> 
-
-                        </tr>
-                    </c:forEach>
-                    </tbody>
-                </table>
-            </c:when>
-            <c:otherwise>
-                <p class="text-center">Nenhum registro financeiro cadastrado.</p>
-            </c:otherwise>
-        </c:choose>
-
-</main>
+            </tbody>
+        </table>
+        <p id="no-records-message" class="text-center" style="display: none;">Nenhum registro financeiro cadastrado.</p>
+    </main>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="assets/js/navbar.js" type="module"></script>
+    <script src="assets/js/history.js" type="module"></script>
 </body>
 </html>

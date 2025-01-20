@@ -21,12 +21,15 @@
         <h1>IFinance</h1>
     </div>
 
-    <form action="create-category" method="post" class="form">
+    <form action="controller" method="post" class="form">
 
-		<c:if test="${categoryErrorMessage != null}">
+        <input type="hidden" name="context" value="categories">
+        <input type="hidden" name="action" value="create">
+
+		<c:if test="${error != null}">
 			<div class="alert alert-danger alert-dismissible fade show"
 				 role="alert">
-					${categoryErrorMessage}
+					${error}
 				<button type="button" class="btn-close" data-bs-dismiss="alert"
 						aria-label="Close"></button>
 			</div>
