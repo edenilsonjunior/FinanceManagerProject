@@ -69,6 +69,33 @@ public class UserDao implements IUserDao {
     }
 
     @Override
+    public Optional<User> findById(long id) {
+
+        try (var con = dataSource.getConnection();
+             var ps = con.prepareStatement(UserQueries.SELECT)) {
+
+            ps.setLong(1, id);
+
+            var rs = ps.executeQuery();
+            if (rs.next()) {
+                var user = new User();
+                user.setId(rs.getLong("id"));
+                user.setFullName(rs.getString("full_name"));
+                user.setEmail(rs.getString("email"));
+                user.setPassword(rs.getString("password"));
+                user.setBirthDate(LocalDate.parse(rs.getDate("birth_date").toString()));
+                user.setCreatedAt(LocalDate.parse(rs.getDate("created_at").toString()));
+
+                return Optional.of(user);
+            }
+        } catch (SQLException sqlException) {
+            throw new RuntimeException("Erro durante a consulta no BD", sqlException);
+        }
+
+        return Optional.empty();
+    }
+
+    @Override
     public boolean existsUserByEmail(String email) {
         return false;
     }

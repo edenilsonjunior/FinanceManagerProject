@@ -10,6 +10,7 @@ public interface IFinancialRecordDao {
     FinancialRecord create(FinancialRecord financialRecord);
     boolean update(FinancialRecord financialRecord);
     boolean delete (long financialRecordId);
+    FinancialRecord findById(long id);
     Map<String, Double> getOverviewByUserId(long userId);
     Map<String, Double> getMonthlyBalanceByUserId(long userId);
     List<FinancialRecordDto> findFinancialRecordHistoryByUserId(long userId);

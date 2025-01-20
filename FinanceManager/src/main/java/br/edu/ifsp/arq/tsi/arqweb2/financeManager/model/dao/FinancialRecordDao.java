@@ -1,13 +1,17 @@
 package br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao;
 
+import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.contracts.dao.IFinancialRecordCategoryDao;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.contracts.dao.IFinancialRecordDao;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao.queries.FinancialRecordQueries;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dto.FinancialRecordDto;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.financialRecord.FinancialRecord;
+import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.financialRecord.FinancialRecordCategory;
+import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.financialRecord.TransactionTypeEnum;
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -15,9 +19,13 @@ import java.util.Map;
 public class FinancialRecordDao implements IFinancialRecordDao {
 
     private final DataSource dataSource;
+    private final IFinancialRecordCategoryDao categoryDao;
+    private final UserDao userDao;
 
     public FinancialRecordDao(DataSource dataSource) {
         this.dataSource = dataSource;
+        this.categoryDao = new FinancialRecordCategoryDao(dataSource);
+        this.userDao = new UserDao(dataSource);
     }
 
     @Override
@@ -145,18 +153,55 @@ public class FinancialRecordDao implements IFinancialRecordDao {
             ps.setLong(1, userId);
             var rs = ps.executeQuery();
             while (rs.next()) {
-                list.add(new FinancialRecordDto(
+               var fr = new FinancialRecordDto(
                         rs.getLong("id"),
                         rs.getString("category_name"),
                         rs.getDouble("amount"),
                         rs.getString("transaction_type"),
                         rs.getDate("transaction_date").toLocalDate(),
                         rs.getString("description")
-                ));
+                );
+
+               if(fr.getCategoryName() == null)
+                   fr.setCategoryName("");
+
+                list.add(fr);
             }
             return list;
         } catch (SQLException sqlException) {
             throw new RuntimeException("Erro SQL: ", sqlException);
         }
+    }
+
+    @Override
+    public FinancialRecord findById(long id) {
+        try (var con = dataSource.getConnection();
+             var ps = con.prepareStatement(FinancialRecordQueries.SELECT_BY_ID)) {
+
+            ps.setLong(1, id);
+            var rs = ps.executeQuery();
+
+            if (rs.next()) {
+                var financialRecord = new FinancialRecord();
+                var category = new FinancialRecordCategory();
+
+                financialRecord.setId(rs.getLong("id"));
+                category.setId(rs.getLong("category_id"));
+                category = categoryDao.findById(category.getId()).get();
+                financialRecord.setCategory(category);
+                financialRecord.setAmount(rs.getDouble("amount"));
+                financialRecord.setTransactionType(TransactionTypeEnum.valueOf(rs.getString("transaction_type")));
+                financialRecord.setTransactionDate(LocalDate.parse(rs.getDate("transaction_date").toString()));
+                financialRecord.setDescription(rs.getString("description"));
+
+                var user = userDao.findById(rs.getLong("user_id")).get();
+                financialRecord.setUser(user);
+
+                return financialRecord;
+            }
+        } catch (SQLException sqlException) {
+            throw new RuntimeException("Erro SQL: ", sqlException);
+        }
+        return null;
     }
 }
