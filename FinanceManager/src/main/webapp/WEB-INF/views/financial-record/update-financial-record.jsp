@@ -15,24 +15,19 @@
 </head>
 <body>
 
-    <form action="update-financial-record" method="post">
+    <form action="controller" method="post" id="update-financial-record">
+
+        <input type="hidden" name="context" value="financial-record">
+        <input type="hidden" name="action" value="update">
+        <input type="hidden" id="financial-record-id" name="id">
 
         <div class="form-header">Atualização Despesa</div>
 
         <!--Categories-->
         <div class="form-field">
 
-            <label for="categorySelect">Categoria:</label>
-            <select name="categorySelect" id="categorySelect" class="form-select">
-                <c:if test="${listCategories = null}">
-                    <c:forEach var="category" items="${listCategories}" varStatus="index">
-                        <option value="${category.id}"
-                            <c:if test="${category.name == fr.category.name}">
-                                selected="selected"
-                            </c:if>
-                        >${category.name}</option>
-                    </c:forEach>  
-                </c:if>
+            <label for="categoryId">Categoria:</label>
+            <select name="categoryId" id="categoryId" class="form-select">
             </select>
         </div>
 
@@ -56,4 +51,5 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script></body>
+    <script src="${pageContext.request.contextPath}/assets/js/update-financial-record.js" type="module"></script>
 </html>

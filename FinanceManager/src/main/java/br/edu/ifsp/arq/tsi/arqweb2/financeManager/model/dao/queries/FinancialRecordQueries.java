@@ -101,12 +101,12 @@ public interface FinancialRecordQueries {
             f.transaction_type,
             f.transaction_date,
             f.description
-        from financial_record f
-        join category c
-        on f.category_id = c.id
-        join user u
-        on f.user_id = u.id
-        where u.id = ?
-        order by f.transaction_date desc;
+        FROM financial_record f
+        LEFT JOIN category c
+        ON f.category_id = c.id
+        JOIN user u
+        ON f.user_id = u.id
+        WHERE u.id = ?
+        ORDER BY f.transaction_date DESC;
         """;
 }

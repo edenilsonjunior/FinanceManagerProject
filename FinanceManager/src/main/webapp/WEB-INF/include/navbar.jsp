@@ -45,7 +45,7 @@
                     </a>
                 </div>
             </div>
-            <a href="logout" class="nav_link">
+            <a href="controller?context=users&action=logout" class="nav_link">
                 <i class='bx bx-log-out nav_icon'></i>
                 <span class="nav_name">SignOut</span>
             </a>

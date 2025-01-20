@@ -1,7 +1,9 @@
 package br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao;
 
+import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.contracts.dao.IFinancialRecordCategoryDao;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao.queries.FinancialRecordCategoryQueries;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dto.CategoryDto;
+import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dto.GetCategoryByUserDto;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.financialRecord.FinancialRecordCategory;
 
 import javax.sql.DataSource;
@@ -11,12 +13,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class FinancialRecordCategoryDao {
+public class FinancialRecordCategoryDao implements IFinancialRecordCategoryDao {
 
     private final DataSource dataSource;
+    private final UserDao userDao;
 
-    public FinancialRecordCategoryDao(DataSource dataSource) { this.dataSource = dataSource; }
+    public FinancialRecordCategoryDao(DataSource dataSource) {
+        this.dataSource = dataSource;
+        this.userDao = new UserDao(dataSource);
+    }
 
+    @Override
     public FinancialRecordCategory create(FinancialRecordCategory financialRecordCategory) {
         try (var con = dataSource.getConnection();
              var ps = con.prepareStatement(FinancialRecordCategoryQueries.CREATE, PreparedStatement.RETURN_GENERATED_KEYS)) {
@@ -35,7 +42,8 @@ public class FinancialRecordCategoryDao {
         }
     }
 
-    public Optional<FinancialRecordCategory> findFinancialRecordCategoryById(long id) {
+    @Override
+    public Optional<FinancialRecordCategory> findById(long id){
 
         try (var con = dataSource.getConnection();
              var ps = con.prepareStatement(FinancialRecordCategoryQueries.SELECT)) {
@@ -47,7 +55,7 @@ public class FinancialRecordCategoryDao {
             if (rs.next()) {
 
                 category.setId(id);
-                category.setUser(new UserDao(dataSource).findUserByUserId(rs.getLong("user_id")).get());
+                category.setUser(userDao.findById(rs.getLong("user_id")).get());
                 category.setName(rs.getString("name"));
             }
             return Optional.of(category);
@@ -56,8 +64,10 @@ public class FinancialRecordCategoryDao {
         }
     }
 
-    public List<FinancialRecordCategory> findFinancialRecordCategoriesByUserId(long userId) {
-        var list = new ArrayList<FinancialRecordCategory>();
+    @Override
+    public List<GetCategoryByUserDto> findByUserId(long userId) throws Exception {
+        
+        var list = new ArrayList<GetCategoryByUserDto>();
 
         try (var con = dataSource.getConnection();
              var ps = con.prepareStatement(FinancialRecordCategoryQueries.SELECT_BY_USER_ID)) {
@@ -67,9 +77,10 @@ public class FinancialRecordCategoryDao {
             var rs = ps.executeQuery();
             while (rs.next()) {
 
-                var category = new FinancialRecordCategory();
-                category.setId(rs.getLong("id"));
-                category.setName(rs.getString("name"));
+                var id = rs.getLong("id");
+                var name = rs.getString("name");
+
+                var category = new GetCategoryByUserDto(id, name);
 
                 list.add(category);
             }
@@ -79,6 +90,7 @@ public class FinancialRecordCategoryDao {
         }
     }
 
+    @Override
     public List<CategoryDto> getCategoryExpensesForCurrentMonthByUserId(long userId){
 
         var list = new ArrayList<CategoryDto>();
@@ -99,5 +111,27 @@ public class FinancialRecordCategoryDao {
         } catch (SQLException sqlException) {
             throw new RuntimeException("Erro durante a consulta no BD", sqlException);
         }
+    }
+
+    @Override
+    public boolean existsByNameAndUserId(String name, long userId) {
+
+        try (var con = dataSource.getConnection();
+             var ps = con.prepareStatement(FinancialRecordCategoryQueries.EXISTS_BY_NAME_AND_USER_ID)) {
+
+            ps.setString(1, name);
+            ps.setLong(2, userId);
+
+            var rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getBoolean("exists_category");
+            }
+
+        } catch (SQLException sqlException) {
+            throw new RuntimeException("Erro durante a consulta no BD", sqlException);
+        }
+
+        return false;
     }
 }

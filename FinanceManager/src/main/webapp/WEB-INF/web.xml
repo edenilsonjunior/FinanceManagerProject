@@ -16,4 +16,114 @@
         <welcome-file>default.htm</welcome-file>
     </welcome-file-list>
 
+    <!--User context-->
+    <servlet>
+        <servlet-name>LoginServlet</servlet-name>
+        <jsp-file>/WEB-INF/views/user/login.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>LoginServlet</servlet-name>
+        <url-pattern>/login</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>SignUpServlet</servlet-name>
+        <jsp-file>/WEB-INF/views/user/signup.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>SignUpServlet</servlet-name>
+        <url-pattern>/signup</url-pattern>
+    </servlet-mapping>
+
+
+    <!--financial record context-->
+    <servlet>
+        <servlet-name>CreateFinancialRecordServlet</servlet-name>
+        <jsp-file>/WEB-INF/views/financial-record/create-financial-record.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>CreateFinancialRecordServlet</servlet-name>
+        <url-pattern>/create-financial-record</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>UpdateFinancialRecordServlet</servlet-name>
+        <jsp-file>/WEB-INF/views/financial-record/update-financial-record.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>UpdateFinancialRecordServlet</servlet-name>
+        <url-pattern>/update-financial-record</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>HistoryServlet</servlet-name>
+        <jsp-file>/WEB-INF/views/financial-record/history-financial-record.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>HistoryServlet</servlet-name>
+        <url-pattern>/history</url-pattern>
+    </servlet-mapping>
+
+    <!--category context-->
+    <servlet>
+        <servlet-name>CreateCategoryServlet</servlet-name>
+        <jsp-file>/WEB-INF/views/financial-record/create-category.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>CreateCategoryServlet</servlet-name>
+        <url-pattern>/create-category</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>NavbarServlet</servlet-name>
+        <jsp-file>/WEB-INF/include/navbar.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>NavbarServlet</servlet-name>
+        <url-pattern>/navbar</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>IndexServlet</servlet-name>
+        <jsp-file>/index.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>IndexServlet</servlet-name>
+        <url-pattern>/index</url-pattern>
+    </servlet-mapping>
+
+    <!-- Handlers -->
+    <context-param>
+        <param-name>board</param-name>
+        <param-value>br.edu.ifsp.arq.tsi.arqweb2.financeManager.servlets.handlers.BoardHandler</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>categories</param-name>
+        <param-value>br.edu.ifsp.arq.tsi.arqweb2.financeManager.servlets.handlers.CategoriesHandler</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>financial-record</param-name>
+        <param-value>br.edu.ifsp.arq.tsi.arqweb2.financeManager.servlets.handlers.FinancialRecordsHandler</param-value>
+    </context-param>
+    
+    <context-param>
+        <param-name>index</param-name>
+        <param-value>br.edu.ifsp.arq.tsi.arqweb2.financeManager.servlets.handlers.IndexHandler</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>users</param-name>
+        <param-value>br.edu.ifsp.arq.tsi.arqweb2.financeManager.servlets.handlers.UsersHandler</param-value>
+    </context-param>
+
 </web-app>
