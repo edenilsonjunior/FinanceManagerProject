@@ -7,6 +7,60 @@ EXCEPTION
 END;
 /
 
+-- Excluir triggers
+BEGIN
+    EXECUTE IMMEDIATE 'DROP TRIGGER tb_users_bi';
+    EXECUTE IMMEDIATE 'DROP TRIGGER category_bi';
+    EXECUTE IMMEDIATE 'DROP TRIGGER financial_record_bi';
+    EXECUTE IMMEDIATE 'DROP TRIGGER wallet_bi';
+    EXECUTE IMMEDIATE 'DROP TRIGGER wallet_transaction_bi';
+    EXECUTE IMMEDIATE 'DROP TRIGGER alert_bi';
+    EXECUTE IMMEDIATE 'DROP TRIGGER history_bi';
+EXCEPTION
+    WHEN OTHERS THEN
+        NULL; -- Caso a trigger não exista, nada faz.
+END;
+/
+
+-- Excluir sequências
+BEGIN
+    EXECUTE IMMEDIATE 'DROP SEQUENCE tb_users_seq';
+    EXECUTE IMMEDIATE 'DROP SEQUENCE category_seq';
+    EXECUTE IMMEDIATE 'DROP SEQUENCE financial_record_seq';
+    EXECUTE IMMEDIATE 'DROP SEQUENCE wallet_seq';
+    EXECUTE IMMEDIATE 'DROP SEQUENCE wallet_transaction_seq';
+    EXECUTE IMMEDIATE 'DROP SEQUENCE alert_seq';
+    EXECUTE IMMEDIATE 'DROP SEQUENCE history_seq';
+EXCEPTION
+    WHEN OTHERS THEN
+        NULL; -- Caso a sequência não exista, nada faz.
+END;
+/
+
+-- Excluir tabelas
+BEGIN
+    EXECUTE IMMEDIATE 'DROP TABLE alert CASCADE CONSTRAINTS';
+    EXECUTE IMMEDIATE 'DROP TABLE wallet_transaction CASCADE CONSTRAINTS';
+    EXECUTE IMMEDIATE 'DROP TABLE wallet CASCADE CONSTRAINTS';
+    EXECUTE IMMEDIATE 'DROP TABLE financial_record CASCADE CONSTRAINTS';
+    EXECUTE IMMEDIATE 'DROP TABLE category CASCADE CONSTRAINTS';
+    EXECUTE IMMEDIATE 'DROP TABLE tb_users CASCADE CONSTRAINTS';
+    EXECUTE IMMEDIATE 'DROP TABLE history CASCADE CONSTRAINTS';
+EXCEPTION
+    WHEN OTHERS THEN
+        NULL; -- Caso a tabela não exista, nada faz.
+END;
+/
+
+-- Excluir o esquema de usuário
+BEGIN
+    EXECUTE IMMEDIATE 'DROP USER personal_finance_system CASCADE';
+EXCEPTION
+    WHEN OTHERS THEN
+        NULL; -- Caso o usuário não exista, nada faz.
+END;
+/
+
 CREATE USER personal_finance_system IDENTIFIED BY finance123
 DEFAULT TABLESPACE USERS
 TEMPORARY TABLESPACE TEMP;
@@ -22,6 +76,32 @@ TO personal_finance_system;
 
 -- Conectar-se ao esquema
 CONN personal_finance_system/finance123
+
+
+-- Tabela alert
+CREATE TABLE history (
+    id NUMBER NOT NULL,
+    insert_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    description VARCHAR2(255) NOT NULL,
+    modified_table VARCHAR2(30) NOT NULL,
+    CONSTRAINT pk_history PRIMARY KEY (id)
+);
+
+-- Sequência para hisotry
+CREATE SEQUENCE history_seq START WITH 1 INCREMENT BY 1;
+
+-- Trigger para auto incremento no history
+CREATE OR REPLACE TRIGGER history_bi
+BEFORE INSERT ON history
+FOR EACH ROW
+BEGIN
+    IF :NEW.id IS NULL THEN
+        SELECT history_seq.NEXTVAL
+        INTO :NEW.id
+        FROM dual;
+    END IF;
+END;
+/
 
 -- Criação das tabelas
 -- Tabela USER
@@ -216,36 +296,12 @@ BEGIN
     END IF;
 
     -- Inserir um histórico na tabela history com os dados inseridos
-    INSERT INTO history(description, inserted_table)
+    INSERT INTO history(description, modified_table)
     VALUES
         ('inserido o alert com id ' || :NEW.id, 'alert');
 END;
 /
 
--- Tabela alert
-CREATE TABLE history (
-    id NUMBER NOT NULL,
-    insert_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    description VARCHAR2(255) NOT NULL,
-    modified_table VARCHAR2(30) NOT NULL,
-    CONSTRAINT pk_history PRIMARY KEY (id)
-);
-
--- Sequência para hisotry
-CREATE SEQUENCE history_seq START WITH 1 INCREMENT BY 1;
-
--- Trigger para auto incremento no history
-CREATE OR REPLACE TRIGGER history_bi
-BEFORE INSERT ON history
-FOR EACH ROW
-BEGIN
-    IF :NEW.id IS NULL THEN
-        SELECT history_seq.NEXTVAL
-        INTO :NEW.id
-        FROM dual;
-    END IF;
-END;
-/
 
 
 
@@ -328,4 +384,3 @@ VALUES (2, 4, 180.00, 'EXPENSE', 'Taxi fare', TO_TIMESTAMP('2024-10-31', 'YYYY-M
 -- Novembro
 INSERT INTO financial_record (user_id, category_id, amount, transaction_type, description, transaction_date) 
 VALUES (2, NULL, 1900.00, 'INCOME', 'Investment dividend for November', TO_TIMESTAMP('2024-11-15', 'YYYY-MM-DD'));
-
