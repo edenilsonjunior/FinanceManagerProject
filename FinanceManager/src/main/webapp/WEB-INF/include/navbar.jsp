@@ -43,6 +43,12 @@
                         <i class='bx bx-bar-chart-alt-2 nav_icon'></i>
                         <span class="nav_name">Histórico</span>
                     </a>
+
+                    <a href="wallets" class="nav_link">
+                        <i class='bx bx-wallet nav_icon'></i>
+                        <span class="nav_name">Carteiras</span>
+                    </a>
+
                 </div>
             </div>
             <a href="controller?context=users&action=logout" class="nav_link">
