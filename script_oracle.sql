@@ -302,7 +302,40 @@ BEGIN
 END;
 /
 
-
+CREATE OR REPLACE PROCEDURE get_financial_summary(
+    p_user_id IN NUMBER,  -- Parâmetro para o user_id
+    p_total_income OUT NUMBER,  -- Resultado para o total de receitas
+    p_total_expense OUT NUMBER,  -- Resultado para o total de despesas
+    p_current_balance OUT NUMBER  -- Resultado para o saldo atual
+)
+IS
+BEGIN
+    -- Calcula os valores financeiros para o usuário
+    SELECT
+        SUM(CASE WHEN transaction_type = 'INCOME' THEN amount ELSE 0 END),
+        SUM(CASE WHEN transaction_type = 'EXPENSE' THEN amount ELSE 0 END),
+        SUM(CASE WHEN transaction_type = 'INCOME' THEN amount ELSE -amount END)
+    INTO 
+        p_total_income, p_total_expense, p_current_balance
+    FROM financial_record
+    WHERE user_id = p_user_id
+      AND EXTRACT(MONTH FROM transaction_date) = EXTRACT(MONTH FROM CURRENT_DATE)
+      AND EXTRACT(YEAR FROM transaction_date) = EXTRACT(YEAR FROM CURRENT_DATE)
+    GROUP BY user_id;
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        -- Caso não encontre dados para o usuário, retorna 0 para os resultados
+        p_total_income := 0;
+        p_total_expense := 0;
+        p_current_balance := 0;
+    WHEN OTHERS THEN
+        -- Em caso de erro, define os valores de saída como NULL
+        p_total_income := NULL;
+        p_total_expense := NULL;
+        p_current_balance := NULL;
+        RAISE;  -- Rethrow the exception
+END get_financial_summary;
+/
 
 
 -- Inserção de dados
@@ -384,3 +417,19 @@ VALUES (2, 4, 180.00, 'EXPENSE', 'Taxi fare', TO_TIMESTAMP('2024-10-31', 'YYYY-M
 -- Novembro
 INSERT INTO financial_record (user_id, category_id, amount, transaction_type, description, transaction_date) 
 VALUES (2, NULL, 1900.00, 'INCOME', 'Investment dividend for November', TO_TIMESTAMP('2024-11-15', 'YYYY-MM-DD'));
+
+-- Janeiro 2025
+INSERT INTO financial_record (user_id, category_id, amount, transaction_type, description, transaction_date) 
+VALUES (2, NULL, 1800.00, 'INCOME', 'Investment dividend for October', TO_TIMESTAMP('2025-01-10', 'YYYY-MM-DD'));
+INSERT INTO financial_record (user_id, category_id, amount, transaction_type, description, transaction_date) 
+VALUES (2, 1, 450.00, 'EXPENSE', 'Emergency home repairs', TO_TIMESTAMP('2025-01-15', 'YYYY-MM-DD'));
+INSERT INTO financial_record (user_id, category_id, amount, transaction_type, description, transaction_date) 
+VALUES (2, 4, 180.00, 'EXPENSE', 'Taxi fare', TO_TIMESTAMP('2025-01-31', 'YYYY-MM-DD'));
+
+-- Fevereiro 2025
+INSERT INTO financial_record (user_id, category_id, amount, transaction_type, description, transaction_date) 
+VALUES (2, NULL, 1700.00, 'INCOME', 'Investment dividend for September', TO_TIMESTAMP('2025-02-10', 'YYYY-MM-DD'));
+INSERT INTO financial_record (user_id, category_id, amount, transaction_type, description, transaction_date) 
+VALUES (2, 3, 350.00, 'EXPENSE', 'Buying supplies for home', TO_TIMESTAMP('2025-02-10', 'YYYY-MM-DD'));
+INSERT INTO financial_record (user_id, category_id, amount, transaction_type, description, transaction_date) 
+VALUES (2, 2, 150.00, 'EXPENSE', 'Debt repayment', TO_TIMESTAMP('2025-02-10', 'YYYY-MM-DD'));
