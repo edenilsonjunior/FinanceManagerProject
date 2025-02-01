@@ -302,6 +302,41 @@ BEGIN
 END;
 /
 
+CREATE OR REPLACE PROCEDURE get_financial_overview_by_user (
+    p_user_id IN NUMBER, 
+    p_total_income OUT NUMBER, 
+    p_total_expense OUT NUMBER, 
+    p_current_balance OUT NUMBER
+) IS
+BEGIN
+    -- Selecionar os dados financeiros por user_id
+    SELECT
+        SUM(CASE WHEN transaction_type = 'INCOME' THEN amount ELSE 0 END) AS total_income,
+        SUM(CASE WHEN transaction_type = 'EXPENSE' THEN amount ELSE 0 END) AS total_expense,
+        SUM(CASE WHEN transaction_type = 'INCOME' THEN amount ELSE -amount END) AS current_balance
+    INTO
+        p_total_income,
+        p_total_expense,
+        p_current_balance
+    FROM financial_record
+    WHERE user_id = p_user_id
+    GROUP BY user_id;
+    
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        -- Caso não exista nenhum dado para o usuário
+        p_total_income := 0;
+        p_total_expense := 0;
+        p_current_balance := 0;
+    WHEN OTHERS THEN
+        -- Em caso de erro geral, tratamos e retornamos valores padrão
+        p_total_income := NULL;
+        p_total_expense := NULL;
+        p_current_balance := NULL;
+        RAISE;
+END get_financial_overview_by_user;
+/
+
 CREATE OR REPLACE PROCEDURE get_financial_summary(
     p_user_id IN NUMBER,  -- Parâmetro para o user_id
     p_total_income OUT NUMBER,  -- Resultado para o total de receitas
