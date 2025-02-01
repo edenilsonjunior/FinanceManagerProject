@@ -88,8 +88,8 @@ public interface FinancialRecordQueries {
             SUM(CASE WHEN transaction_type = 'INCOME' THEN amount ELSE -amount END) AS current_balance
         FROM financial_record
         WHERE user_id = ?
-              AND MONTH(transaction_date) = MONTH(CURRENT_DATE)
-              AND YEAR(transaction_date) = YEAR(CURRENT_DATE)
+              AND EXTRACT(MONTH FROM transaction_date) = EXTRACT(MONTH FROM CURRENT_DATE)
+              AND EXTRACT(YEAR FROM transaction_date) = EXTRACT(YEAR FROM CURRENT_DATE)
         GROUP BY user_id;
         """;
 
@@ -104,7 +104,7 @@ public interface FinancialRecordQueries {
         FROM financial_record f
         LEFT JOIN category c
         ON f.category_id = c.id
-        JOIN user u
+        JOIN TB_USERS u
         ON f.user_id = u.id
         WHERE u.id = ?
         ORDER BY f.transaction_date DESC;

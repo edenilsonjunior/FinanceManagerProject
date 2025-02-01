@@ -5,18 +5,18 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-public class DataSourceSearcher {
+public class OracleDataSourceSearcher {
 
-    private static DataSourceSearcher instance = new DataSourceSearcher();
+    private static OracleDataSourceSearcher instance = new OracleDataSourceSearcher();
 
     private DataSource dataSource;
 
-    private DataSourceSearcher() {
+    private OracleDataSourceSearcher() {
         try {
             Context context = new InitialContext();
-            context = (Context)context.lookup("java:comp/env");
-            dataSource = (DataSource)context.lookup("jdbc/personal_finance_system_DB");
-        }catch (NamingException e) {
+            context = (Context) context.lookup("java:comp/env");
+            dataSource = (DataSource) context.lookup("jdbc/personal_finance_system_Oracle_DB");
+        } catch (NamingException e) {
             throw new RuntimeException("Erro durante o lookup", e);
         }
     }
@@ -25,7 +25,7 @@ public class DataSourceSearcher {
         return dataSource;
     }
 
-    public static DataSourceSearcher getInstance() {
+    public static OracleDataSourceSearcher getInstance() {
         return instance;
     }
 }

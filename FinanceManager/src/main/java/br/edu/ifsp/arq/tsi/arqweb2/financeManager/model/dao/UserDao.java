@@ -7,6 +7,7 @@ import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.user.User;
 import javax.sql.DataSource;
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Optional;
@@ -21,7 +22,6 @@ public class UserDao implements IUserDao {
 
     @Override
     public void create(User user) {
-
         try (var con = dataSource.getConnection();
              var ps = con.prepareStatement(UserQueries.CREATE, PreparedStatement.RETURN_GENERATED_KEYS)) {
 
@@ -30,15 +30,17 @@ public class UserDao implements IUserDao {
             ps.setString(3, user.getPassword());
             ps.setDate(4, Date.valueOf(user.getBirthDate()));
             ps.executeUpdate();
-            var rs = ps.getGeneratedKeys();
-            if (rs.next()) {
-                user.setId(rs.getLong(1));
+
+            // Recuperar a chave gerada no Oracle após o INSERT
+            try (var rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    user.setId(rs.getLong(1));
+                }
             }
 
         } catch (SQLException sqlException) {
             throw new RuntimeException("Erro durante a criacao no BD", sqlException);
         }
-
     }
 
     @Override
@@ -56,8 +58,8 @@ public class UserDao implements IUserDao {
                 user.setFullName(rs.getString("full_name"));
                 user.setEmail(rs.getString("email"));
                 user.setPassword(rs.getString("password"));
-                user.setBirthDate(LocalDate.parse(rs.getDate("birth_date").toString()));
-                user.setCreatedAt(LocalDate.parse(rs.getDate("created_at").toString()));
+                user.setBirthDate(rs.getDate("birth_date").toLocalDate());
+                user.setCreatedAt(rs.getDate("created_at").toLocalDate());
 
                 return Optional.of(user);
             }
@@ -83,8 +85,8 @@ public class UserDao implements IUserDao {
                 user.setFullName(rs.getString("full_name"));
                 user.setEmail(rs.getString("email"));
                 user.setPassword(rs.getString("password"));
-                user.setBirthDate(LocalDate.parse(rs.getDate("birth_date").toString()));
-                user.setCreatedAt(LocalDate.parse(rs.getDate("created_at").toString()));
+                user.setBirthDate(rs.getDate("birth_date").toLocalDate());
+                user.setCreatedAt(rs.getDate("created_at").toLocalDate());
 
                 return Optional.of(user);
             }
@@ -97,6 +99,17 @@ public class UserDao implements IUserDao {
 
     @Override
     public boolean existsUserByEmail(String email) {
-        return false;
+        try (var con = dataSource.getConnection();
+             var ps = con.prepareStatement(UserQueries.SELECT_BY_EMAIL)) {
+
+            ps.setString(1, email);
+
+            try (var rs = ps.executeQuery()) {
+                return rs.next();
+            }
+
+        } catch (SQLException sqlException) {
+            throw new RuntimeException("Erro durante a consulta no BD", sqlException);
+        }
     }
 }

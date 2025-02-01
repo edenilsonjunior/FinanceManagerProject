@@ -32,8 +32,8 @@ public interface FinancialRecordCategoryQueries {
         LEFT JOIN financial_record fr
                 ON c.id = fr.category_id
             AND fr.user_id = ?
-            AND MONTH(fr.transaction_date) = MONTH(CURRENT_DATE())
-            AND YEAR(fr.transaction_date) = YEAR(CURRENT_DATE())
+            AND EXTRACT(MONTH FROM fr.transaction_date) = EXTRACT(MONTH FROM CURRENT_DATE)
+            AND EXTRACT(YEAR FROM fr.transaction_date) = EXTRACT(YEAR FROM CURRENT_DATE)
         GROUP BY c.id, c.name;
         """;
 
