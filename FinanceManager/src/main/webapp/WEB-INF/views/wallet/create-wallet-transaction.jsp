@@ -12,9 +12,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/forms.css">
-    <title>IFinance - Página de Login</title>
+    <title>IFinance - Nova Transação</title>
 </head>
-<body>	
+<body>
 
     <div class="forms-page-header">
         <i class='bx bx-wallet nav_logo-icon'></i>
@@ -23,35 +23,33 @@
 
     <form action="controller" method="post" class="form">
 
-        <input type="hidden" name="context" value="users">
-        <input type="hidden" name="action" value="login">
+        <input type="hidden" name="context" value="wallet">
+        <input type="hidden" name="action" value="create-transaction">
+        <input type="hidden" name="id" id="wallet-id">
 
-        <c:choose>
-            <c:when test="${error != null}">
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    ${error}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            </c:when>
-        </c:choose>
+		<c:if test="${error != null}">
+			<div class="alert alert-danger alert-dismissible fade show"
+				 role="alert">
+					${error}
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+		</c:if>
 
-        <div class="form-header">Login</div>
-        
+        <div class="form-header">Nova Transação</div>
+
         <div class="form-field">
-            <label for="email">E-mail:</label>
-            <input type="email" name="email" id="email" placeholder="E-mail" required="required" class="form-control">
+            <label for="transaction-type">Tipo:</label>
+            <input type="text" name="transaction-type" id="transaction-type" placeholder="Digite o tipo da transacao" required="required" class="form-control">
         </div>
+
+        <!--Amount-->
         <div class="form-field">
-            <label for="password">Senha:</label>
-            <input type="password" name="password" id="password" placeholder="Senha" required="required" class="form-control">
+            <label for="amount">Valor:</label>
+            <input placeholder="Digite sua meta:" type="number" step="0.01" name="amount" id="amount" required="required" value="" class="form-control">
         </div>
 
         <div class="form-submit">
-            <button type="submit">Login</button>
-        </div>
-
-         <div class="form-field">
-            <a href="signup">Não possui login?</a>
+            <button type="submit">Criar</button>
         </div>
 
     </div>

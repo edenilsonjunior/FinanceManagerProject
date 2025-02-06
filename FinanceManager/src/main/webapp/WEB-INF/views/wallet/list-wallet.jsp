@@ -15,32 +15,32 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/styles.css">
-    <title>IFinance - Histórico de Registros financeiros</title>
+    <title>IFinance - Todas as carteiras</title>
 </head>
 
 <body id="body-pd">
     
     <jsp:include page="/navbar" />
     <main class="bg-light">
-        <h1 class="mx-2 my-5">Histórico de Registros Financeiros</h1>
-        <table id="financial-records-table" class="table table-bordered table-striped table-hover table-responsive">
+        <h1 class="mx-2 my-5">Todas as suas carteiras</h1>
+        <table id="wallets-table" class="table table-bordered table-striped table-hover table-responsive">
             <thead>
                 <tr>
                     <th>Id</th>
-                    <th>Tipo de Transação</th>
-                    <th>Valor</th>
-                    <th>Data</th>
-                    <th>Categoria</th>
+                    <th>Nome</th>
+                    <th>Meta</th>
+                    <th>Balança atual</th>
                     <th>Descrição</th>
+                    <th>Ver detalhes</th>
                     <th>Editar</th>
                     <th>Excluir</th>
                 </tr>
             </thead>
-            <tbody id="financial-records-body">
+            <tbody id="wallets-body">
 
             </tbody>
         </table>
-        <p id="no-records-message" class="text-center" style="display: none;">Nenhum registro financeiro cadastrado.</p>
+        <p id="no-wallets-message" class="text-center" style="display: none;">Nenhuma carteira cadastrada.</p>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

@@ -21,12 +21,15 @@
         <h1>IFinance</h1>
     </div>
 
-    <form action="signup" method="post" class="form" id="signup-form">
+    <form action="controller" method="post" class="form" id="signup-form">
 
-		<c:if test="${signupErrorMessage != null}">
+        <input type="hidden" name="context" value="users">
+        <input type="hidden" name="action" value="signup">
+
+		<c:if test="${error != null}">
 			<div class="alert alert-danger alert-dismissible fade show"
 				 role="alert">
-					${signupErrorMessage}
+					${error}
 				<button type="button" class="btn-close" data-bs-dismiss="alert"
 						aria-label="Close"></button>
 			</div>

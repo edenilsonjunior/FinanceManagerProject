@@ -12,9 +12,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/forms.css">
-    <title>IFinance - Página de Login</title>
+    <title>IFinance - Nova Carteira</title>
 </head>
-<body>	
+<body>
 
     <div class="forms-page-header">
         <i class='bx bx-wallet nav_logo-icon'></i>
@@ -23,35 +23,38 @@
 
     <form action="controller" method="post" class="form">
 
-        <input type="hidden" name="context" value="users">
-        <input type="hidden" name="action" value="login">
+        <input type="hidden" name="context" value="wallet">
+        <input type="hidden" name="action" value="create">
 
-        <c:choose>
-            <c:when test="${error != null}">
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    ${error}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            </c:when>
-        </c:choose>
+		<c:if test="${error != null}">
+			<div class="alert alert-danger alert-dismissible fade show"
+				 role="alert">
+					${error}
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+		</c:if>
 
-        <div class="form-header">Login</div>
-        
+        <div class="form-header">Nova Carteira</div>
+
         <div class="form-field">
-            <label for="email">E-mail:</label>
-            <input type="email" name="email" id="email" placeholder="E-mail" required="required" class="form-control">
+            <label for="name">Nome:</label>
+            <input type="text" name="name" id="name" placeholder="Digite o nome da carteira" required="required" class="form-control">
         </div>
+
+        <!--Goal amount-->
         <div class="form-field">
-            <label for="password">Senha:</label>
-            <input type="password" name="password" id="password" placeholder="Senha" required="required" class="form-control">
+            <label for="goal-amount">Meta:</label>
+            <input placeholder="Digite sua meta:" type="number" step="0.01" name="goal-amount" id="goal-amount" required="required" value="" class="form-control">
+        </div>
+        
+        <!--Description-->
+        <div class="form-field">
+            <label for="description">Descrição:</label>
+            <input type="text" name="description" id="description" placeholder="Descrição" required="required" class="form-control">
         </div>
 
         <div class="form-submit">
-            <button type="submit">Login</button>
-        </div>
-
-         <div class="form-field">
-            <a href="signup">Não possui login?</a>
+            <button type="submit">Criar</button>
         </div>
 
     </div>
