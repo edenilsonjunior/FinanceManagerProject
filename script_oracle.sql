@@ -1,69 +1,17 @@
--- Criação do esquema
+SET SERVEROUTPUT ON;
+
 BEGIN
     EXECUTE IMMEDIATE 'DROP USER personal_finance_system CASCADE';
 EXCEPTION
     WHEN OTHERS THEN
-        NULL; -- Caso o esquema não exista, nada faz.
-END;
-/
-
--- Excluir triggers
-BEGIN
-    EXECUTE IMMEDIATE 'DROP TRIGGER tb_users_bi';
-    EXECUTE IMMEDIATE 'DROP TRIGGER category_bi';
-    EXECUTE IMMEDIATE 'DROP TRIGGER financial_record_bi';
-    EXECUTE IMMEDIATE 'DROP TRIGGER wallet_bi';
-    EXECUTE IMMEDIATE 'DROP TRIGGER wallet_transaction_bi';
-    EXECUTE IMMEDIATE 'DROP TRIGGER alert_bi';
-    EXECUTE IMMEDIATE 'DROP TRIGGER history_bi';
-EXCEPTION
-    WHEN OTHERS THEN
-        NULL; -- Caso a trigger não exista, nada faz.
-END;
-/
-
--- Excluir sequências
-BEGIN
-    EXECUTE IMMEDIATE 'DROP SEQUENCE tb_users_seq';
-    EXECUTE IMMEDIATE 'DROP SEQUENCE category_seq';
-    EXECUTE IMMEDIATE 'DROP SEQUENCE financial_record_seq';
-    EXECUTE IMMEDIATE 'DROP SEQUENCE wallet_seq';
-    EXECUTE IMMEDIATE 'DROP SEQUENCE wallet_transaction_seq';
-    EXECUTE IMMEDIATE 'DROP SEQUENCE alert_seq';
-    EXECUTE IMMEDIATE 'DROP SEQUENCE history_seq';
-EXCEPTION
-    WHEN OTHERS THEN
-        NULL; -- Caso a sequência não exista, nada faz.
-END;
-/
-
--- Excluir tabelas
-BEGIN
-    EXECUTE IMMEDIATE 'DROP TABLE alert CASCADE CONSTRAINTS';
-    EXECUTE IMMEDIATE 'DROP TABLE wallet_transaction CASCADE CONSTRAINTS';
-    EXECUTE IMMEDIATE 'DROP TABLE wallet CASCADE CONSTRAINTS';
-    EXECUTE IMMEDIATE 'DROP TABLE financial_record CASCADE CONSTRAINTS';
-    EXECUTE IMMEDIATE 'DROP TABLE category CASCADE CONSTRAINTS';
-    EXECUTE IMMEDIATE 'DROP TABLE tb_users CASCADE CONSTRAINTS';
-    EXECUTE IMMEDIATE 'DROP TABLE history CASCADE CONSTRAINTS';
-EXCEPTION
-    WHEN OTHERS THEN
-        NULL; -- Caso a tabela não exista, nada faz.
-END;
-/
-
--- Excluir o esquema de usuário
-BEGIN
-    EXECUTE IMMEDIATE 'DROP USER personal_finance_system CASCADE';
-EXCEPTION
-    WHEN OTHERS THEN
-        NULL; -- Caso o usuário não exista, nada faz.
+        DBMS_OUTPUT.PUT_LINE('Erro ao excluir usuário: ' || SQLERRM);
 END;
 /
 
 CREATE USER personal_finance_system IDENTIFIED BY finance123
 DEFAULT TABLESPACE USERS
-TEMPORARY TABLESPACE TEMP;
+TEMPORARY TABLESPACE TEMP
+QUOTA UNLIMITED ON USERS;
 
 GRANT CONNECT, RESOURCE TO personal_finance_system;
 
@@ -110,7 +58,7 @@ CREATE TABLE tb_users (
     id NUMBER NOT NULL,
     full_name VARCHAR2(100) NOT NULL,
     email VARCHAR2(100) NOT NULL UNIQUE,
-    pass VARCHAR2(255) NOT NULL,
+    password VARCHAR2(255) NOT NULL,
     birth_date DATE NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
 
@@ -302,14 +250,11 @@ BEGIN
 END;
 /
 
-
-
-
 -- Inserção de dados
-INSERT INTO tb_users (full_name, email, pass, birth_date) 
+INSERT INTO tb_users (full_name, email, password, birth_date) 
 VALUES ('John Doe', 'john.doe@example.com', '81DC9BDB52D04DC20036DBD8313ED055', TO_DATE('1985-07-12', 'YYYY-MM-DD'));
 
-INSERT INTO tb_users (full_name, email, pass, birth_date) 
+INSERT INTO tb_users (full_name, email, password, birth_date) 
 VALUES ('Jane Smith', 'jane.smith@example.com', 'hashed_password_2', TO_DATE('1990-03-25', 'YYYY-MM-DD'));
 
 -- Inserção de categorias
@@ -384,3 +329,6 @@ VALUES (2, 4, 180.00, 'EXPENSE', 'Taxi fare', TO_TIMESTAMP('2024-10-31', 'YYYY-M
 -- Novembro
 INSERT INTO financial_record (user_id, category_id, amount, transaction_type, description, transaction_date) 
 VALUES (2, NULL, 1900.00, 'INCOME', 'Investment dividend for November', TO_TIMESTAMP('2024-11-15', 'YYYY-MM-DD'));
+
+
+COMMIT;
