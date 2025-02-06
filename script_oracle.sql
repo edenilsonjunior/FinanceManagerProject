@@ -30,26 +30,11 @@ CONN personal_finance_system/finance123
 CREATE TABLE history (
     id NUMBER NOT NULL,
     insert_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    description VARCHAR2(255) NOT NULL,
+    action VARCHAR2(255) NOT NULL,
+    action_id NUMBER NOT NULL,
     modified_table VARCHAR2(30) NOT NULL,
     CONSTRAINT pk_history PRIMARY KEY (id)
 );
-
--- Sequência para hisotry
-CREATE SEQUENCE history_seq START WITH 1 INCREMENT BY 1;
-
--- Trigger para auto incremento no history
-CREATE OR REPLACE TRIGGER history_bi
-BEFORE INSERT ON history
-FOR EACH ROW
-BEGIN
-    IF :NEW.id IS NULL THEN
-        SELECT history_seq.NEXTVAL
-        INTO :NEW.id
-        FROM dual;
-    END IF;
-END;
-/
 
 -- Criação das tabelas
 -- Tabela USER
@@ -65,26 +50,6 @@ CREATE TABLE tb_users (
     CONSTRAINT pk_user PRIMARY KEY (id)
 );
 
--- Sequência para tb_users
-CREATE SEQUENCE tb_users_seq START WITH 1 INCREMENT BY 1;
-
--- Trigger para auto incremento no tb_users
-CREATE OR REPLACE TRIGGER tb_users_bi
-BEFORE INSERT ON tb_users
-FOR EACH ROW
-BEGIN
-    IF :NEW.id IS NULL THEN
-        SELECT tb_users_seq.NEXTVAL
-        INTO :NEW.id
-        FROM dual;
-    END IF;
-    
-    INSERT INTO history(description, modified_table)
-    VALUES
-        ('inserido o user com id ' || :NEW.id, 'tb_users');
-END;
-/
-
 -- Tabela category
 CREATE TABLE category (
     id NUMBER NOT NULL,
@@ -94,26 +59,6 @@ CREATE TABLE category (
     CONSTRAINT pk_category PRIMARY KEY (id),
     CONSTRAINT fk_category_user FOREIGN KEY (user_id) REFERENCES tb_users(id)
 );
-
--- Sequência para category
-CREATE SEQUENCE category_seq START WITH 1 INCREMENT BY 1;
-
--- Trigger para auto incremento no category
-CREATE OR REPLACE TRIGGER category_bi
-BEFORE INSERT ON category
-FOR EACH ROW
-BEGIN
-    IF :NEW.id IS NULL THEN
-        SELECT category_seq.NEXTVAL
-        INTO :NEW.id
-        FROM dual;
-    END IF;
-    
-    INSERT INTO history(description, modified_table)
-    VALUES
-        ('inserida a category com id ' || :NEW.id, 'category');
-END;
-/
 
 -- Tabela financial_record
 CREATE TABLE financial_record (
@@ -130,6 +75,146 @@ CREATE TABLE financial_record (
     CONSTRAINT financial_record_category FOREIGN KEY (category_id) REFERENCES category(id)
 );
 
+-- Tabela wallet
+CREATE TABLE wallet (
+    id NUMBER NOT NULL,
+    user_id NUMBER,
+    name VARCHAR2(100) NOT NULL,
+    goal_amount NUMBER(10, 2) NOT NULL,
+    current_balance NUMBER(10, 2) DEFAULT 0.00,
+    description CLOB,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT pk_wallet PRIMARY KEY (id),
+    CONSTRAINT fk_wallet_user FOREIGN KEY (user_id) REFERENCES tb_users(id)
+);
+
+-- Tabela wallet_transaction
+CREATE TABLE wallet_transaction (
+    id NUMBER NOT NULL,
+    wallet_id NUMBER,
+    transaction_type VARCHAR2(100) NOT NULL,
+    amount NUMBER(10, 2) NOT NULL,
+    transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    description CLOB,
+
+    CONSTRAINT pk_wallet_transaction PRIMARY KEY (id),
+    CONSTRAINT fk_wallet_transaction_wallet FOREIGN KEY (wallet_id) REFERENCES wallet(id)
+);
+
+-- Tabela alert
+CREATE TABLE alert (
+    id NUMBER NOT NULL,
+    alert_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    message CLOB NOT NULL,
+    notified CHAR(1) DEFAULT 'N',
+    user_id NUMBER,
+
+    CONSTRAINT pk_alert PRIMARY KEY (id),
+    CONSTRAINT fk_alert_user FOREIGN KEY (user_id) REFERENCES tb_users(id)
+);
+
+-- Criação da SEQUENCES e DAS TRIGGERS para insert na tabela history
+-- Sequência para hisotry
+CREATE SEQUENCE history_seq START WITH 1 INCREMENT BY 1;
+
+-- Trigger para auto incremento no history
+CREATE OR REPLACE TRIGGER history_bi
+BEFORE INSERT ON history
+FOR EACH ROW
+BEGIN
+    IF :NEW.id IS NULL THEN
+        SELECT history_seq.NEXTVAL
+        INTO :NEW.id
+        FROM dual;
+    END IF;
+END;
+/
+
+-- Sequência para tb_users
+CREATE SEQUENCE tb_users_seq START WITH 1 INCREMENT BY 1;
+
+-- Trigger para auto incremento no tb_users
+CREATE OR REPLACE TRIGGER tb_users_bi
+BEFORE INSERT ON tb_users
+FOR EACH ROW
+BEGIN
+    IF :NEW.id IS NULL THEN
+        SELECT tb_users_seq.NEXTVAL
+        INTO :NEW.id
+        FROM dual;
+    END IF;
+    
+    INSERT INTO history(action, action_id, modified_table)
+    VALUES
+        ('insert', :NEW.id, 'tb_users');
+END;
+/
+
+-- Trigger para UPDATE na tabela tb_users
+CREATE OR REPLACE TRIGGER tb_users_bu
+AFTER UPDATE ON tb_users
+FOR EACH ROW
+BEGIN
+    INSERT INTO history(action, action_id, modified_table)
+    VALUES
+        ('update', :OLD.id, 'tb_users');
+END;
+/
+
+-- Trigger para DELETE na tabela tb_users
+CREATE OR REPLACE TRIGGER tb_users_bd
+AFTER DELETE ON tb_users
+FOR EACH ROW
+BEGIN
+    INSERT INTO history(action, action_id, modified_table)
+    VALUES
+        ('delete', :OLD.id, 'tb_users');
+END;
+/
+
+-- Sequência para category
+CREATE SEQUENCE category_seq START WITH 1 INCREMENT BY 1;
+
+-- Trigger para auto incremento no category
+CREATE OR REPLACE TRIGGER category_bi
+BEFORE INSERT ON category
+FOR EACH ROW
+BEGIN
+    IF :NEW.id IS NULL THEN
+        SELECT category_seq.NEXTVAL
+        INTO :NEW.id
+        FROM dual;
+    END IF;
+    
+    INSERT INTO history(action, action_id, modified_table)
+    VALUES
+        ('insert', :NEW.id, 'category');
+END;
+/
+
+-- Trigger para UPDATE na tabela category
+CREATE OR REPLACE TRIGGER category_bu
+AFTER UPDATE ON category
+FOR EACH ROW
+BEGIN
+    INSERT INTO history(action, action_id, modified_table)
+    VALUES
+        ('update', :OLD.id, 'category');
+END;
+/
+
+-- Trigger para DELETE na tabela category
+CREATE OR REPLACE TRIGGER category_bd
+AFTER DELETE ON category
+FOR EACH ROW
+BEGIN
+    INSERT INTO history(action, action_id, modified_table)
+    VALUES
+        ('delete', :OLD.id, 'category');
+END;
+/
+
 -- Sequência para financial_record
 CREATE SEQUENCE financial_record_seq START WITH 1 INCREMENT BY 1;
 
@@ -144,25 +229,33 @@ BEGIN
         FROM dual;
     END IF;
     
-    INSERT INTO history(description, modified_table)
+    INSERT INTO history(action, action_id, modified_table)
     VALUES
-        ('inserido o financial record com id ' || :NEW.id, 'financial_record');
+        ('insert', :NEW.id, 'financial_record');
 END;
 /
 
--- Tabela wallet
-CREATE TABLE wallet (
-    id NUMBER NOT NULL,
-    user_id NUMBER,
-    name VARCHAR2(100) NOT NULL,
-    goal_amount NUMBER(10, 2) NOT NULL,
-    current_balance NUMBER(10, 2) DEFAULT 0.00,
-    description CLOB,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+-- Trigger para UPDATE na tabela financial_record
+CREATE OR REPLACE TRIGGER financial_record_bu
+AFTER UPDATE ON financial_record
+FOR EACH ROW
+BEGIN
+    INSERT INTO history(action, action_id, modified_table)
+    VALUES
+        ('update', :OLD.id, 'financial_record');
+END;
+/
 
-    CONSTRAINT pk_wallet PRIMARY KEY (id),
-    CONSTRAINT fk_wallet_user FOREIGN KEY (user_id) REFERENCES tb_users(id)
-);
+-- Trigger para DELETE na tabela financial_record
+CREATE OR REPLACE TRIGGER financial_record_bd
+AFTER DELETE ON financial_record
+FOR EACH ROW
+BEGIN
+    INSERT INTO history(action, action_id, modified_table)
+    VALUES
+        ('delete', :OLD.id, 'financial_record');
+END;
+/
 
 -- Sequência para wallet
 CREATE SEQUENCE wallet_seq START WITH 1 INCREMENT BY 1;
@@ -178,24 +271,33 @@ BEGIN
         FROM dual;
     END IF;
     
-    INSERT INTO history(description, modified_table)
+    INSERT INTO history(action, action_id, modified_table)
     VALUES
-        ('inserida a wallet com id ' || :NEW.id, 'wallet');
+        ('insert', :NEW.id, 'wallet');
 END;
 /
 
--- Tabela wallet_transaction
-CREATE TABLE wallet_transaction (
-    id NUMBER NOT NULL,
-    wallet_id NUMBER,
-    transaction_type VARCHAR2(100) NOT NULL,
-    amount NUMBER(10, 2) NOT NULL,
-    transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    description CLOB,
+-- Trigger para UPDATE na tabela wallet
+CREATE OR REPLACE TRIGGER wallet_bu
+AFTER UPDATE ON wallet
+FOR EACH ROW
+BEGIN
+    INSERT INTO history(action, action_id, modified_table)
+    VALUES
+        ('update', :OLD.id, 'wallet');
+END;
+/
 
-    CONSTRAINT pk_wallet_transaction PRIMARY KEY (id),
-    CONSTRAINT fk_wallet_transaction_wallet FOREIGN KEY (wallet_id) REFERENCES wallet(id)
-);
+-- Trigger para DELETE na tabela wallet
+CREATE OR REPLACE TRIGGER wallet_bd
+AFTER DELETE ON wallet
+FOR EACH ROW
+BEGIN
+    INSERT INTO history(action, action_id, modified_table)
+    VALUES
+        ('delete', :OLD.id, 'wallet');
+END;
+/
 
 -- Sequência para wallet_transaction
 CREATE SEQUENCE wallet_transaction_seq START WITH 1 INCREMENT BY 1;
@@ -211,23 +313,34 @@ BEGIN
         FROM dual;
     END IF;
     
-    INSERT INTO history(description, modified_table)
+    INSERT INTO history(action, action_id, modified_table)
     VALUES
-        ('inserida a wallet transaction com id ' || :NEW.id, 'wallet_transaction');
+        ('insert', :NEW.id, 'wallet_transaction');
 END;
 /
 
--- Tabela alert
-CREATE TABLE alert (
-    id NUMBER NOT NULL,
-    alert_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    message CLOB NOT NULL,
-    notified CHAR(1) DEFAULT 'N',
-    user_id NUMBER,
+-- Trigger para UPDATE na tabela wallet_transaction
+CREATE OR REPLACE TRIGGER wallet_transaction_bu
+AFTER UPDATE ON wallet_transaction
+FOR EACH ROW
+BEGIN
+    INSERT INTO history(action, action_id, modified_table)
+    VALUES
+        ('update', :OLD.id, 'wallet_transaction');
+END;
+/
 
-    CONSTRAINT pk_alert PRIMARY KEY (id),
-    CONSTRAINT fk_alert_user FOREIGN KEY (user_id) REFERENCES tb_users(id)
-);
+-- Trigger para DELETE na tabela wallet_transaction
+CREATE OR REPLACE TRIGGER wallet_transaction_bd
+AFTER DELETE ON wallet_transaction
+FOR EACH ROW
+BEGIN
+    INSERT INTO history(action, action_id, modified_table)
+    VALUES
+        ('delete', :OLD.id, 'wallet_transaction');
+END;
+/
+
 
 -- Sequência para alert
 CREATE SEQUENCE alert_seq START WITH 1 INCREMENT BY 1;
@@ -244,40 +357,101 @@ BEGIN
     END IF;
 
     -- Inserir um histórico na tabela history com os dados inseridos
-    INSERT INTO history(description, modified_table)
+    INSERT INTO history(action, action_id, modified_table)
     VALUES
-        ('inserido o alert com id ' || :NEW.id, 'alert');
+        ('insert', :NEW.id, 'alert');
 END;
 /
 
+-- Trigger para UPDATE na tabela alert
+CREATE OR REPLACE TRIGGER alert_bu
+AFTER UPDATE ON alert
+FOR EACH ROW
+BEGIN
+    INSERT INTO history(action, action_id, modified_table)
+    VALUES
+        ('update', :OLD.id, 'alert');
+END;
+/
+
+-- Trigger para DELETE na tabela alert
+CREATE OR REPLACE TRIGGER alert_bd
+AFTER DELETE ON alert
+FOR EACH ROW
+BEGIN
+    INSERT INTO history(action, action_id, modified_table)
+    VALUES
+        ('delete', :OLD.id, 'alert');
+END;
+/
+
+-- Criação de TYPES
+CREATE OR REPLACE TYPE financial_summary_rec AS OBJECT (
+  total_income NUMBER,
+  total_expense NUMBER,
+  current_balance NUMBER
+);
+/
+
+-- Criação da FUNCTIONS
+CREATE OR REPLACE FUNCTION CALCULATE_FINANCIAL_SUMMARY (
+    p_user_id IN NUMBER,
+    p_start_date IN DATE DEFAULT NULL,  -- Data de início opcional para filtro
+    p_end_date IN DATE DEFAULT NULL     -- Data de fim opcional para filtro
+) RETURN financial_summary_rec IS
+    v_summary financial_summary_rec;
+BEGIN
+    SELECT
+        SUM(CASE WHEN transaction_type = 'INCOME' THEN amount ELSE 0 END),
+        SUM(CASE WHEN transaction_type = 'EXPENSE' THEN amount ELSE 0 END),
+        SUM(CASE WHEN transaction_type = 'INCOME' THEN amount ELSE -amount END)
+    INTO
+        v_summary.total_income, v_summary.total_expense, v_summary.current_balance
+    FROM financial_record
+    WHERE user_id = p_user_id
+      AND (transaction_date BETWEEN p_start_date AND p_end_date OR (p_start_date IS NULL AND p_end_date IS NULL))  -- Filtro de data
+    GROUP BY user_id;
+
+    RETURN v_summary;
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        RETURN financial_summary_rec(0, 0, 0);  -- Retorna 0 se não houver dados
+    WHEN OTHERS THEN
+        RETURN financial_summary_rec(NULL, NULL, NULL); -- Retorna NULL em caso de erro
+        -- Considerar logar o erro para depuração:
+        -- DBMS_OUTPUT.PUT_LINE('Erro em CALCULATE_FINANCIAL_SUMMARY: ' || SQLERRM);
+        RAISE; -- Re-lança a exceção após tratamento
+END CALCULATE_FINANCIAL_SUMMARY;
+/
+
+
+-- Criação das PROCEDURES
 CREATE OR REPLACE PROCEDURE get_financial_overview_by_user (
     p_user_id IN NUMBER, 
     p_total_income OUT NUMBER, 
     p_total_expense OUT NUMBER, 
     p_current_balance OUT NUMBER
 ) IS
+    v_summary financial_summary_rec;
+    CURSOR cur_financial_summary IS
+        SELECT
+            SUM(CASE WHEN transaction_type = 'INCOME' THEN amount ELSE 0 END) AS total_income,
+            SUM(CASE WHEN transaction_type = 'EXPENSE' THEN amount ELSE 0 END) AS total_expense,
+            SUM(CASE WHEN transaction_type = 'INCOME' THEN amount ELSE -amount END) AS current_balance
+        FROM financial_record
+        WHERE user_id = p_user_id
+        GROUP BY user_id;
 BEGIN
-    -- Selecionar os dados financeiros por user_id
-    SELECT
-        SUM(CASE WHEN transaction_type = 'INCOME' THEN amount ELSE 0 END) AS total_income,
-        SUM(CASE WHEN transaction_type = 'EXPENSE' THEN amount ELSE 0 END) AS total_expense,
-        SUM(CASE WHEN transaction_type = 'INCOME' THEN amount ELSE -amount END) AS current_balance
-    INTO
-        p_total_income,
-        p_total_expense,
-        p_current_balance
-    FROM financial_record
-    WHERE user_id = p_user_id
-    GROUP BY user_id;
-    
+    OPEN cur_financial_summary;
+    FETCH cur_financial_summary INTO p_total_income, p_total_expense, p_current_balance;
+    CLOSE cur_financial_summary;
+
 EXCEPTION
     WHEN NO_DATA_FOUND THEN
-        -- Caso não exista nenhum dado para o usuário
         p_total_income := 0;
         p_total_expense := 0;
         p_current_balance := 0;
     WHEN OTHERS THEN
-        -- Em caso de erro geral, tratamos e retornamos valores padrão
         p_total_income := NULL;
         p_total_expense := NULL;
         p_current_balance := NULL;
@@ -285,42 +459,69 @@ EXCEPTION
 END get_financial_overview_by_user;
 /
 
-CREATE OR REPLACE PROCEDURE GET_CATEGORY_EXPENSES_FOR_CURRENT_MONTH_BY_USER_ID(
-
-    p_user_id IN NUMBER,  -- Parâmetro para o user_id
-    p_total_income OUT NUMBER,  -- Resultado para o total de receitas
-    p_total_expense OUT NUMBER,  -- Resultado para o total de despesas
-    p_current_balance OUT NUMBER  -- Resultado para o saldo atual
-)
-IS
+CREATE OR REPLACE PROCEDURE get_financial_overview_by_user_monthly(
+    p_user_id IN NUMBER,
+    p_total_income OUT NUMBER,
+    p_total_expense OUT NUMBER,
+    p_current_balance OUT NUMBER
+) IS
+    v_summary financial_summary_rec;
+    v_start_date DATE;
+    v_end_date DATE;
+    CURSOR cur_financial_summary IS
+        SELECT
+            SUM(CASE WHEN transaction_type = 'INCOME' THEN amount ELSE 0 END) AS total_income,
+            SUM(CASE WHEN transaction_type = 'EXPENSE' THEN amount ELSE 0 END) AS total_expense,
+            SUM(CASE WHEN transaction_type = 'INCOME' THEN amount ELSE -amount END) AS current_balance
+        FROM financial_record
+        WHERE user_id = p_user_id
+          AND EXTRACT(MONTH FROM transaction_date) = EXTRACT(MONTH FROM CURRENT_DATE)
+          AND EXTRACT(YEAR FROM transaction_date) = EXTRACT(YEAR FROM CURRENT_DATE)
+        GROUP BY user_id;
 BEGIN
-    -- Calcula os valores financeiros para o usuário
-    SELECT
-        SUM(CASE WHEN transaction_type = 'INCOME' THEN amount ELSE 0 END),
-        SUM(CASE WHEN transaction_type = 'EXPENSE' THEN amount ELSE 0 END),
-        SUM(CASE WHEN transaction_type = 'INCOME' THEN amount ELSE -amount END)
-    INTO 
-        p_total_income, p_total_expense, p_current_balance
-    FROM financial_record
-    WHERE user_id = p_user_id
-      AND EXTRACT(MONTH FROM transaction_date) = EXTRACT(MONTH FROM CURRENT_DATE)
-      AND EXTRACT(YEAR FROM transaction_date) = EXTRACT(YEAR FROM CURRENT_DATE)
-    GROUP BY user_id;
+    v_start_date := TRUNC(ADD_MONTHS(SYSDATE, 0), 'MM');  -- Primeiro dia do mês atual
+    v_end_date := LAST_DAY(SYSDATE);                      -- Último dia do mês atual
+
+    OPEN cur_financial_summary;
+    FETCH cur_financial_summary INTO p_total_income, p_total_expense, p_current_balance;
+    CLOSE cur_financial_summary;
+
 EXCEPTION
     WHEN NO_DATA_FOUND THEN
-        -- Caso não encontre dados para o usuário, retorna 0 para os resultados
         p_total_income := 0;
         p_total_expense := 0;
         p_current_balance := 0;
     WHEN OTHERS THEN
-        -- Em caso de erro, define os valores de saída como NULL
         p_total_income := NULL;
         p_total_expense := NULL;
         p_current_balance := NULL;
-        RAISE;  -- Rethrow the exception
-        
-END GET_CATEGORY_EXPENSES_FOR_CURRENT_MONTH_BY_USER_ID;
+        RAISE;
+END get_financial_overview_by_user_monthly;
 /
+
+CREATE OR REPLACE PROCEDURE GET_FINANCIAL_SUMMARY_AND_HISTORY(
+    p_user_id IN NUMBER,
+    p_cursor OUT SYS_REFCURSOR
+)
+IS
+BEGIN
+    -- Retorna o histórico de transações do usuário em um cursor
+    OPEN p_cursor FOR
+        SELECT
+            f.id,
+            c.name AS category_name,
+            f.amount,
+            f.transaction_type,
+            f.transaction_date,
+            f.description
+        FROM financial_record f
+        LEFT JOIN category c ON f.category_id = c.id
+        JOIN TB_USERS u ON f.user_id = u.id
+        WHERE u.id = p_user_id
+        ORDER BY f.transaction_date DESC;
+END GET_FINANCIAL_SUMMARY_AND_HISTORY;
+/
+
 
 -- Inserção de dados
 INSERT INTO tb_users (full_name, email, password, birth_date) 
