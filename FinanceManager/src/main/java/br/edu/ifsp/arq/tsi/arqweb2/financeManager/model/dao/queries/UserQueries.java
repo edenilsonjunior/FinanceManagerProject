@@ -6,7 +6,7 @@ public interface UserQueries {
         INSERT INTO TB_USERS
         (id, full_name, email, password, birth_date)
         VALUES
-        (user_seq.NEXTVAL, ?, ?, ?, ?);
+        (user_seq.NEXTVAL, ?, ?, ?, ?)
         """;
 
     String SELECT = """
@@ -17,7 +17,7 @@ public interface UserQueries {
                u.birth_date,
                u.created_at
         FROM TB_USERS u
-        WHERE u.id = ?;
+        WHERE u.id = ?
         """;
 
     String SELECT_BY_EMAIL = """
@@ -28,6 +28,6 @@ public interface UserQueries {
                u.birth_date,
                u.created_at
         FROM TB_USERS u
-        WHERE u.email = ?;
+        WHERE u.email = ?
         """;
 }
