@@ -1,60 +1,41 @@
 package br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao;
 
-import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.contracts.dao.IFinancialRecordCategoryDao;
-import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.contracts.dao.IUserDao;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao.queries.FinancialRecordCategoryQueries;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dto.CategoryDto;
-import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dto.GetCategoryByUserDto;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.financialRecord.FinancialRecordCategory;
 
 import javax.sql.DataSource;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class FinancialRecordCategoryDao implements IFinancialRecordCategoryDao {
+public class FinancialRecordCategoryDao {
 
     private final DataSource dataSource;
-    private final IUserDao userDao;
 
-    public FinancialRecordCategoryDao(DataSource dataSource, IUserDao userDao) {
-        this.dataSource = dataSource;
-        this.userDao = userDao;
-    }
+    public FinancialRecordCategoryDao(DataSource dataSource) { this.dataSource = dataSource; }
 
-    @Override
     public FinancialRecordCategory create(FinancialRecordCategory financialRecordCategory) {
-        try (var con = dataSource.getConnection()) {
-            con.setAutoCommit(false);
+        try (var con = dataSource.getConnection();
+             var ps = con.prepareStatement(FinancialRecordCategoryQueries.CREATE, PreparedStatement.RETURN_GENERATED_KEYS)) {
 
-            try (var ps = con.prepareStatement(FinancialRecordCategoryQueries.CREATE, new String[]{"id"})) {
-
-                ps.setLong(1, financialRecordCategory.getUser().getId());
-                ps.setString(2, financialRecordCategory.getName());
-                ps.executeUpdate();
-
-                try (var rs = ps.getGeneratedKeys()) {
-                    if (rs.next()) {
-                        financialRecordCategory.setId(rs.getLong(1));
-                    }
-                }
-
-                con.commit();
-                return financialRecordCategory;
-            } catch (SQLException sqlException) {
-                con.rollback();
-                throw new RuntimeException("Erro durante a criação no BD", sqlException);
-            } finally {
-                con.setAutoCommit(true);
+            ps.setLong(1, financialRecordCategory.getUser().getId());
+            ps.setString(2, financialRecordCategory.getName());
+            ps.executeUpdate();
+            var rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                financialRecordCategory.setId(rs.getLong(1));
             }
+
+            return financialRecordCategory;
         } catch (SQLException sqlException) {
-            throw new RuntimeException("Erro ao obter conexão com o BD", sqlException);
+            throw new RuntimeException("Erro durante a criacao no BD", sqlException);
         }
     }
 
-    @Override
-    public Optional<FinancialRecordCategory> findById(long id){
+    public Optional<FinancialRecordCategory> findFinancialRecordCategoryById(long id) {
 
         try (var con = dataSource.getConnection();
              var ps = con.prepareStatement(FinancialRecordCategoryQueries.SELECT)) {
@@ -66,7 +47,7 @@ public class FinancialRecordCategoryDao implements IFinancialRecordCategoryDao {
             if (rs.next()) {
 
                 category.setId(id);
-                category.setUser(userDao.findById(rs.getLong("user_id")).get());
+                category.setUser(new UserDao(dataSource).findUserByUserId(rs.getLong("user_id")).get());
                 category.setName(rs.getString("name"));
             }
             return Optional.of(category);
@@ -75,10 +56,8 @@ public class FinancialRecordCategoryDao implements IFinancialRecordCategoryDao {
         }
     }
 
-    @Override
-    public List<GetCategoryByUserDto> findByUserId(long userId) throws Exception {
-        
-        var list = new ArrayList<GetCategoryByUserDto>();
+    public List<FinancialRecordCategory> findFinancialRecordCategoriesByUserId(long userId) {
+        var list = new ArrayList<FinancialRecordCategory>();
 
         try (var con = dataSource.getConnection();
              var ps = con.prepareStatement(FinancialRecordCategoryQueries.SELECT_BY_USER_ID)) {
@@ -88,10 +67,9 @@ public class FinancialRecordCategoryDao implements IFinancialRecordCategoryDao {
             var rs = ps.executeQuery();
             while (rs.next()) {
 
-                var id = rs.getLong("id");
-                var name = rs.getString("name");
-
-                var category = new GetCategoryByUserDto(id, name);
+                var category = new FinancialRecordCategory();
+                category.setId(rs.getLong("id"));
+                category.setName(rs.getString("name"));
 
                 list.add(category);
             }
@@ -101,7 +79,6 @@ public class FinancialRecordCategoryDao implements IFinancialRecordCategoryDao {
         }
     }
 
-    @Override
     public List<CategoryDto> getCategoryExpensesForCurrentMonthByUserId(long userId){
 
         var list = new ArrayList<CategoryDto>();
@@ -122,27 +99,5 @@ public class FinancialRecordCategoryDao implements IFinancialRecordCategoryDao {
         } catch (SQLException sqlException) {
             throw new RuntimeException("Erro durante a consulta no BD", sqlException);
         }
-    }
-
-    @Override
-    public boolean existsByNameAndUserId(String name, long userId) {
-
-        try (var con = dataSource.getConnection();
-             var ps = con.prepareStatement(FinancialRecordCategoryQueries.EXISTS_BY_NAME_AND_USER_ID)) {
-
-            ps.setString(1, name);
-            ps.setLong(2, userId);
-
-            var rs = ps.executeQuery();
-
-            if (rs.next()) {
-                return rs.getInt("exists_category") == 1;
-            }
-
-        } catch (SQLException sqlException) {
-            throw new RuntimeException("Erro durante a consulta no BD", sqlException);
-        }
-
-        return false;
     }
 }

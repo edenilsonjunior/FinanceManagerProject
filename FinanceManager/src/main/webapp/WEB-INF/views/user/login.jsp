@@ -21,15 +21,18 @@
         <h1>IFinance</h1>
     </div>
 
-    <form action="controller" method="post" class="form">
-
-        <input type="hidden" name="context" value="users">
-        <input type="hidden" name="action" value="login">
+    <form action="login" method="post" class="form">
 
         <c:choose>
-            <c:when test="${error != null}">
+            <c:when test="${signupSuccessMessage != null}">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    ${signupSuccessMessage}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </c:when>
+            <c:when test="${loginErrorMessage != null}">
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    ${error}
+                    ${loginErrorMessage}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             </c:when>

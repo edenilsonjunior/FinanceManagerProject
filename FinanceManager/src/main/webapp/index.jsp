@@ -18,12 +18,11 @@
 
 <main class="bg-light">
 
-    <c:if test="${error != null}">
-        <div id="error-message" class="alert alert-danger" role="alert">${error}</div>
-    </c:if>
-
-    <c:if test="${success != null}">
-        <div id="success-message" class="alert alert-success" role="alert">${success}</div>
+    <c:if test="${successMessage != null}">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            ${successMessage}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
     </c:if>
 
     <h1 class="mx-2 my-5">DashBoard</h1>

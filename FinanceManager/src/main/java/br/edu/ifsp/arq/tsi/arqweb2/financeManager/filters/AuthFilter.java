@@ -10,12 +10,15 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
 @WebFilter(urlPatterns = {
-    "/index.jsp",
-    "/index",
-    "/create-financial-record",
-    "/update-financial-record",
-    "/history",
-    "/create-category"
+        "/index",
+        "/index.jsp",
+        "/WEB-INF/views/financial-record/*",
+        "/create-category",
+        "/create-financial-record",
+        "/delete-financial-record",
+        "/retrieve-categories",
+        "/update-financial-record",
+        "/board"
 }, filterName = "Auth")
 public class AuthFilter implements Filter {
 
@@ -32,5 +35,6 @@ public class AuthFilter implements Filter {
         } else {
             chain.doFilter(request, response);
         }
+
     }
 }

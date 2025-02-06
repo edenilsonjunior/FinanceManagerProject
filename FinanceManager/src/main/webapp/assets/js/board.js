@@ -109,24 +109,10 @@ const loadMonthlyBalance = (data) => {
     });
 }
 
-const loadNotification = async () => {
-
-    var data = await submitGet('/controller?context=index&action=notification');
-
-    if (data.success) {
-        const successMessageElement = document.getElementById('success-message');
-        successMessageElement.textContent = data.success;
-        successMessageElement.style.display = 'block';
-    }
-    else if (data.error) {
-        document.getElementById('error-message').innerText = data.error;
-        document.getElementById('error-message').style.display = 'block';
-    }
-}
-
 const loadData = async () => {
 
-    var data = await submitGet('/controller?context=board&action=preview');
+    var data = await submitGet('/board');
+
 
     loadOverview(data);
     
@@ -145,8 +131,6 @@ const loadData = async () => {
     }
 
     loadMonthlyBalance(data);
-
-    await loadNotification();
 }
 
 document.addEventListener("DOMContentLoaded", loadData);

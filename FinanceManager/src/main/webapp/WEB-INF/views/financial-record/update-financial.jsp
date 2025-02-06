@@ -11,32 +11,40 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/forms.css">
-    <title>IFinance - Atualização de Carteira</title>
+    <title>IFinance - Atualização de Despesa</title>
 </head>
 <body>
 
-    <form action="controller" method="post" id="update-financial-record">
+    <form action="update-financial-record" method="post">
 
-        <input type="hidden" name="context" value="wallet">
-        <input type="hidden" name="action" value="update">
-        <input type="hidden" id="wallet-id" name="id">
+        <div class="form-header">Atualização Despesa</div>
 
-        <div class="form-header">Atualização Carteira</div>
-
-        <!--Name-->
+        <!--Categories-->
         <div class="form-field">
-            <label for="name">Nome:</label>
-            <input type="text" name="name" id="name" placeholder="Digite o nome da carteira" required="required" class="form-control">
+
+            <label for="categorySelect">Categoria:</label>
+            <select name="categorySelect" id="categorySelect" class="form-select">
+                <c:if test="${listCategories = null}">
+                    <c:forEach var="category" items="${listCategories}" varStatus="index">
+                        <option value="${category.id}"
+                            <c:if test="${category.name == fr.category.name}">
+                                selected="selected"
+                            </c:if>
+                        >${category.name}</option>
+                    </c:forEach>  
+                </c:if>
+            </select>
         </div>
 
-        <!--Goal amount-->
+        <!--Amount-->
         <div class="form-field">
-            <label for="name">Meta:</label>
-            <input placeholder="Digite sua meta:" type="number" step="0.01" name="goal-amount" id="goal-amount" required="required" value="" class="form-control">
+            <label for="amount">Valor:</label>
+            <input placeholder="valor do registro" type="number" step="0.01" name="amount" id="amount" required="required" value="" class="form-control">
         </div>
-
+        
         <!--Description-->
         <div class="form-field">
+            <label for="description">Descrição:</label>
             <input type="text" name="description" id="description" placeholder="Descrição" required="required" class="form-control">
         </div>
 
@@ -48,5 +56,4 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script></body>
-    <script src="${pageContext.request.contextPath}/assets/js/update-financial-record.js" type="module"></script>
 </html>
