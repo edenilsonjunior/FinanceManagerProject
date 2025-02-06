@@ -7,6 +7,6 @@
               maxTotal="100" minIdle="10" maxIdle="30" maxWaitMillis="10000"
               username="personal_finance_system" password="finance123"
               driverClassName="oracle.jdbc.OracleDriver"
-              url="jdbc:oracle:thin:@localhost:1521:xe" />
+              url="jdbc:oracle:thin:@//localhost:1521/xe" />
 
 </Context>
