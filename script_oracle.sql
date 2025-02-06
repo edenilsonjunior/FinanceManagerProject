@@ -286,6 +286,7 @@ END get_financial_overview_by_user;
 /
 
 CREATE OR REPLACE PROCEDURE GET_CATEGORY_EXPENSES_FOR_CURRENT_MONTH_BY_USER_ID(
+
     p_user_id IN NUMBER,  -- Parâmetro para o user_id
     p_total_income OUT NUMBER,  -- Resultado para o total de receitas
     p_total_expense OUT NUMBER,  -- Resultado para o total de despesas
@@ -317,6 +318,7 @@ EXCEPTION
         p_total_expense := NULL;
         p_current_balance := NULL;
         RAISE;  -- Rethrow the exception
+        
 END GET_CATEGORY_EXPENSES_FOR_CURRENT_MONTH_BY_USER_ID;
 /
 
