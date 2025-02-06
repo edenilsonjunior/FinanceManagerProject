@@ -5,7 +5,7 @@ import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.service.*;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.contracts.dao.*;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.contracts.services.*;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.servlets.handlers.*;
-import br.edu.ifsp.arq.tsi.arqweb2.financeManager.utils.DataSourceSearcher;
+import br.edu.ifsp.arq.tsi.arqweb2.financeManager.utils.OracleDataSourceSearcher;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 
@@ -16,9 +16,9 @@ public class AppBootstrapper implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
 
-        var dataSource = DataSourceSearcher.getInstance().getDataSource();
+        var oracleDataSource = OracleDataSourceSearcher.getInstance().getDataSource();
 
-        registerDaos(dataSource);
+        registerDaos(oracleDataSource);
         registerServices();
         registerHandlers();
     }

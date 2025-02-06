@@ -32,7 +32,7 @@ public class FinancialRecordDao implements IFinancialRecordDao {
     @Override
     public FinancialRecord create(FinancialRecord financialRecord) {
         try (var con = dataSource.getConnection();
-             var ps = con.prepareStatement(FinancialRecordQueries.CREATE, PreparedStatement.RETURN_GENERATED_KEYS)) {
+             var ps = con.prepareStatement(FinancialRecordQueries.CREATE, new String[]{"id"})) {
 
             ps.setLong(1, financialRecord.getUser().getId());
             if(financialRecord.getCategory() != null)
