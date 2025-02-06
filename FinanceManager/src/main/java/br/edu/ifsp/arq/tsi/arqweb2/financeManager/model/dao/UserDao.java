@@ -23,7 +23,7 @@ public class UserDao implements IUserDao {
     @Override
     public void create(User user) {
         try (var con = dataSource.getConnection();
-             var ps = con.prepareStatement(UserQueries.CREATE, PreparedStatement.RETURN_GENERATED_KEYS)) {
+             var ps = con.prepareStatement(UserQueries.CREATE, new String[]{"id"})) {
 
             ps.setString(1, user.getFullName());
             ps.setString(2, user.getEmail());
@@ -63,11 +63,12 @@ public class UserDao implements IUserDao {
 
                 return Optional.of(user);
             }
+
+            throw new SQLException("Usuário não encontrado");
+
         } catch (SQLException sqlException) {
             throw new RuntimeException("Erro durante a consulta no BD", sqlException);
         }
-
-        return Optional.empty();
     }
 
     @Override

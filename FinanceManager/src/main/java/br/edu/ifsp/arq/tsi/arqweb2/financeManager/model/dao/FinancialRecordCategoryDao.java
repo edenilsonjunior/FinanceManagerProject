@@ -8,7 +8,6 @@ import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dto.GetCategoryByUserDto
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.financialRecord.FinancialRecordCategory;
 
 import javax.sql.DataSource;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,20 +25,31 @@ public class FinancialRecordCategoryDao implements IFinancialRecordCategoryDao {
 
     @Override
     public FinancialRecordCategory create(FinancialRecordCategory financialRecordCategory) {
-        try (var con = dataSource.getConnection();
-             var ps = con.prepareStatement(FinancialRecordCategoryQueries.CREATE, PreparedStatement.RETURN_GENERATED_KEYS)) {
+        try (var con = dataSource.getConnection()) {
+            con.setAutoCommit(false);
 
-            ps.setLong(1, financialRecordCategory.getUser().getId());
-            ps.setString(2, financialRecordCategory.getName());
-            ps.executeUpdate();
-            var rs = ps.getGeneratedKeys();
-            if (rs.next()) {
-                financialRecordCategory.setId(rs.getLong(1));
+            try (var ps = con.prepareStatement(FinancialRecordCategoryQueries.CREATE, new String[]{"id"})) {
+
+                ps.setLong(1, financialRecordCategory.getUser().getId());
+                ps.setString(2, financialRecordCategory.getName());
+                ps.executeUpdate();
+
+                try (var rs = ps.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        financialRecordCategory.setId(rs.getLong(1));
+                    }
+                }
+
+                con.commit();
+                return financialRecordCategory;
+            } catch (SQLException sqlException) {
+                con.rollback();
+                throw new RuntimeException("Erro durante a criação no BD", sqlException);
+            } finally {
+                con.setAutoCommit(true);
             }
-
-            return financialRecordCategory;
         } catch (SQLException sqlException) {
-            throw new RuntimeException("Erro durante a criacao no BD", sqlException);
+            throw new RuntimeException("Erro ao obter conexão com o BD", sqlException);
         }
     }
 
@@ -126,7 +136,7 @@ public class FinancialRecordCategoryDao implements IFinancialRecordCategoryDao {
             var rs = ps.executeQuery();
 
             if (rs.next()) {
-                return rs.getBoolean("exists_category");
+                return rs.getInt("exists_category") == 1;
             }
 
         } catch (SQLException sqlException) {
