@@ -1,4 +1,4 @@
-CONN personal_finance_system/finance123;
+-- Conectado como personal_finance_system
 
 CREATE TABLE history (
     id NUMBER NOT NULL,

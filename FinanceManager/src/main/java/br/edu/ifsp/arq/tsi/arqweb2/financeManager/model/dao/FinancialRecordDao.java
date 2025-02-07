@@ -5,6 +5,7 @@ import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.contracts.dao.IFinancial
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.contracts.dao.IUserDao;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao.queries.FinancialRecordQueries;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dto.FinancialRecordDto;
+import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dto.GetMonthBalanceDto;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.financialRecord.FinancialRecord;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.financialRecord.FinancialRecordCategory;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.financialRecord.TransactionTypeEnum;
@@ -115,7 +116,9 @@ public class FinancialRecordDao implements IFinancialRecordDao {
     }
 
     @Override
-    public Map<String, Double> getMonthlyBalanceByUserId(long userId){
+    public List<GetMonthBalanceDto> getBalanceByUserGroupByMonth(long userId){
+
+        var response = new ArrayList<GetMonthBalanceDto>();
 
         try (var con = dataSource.getConnection();
              var ps = con.prepareStatement(FinancialRecordQueries.SELECT_MONTHLY_BALANCE_BY_USER_ID)) {
@@ -123,25 +126,23 @@ public class FinancialRecordDao implements IFinancialRecordDao {
             ps.setLong(1, userId);
 
             var rs = ps.executeQuery();
-            double totalIncome = 0.0;
-            double totalExpense = 0.0;
-            double currentBalance = 0.0;
 
-            if (rs.next()) {
-                totalIncome = rs.getDouble("total_income");
-                totalExpense = rs.getDouble("total_expense");
-                currentBalance = rs.getDouble("current_balance");
+            while (rs.next()) {
+                var balance = new GetMonthBalanceDto(
+                    rs.getString("month_year"),
+                    rs.getDouble("total_income"),
+                    rs.getDouble("total_expense"),
+                    rs.getDouble("current_balance")
+                );
+
+                response.add(balance);
             }
-
-            return Map.of(
-                    "totalIncome", totalIncome,
-                    "totalExpense", totalExpense,
-                    "currentBalance", currentBalance
-            );
 
         } catch (SQLException sqlException) {
             throw new RuntimeException("Erro SQL: ", sqlException);
         }
+
+        return response;
     }
 
     @Override

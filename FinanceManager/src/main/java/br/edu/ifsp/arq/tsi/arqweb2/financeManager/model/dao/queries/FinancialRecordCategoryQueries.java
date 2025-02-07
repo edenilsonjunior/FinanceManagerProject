@@ -25,15 +25,13 @@ public interface FinancialRecordCategoryQueries {
         WHERE c.user_id = ?
         """;
 
-    String GET_CATEGORY_EXPENSES_FOR_CURRENT_MONTH_BY_USER_ID = """
+    String GET_CATEGORY_EXPENSES_BY_USER_ID = """
         SELECT c.name AS category,
             COALESCE(SUM(fr.amount), 0) AS amount
         FROM category c
         LEFT JOIN financial_record fr
                 ON c.id = fr.category_id
             AND fr.user_id = ?
-            AND EXTRACT(MONTH FROM fr.transaction_date) = EXTRACT(MONTH FROM CURRENT_DATE)
-            AND EXTRACT(YEAR FROM fr.transaction_date) = EXTRACT(YEAR FROM CURRENT_DATE)
         GROUP BY c.id, c.name
         """;
 

@@ -24,13 +24,19 @@
     <main>
 
         <c:if test="${error != null}">
-            <div id="error-message" class="alert alert-danger" role="alert">${error}</div>
+            <div id="error-message" class="alert alert-danger alert-dismissible fade show" role="alert">
+                ${error}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
         </c:if>
-
+        
         <c:if test="${success != null}">
-            <div id="success-message" class="alert alert-success" role="alert">${success}</div>
+            <div id="success-message" class="alert alert-success alert-dismissible fade show" role="alert">
+                ${success}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
         </c:if>
-
+        
         <h1 class="mx-2 text-header">DashBoard</h1>
 
         <div id="overview" class="row justify-content-center mb-3">
@@ -60,7 +66,7 @@
             <div class="col-12 col-md-6 mt-3">
                 <div class="col-12 d-flex flex-column align-items-start">
                     <h5 class="mb-3">Despesas por categoria</h5>
-                    <div class="card shadow-sm p-3 w-100" style="border-radius: 20px; height: 300px;">
+                    <div class="card shadow-sm p-3 w-100" style="border-radius: 20px; height: 400px;">
                         <div class="chart-container ">
                             <canvas id="expense-statistics-by-category"></canvas>
                         </div>
@@ -75,11 +81,19 @@
             <div class="col-12 col-md-6 mt-3">
                 <div class="col-12 d-flex flex-column align-items-start">
                     <h5 class="mb-3">Balanço Mensal</h5>
-                    <div class="card shadow-sm p-3 w-100" style="border-radius: 20px; height: 300px;">
-                        <div class="chart-container ">
+
+                    <div class="card shadow-sm p-3 w-100 gap-2" style="border-radius: 20px; height: 400px;">
+                        <div class="d-flex justify-content-between align-items-center w-100">
+                            <div></div>
+                            <select id="balance-dropdown" class="form-select pe-4" style="max-width: 115px; border-radius: 10px;">
+                            </select>
+                        </div>
+                        
+                        <div class="chart-container">
                             <canvas id="monthly-balance"></canvas>
                         </div>
-                        <div class="text-center ">
+                        
+                        <div class="text-center">
                             <a href="history" class="text-primary">VER MAIS</a>
                         </div>
                     </div>
