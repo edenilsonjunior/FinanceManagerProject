@@ -17,6 +17,10 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     const categorySelect = form.querySelector("#categoryId");
 
+    if (data.financialRecord.transactionType.trim().toUpperCase() === 'INCOME') {
+        form.removeChild(categorySelect.parentElement);
+    }
+
     categories.forEach(category => {
         const option = document.createElement("option");
         option.value = category.id;
