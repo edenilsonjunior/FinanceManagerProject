@@ -36,7 +36,7 @@ CREATE TABLE financial_record (
     amount NUMBER(10, 2) NOT NULL,
     transaction_type VARCHAR2(100) NOT NULL,
     transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    description CLOB,
+    description VARCHAR2(255),
 
     CONSTRAINT pk_financial_record PRIMARY KEY (id),
     CONSTRAINT financial_record_user FOREIGN KEY (user_id) REFERENCES tb_users(id),
@@ -49,7 +49,7 @@ CREATE TABLE wallet (
     name VARCHAR2(100) NOT NULL,
     goal_amount NUMBER(10, 2) NOT NULL,
     current_balance NUMBER(10, 2) DEFAULT 0.00,
-    description CLOB,
+    description VARCHAR2(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT pk_wallet PRIMARY KEY (id),
@@ -61,8 +61,7 @@ CREATE TABLE wallet_transaction (
     wallet_id NUMBER,
     transaction_type VARCHAR2(100) NOT NULL,
     amount NUMBER(10, 2) NOT NULL,
-    transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    description CLOB,
+    transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 
     CONSTRAINT pk_wallet_transaction PRIMARY KEY (id),
     CONSTRAINT fk_wallet_transaction_wallet FOREIGN KEY (wallet_id) REFERENCES wallet(id)
@@ -71,7 +70,7 @@ CREATE TABLE wallet_transaction (
 CREATE TABLE alert (
     id NUMBER NOT NULL,
     alert_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    message CLOB NOT NULL,
+    message VARCHAR2(255) NOT NULL,
     notified CHAR(1) DEFAULT 'N',
     user_id NUMBER,
 
