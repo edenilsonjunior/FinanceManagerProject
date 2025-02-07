@@ -14,7 +14,6 @@ public class WalletTransaction {
 
     private long id;
     private LocalDate transactionDate;
-    private String description;
     private double amount;
     private TransactionTypeEnum transactionType;
 }

@@ -103,7 +103,7 @@
     <!--wallet context-->
     <servlet>
         <servlet-name>WalletListServlet</servlet-name>
-        <jsp-file>/WEB-INF/views/wallet/list-wallet.jsp</jsp-file>
+        <jsp-file>/WEB-INF/views/wallet/wallets.jsp</jsp-file>
     </servlet>
 
     <servlet-mapping>
@@ -169,9 +169,10 @@
     </context-param>
 
     <context-param>
-        <param-name>wallet</param-name>
+        <param-name>wallets</param-name>
         <param-value>br.edu.ifsp.arq.tsi.arqweb2.financeManager.servlets.handlers.WalletsHandler</param-value>
     </context-param>
+
 
     <listener>
         <listener-class>br.edu.ifsp.arq.tsi.arqweb2.financeManager.config.AppBootstrapper</listener-class>

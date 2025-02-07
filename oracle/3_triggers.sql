@@ -271,3 +271,23 @@ END;
     ===== TRIGGERS EXTRAS =====
 */
 
+CREATE OR REPLACE TRIGGER trg_update_wallet_balance
+AFTER INSERT OR UPDATE OR DELETE ON wallet_transaction
+DECLARE
+    v_balance NUMBER(10,2);
+BEGIN
+    FOR rec IN (SELECT DISTINCT wallet_id FROM wallet_transaction) LOOP
+        SELECT COALESCE(SUM(amount * CASE transaction_type 
+                                        WHEN 'INCOME' THEN 1 
+                                        WHEN 'EXPENSE' THEN -1 
+                                        ELSE 0 END), 0)
+        INTO v_balance
+        FROM wallet_transaction
+        WHERE wallet_id = rec.wallet_id;
+        
+        UPDATE wallet
+        SET current_balance = v_balance
+        WHERE id = rec.wallet_id;
+    END LOOP;
+END;
+/
