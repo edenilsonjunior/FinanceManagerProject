@@ -66,23 +66,19 @@ CREATE OR REPLACE PACKAGE BODY pkg_finance AS
     -- Recuperar o resumo financeiro mensal do usuario
     PROCEDURE get_financial_overview_by_user_monthly (
         p_user_id IN NUMBER,
-        p_total_income OUT NUMBER,
-        p_total_expense OUT NUMBER,
-        p_current_balance OUT NUMBER
+        p_result OUT SYS_REFCURSOR
     ) IS
-        v_summary financial_summary_rec;
-        v_start_date DATE := TRUNC(CURRENT_DATE, 'MM');
-        v_end_date DATE := LAST_DAY(CURRENT_DATE);
     BEGIN
-        v_summary := calculate_financial_summary(p_user_id, v_start_date, v_end_date);
-        p_total_income := v_summary.total_income;
-        p_total_expense := v_summary.total_expense;
-        p_current_balance := v_summary.current_balance;
-    EXCEPTION
-        WHEN OTHERS THEN
-            p_total_income := NULL;
-            p_total_expense := NULL;
-            p_current_balance := NULL;
+        OPEN p_result FOR
+            SELECT 
+                TO_CHAR(transaction_date, 'MM/YYYY') AS month_year,
+                SUM(CASE WHEN transaction_type = 'INCOME' THEN amount ELSE 0 END) AS total_income,
+                SUM(CASE WHEN transaction_type = 'EXPENSE' THEN amount ELSE 0 END) AS total_expense,
+                SUM(CASE WHEN transaction_type = 'INCOME' THEN amount ELSE -amount END) AS current_balance
+            FROM financial_record
+            WHERE user_id = p_user_id
+            GROUP BY TO_CHAR(transaction_date, 'MM/YYYY')
+            ORDER BY TO_DATE(TO_CHAR(transaction_date, 'MM/YYYY'), 'MM/YYYY') DESC;
     END get_financial_overview_by_user_monthly;
 
 

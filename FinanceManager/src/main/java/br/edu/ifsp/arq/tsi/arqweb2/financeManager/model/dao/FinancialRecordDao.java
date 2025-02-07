@@ -12,7 +12,9 @@ import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.financialRecord.T
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -89,20 +91,19 @@ public class FinancialRecordDao implements IFinancialRecordDao {
     public Map<String, Double> getOverviewByUserId(long userId){
 
         try (var con = dataSource.getConnection();
-             var ps = con.prepareStatement(FinancialRecordQueries.SELECT_OVERVIEW_BY_USER_ID)) {
+             var ps = con.prepareCall(FinancialRecordQueries.GET_FINANCIAL_OVERVIEW_BY_USER_PROCEDURE)) {
 
             ps.setLong(1, userId);
 
-            var rs = ps.executeQuery();
-            double totalIncome = 0.0;
-            double totalExpense = 0.0;
-            double currentBalance = 0.0;
+            ps.registerOutParameter(2, Types.NUMERIC);
+            ps.registerOutParameter(3, Types.NUMERIC);
+            ps.registerOutParameter(4, Types.NUMERIC);
 
-            if (rs.next()) {
-                totalIncome = rs.getDouble("total_income");
-                totalExpense = rs.getDouble("total_expense");
-                currentBalance = rs.getDouble("current_balance");
-            }
+            ps.execute();
+
+            double totalIncome = ps.getDouble(2);
+            double totalExpense = ps.getDouble(3);
+            double currentBalance = ps.getDouble(4);
 
             return Map.of(
                     "totalIncome", totalIncome,
@@ -121,13 +122,17 @@ public class FinancialRecordDao implements IFinancialRecordDao {
         var response = new ArrayList<GetMonthBalanceDto>();
 
         try (var con = dataSource.getConnection();
-             var ps = con.prepareStatement(FinancialRecordQueries.SELECT_MONTHLY_BALANCE_BY_USER_ID)) {
+             var ps = con.prepareCall(FinancialRecordQueries.GET_MONTHLY_BALANCE_BY_USER_ID_PROCEDURE)) {
 
             ps.setLong(1, userId);
 
-            var rs = ps.executeQuery();
+            ps.registerOutParameter(2, Types.REF_CURSOR);
+
+            ps.execute();
+            ResultSet rs = (ResultSet) ps.getObject(2);
 
             while (rs.next()) {
+
                 var balance = new GetMonthBalanceDto(
                     rs.getString("month_year"),
                     rs.getDouble("total_income"),

@@ -81,6 +81,8 @@ public interface FinancialRecordQueries {
         GROUP BY user_id
         """;
 
+    String GET_FINANCIAL_OVERVIEW_BY_USER_PROCEDURE = "{call get_financial_overview_by_user(?, ?, ?, ?)}";
+
     String SELECT_MONTHLY_BALANCE_BY_USER_ID = """
         SELECT
             TO_CHAR(transaction_date, 'MM/YYYY') AS month_year,
@@ -92,6 +94,8 @@ public interface FinancialRecordQueries {
         GROUP BY TO_CHAR(transaction_date, 'MM/YYYY')
         ORDER BY TO_DATE(TO_CHAR(transaction_date, 'MM/YYYY'), 'MM/YYYY') DESC
         """;
+
+    String GET_MONTHLY_BALANCE_BY_USER_ID_PROCEDURE = "{call get_financial_overview_by_user_monthly(?, ?)}";
 
     String SELECT_HISTORY_BY_USER_ID = """
         SELECT
