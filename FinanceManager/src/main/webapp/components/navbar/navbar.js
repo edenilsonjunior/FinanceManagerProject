@@ -46,6 +46,11 @@ class Navbar extends HTMLElement {
                                 <span class="nav-list-text">Histórico</span>
                             </a>
 
+                            <a href="wallets" class="nav-list-link">
+                                <i class='bx bx-wallet nav-list-icon'></i>
+                                <span class="nav-list-text">Carteiras</span>
+                            </a>
+
                         </div>
                     </div>
 
