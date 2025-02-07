@@ -62,7 +62,6 @@ CREATE TABLE wallet_transaction (
     transaction_type VARCHAR2(100) NOT NULL,
     amount NUMBER(10, 2) NOT NULL,
     transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    description CLOB,
 
     CONSTRAINT pk_wallet_transaction PRIMARY KEY (id),
     CONSTRAINT fk_wallet_transaction_wallet FOREIGN KEY (wallet_id) REFERENCES wallet(id)

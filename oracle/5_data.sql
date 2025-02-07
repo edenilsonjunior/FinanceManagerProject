@@ -96,4 +96,31 @@ VALUES (2, 3, 350.00, 'EXPENSE', 'Buying supplies for home', TO_TIMESTAMP('2025-
 INSERT INTO financial_record (user_id, category_id, amount, transaction_type, description, transaction_date) 
 VALUES (2, 2, 150.00, 'EXPENSE', 'Debt repayment', TO_TIMESTAMP('2025-02-10', 'YYYY-MM-DD'));
 
+
+
+INSERT INTO wallet (id, user_id, name, goal_amount, current_balance, description, created_at)
+VALUES (1, 1, 'Carteira Principal', 10000.00, 0.00, 'Carteira principal do usuário', CURRENT_TIMESTAMP);
+
+INSERT INTO wallet (id, user_id, name, goal_amount, current_balance, description, created_at)
+VALUES (2, 1, 'Carteira de Investimentos', 20000.00, 0.00, 'Carteira destinada a investimentos', CURRENT_TIMESTAMP);
+
+INSERT INTO wallet_transaction (wallet_id, transaction_type, amount, transaction_date)
+VALUES (1, 'INCOME', 1500.00, TO_TIMESTAMP('2025-02-01 10:00:00', 'YYYY-MM-DD HH24:MI:SS'));
+
+INSERT INTO wallet_transaction (wallet_id, transaction_type, amount, transaction_date)
+VALUES (1, 'INCOME', 2000.00, TO_TIMESTAMP('2025-02-05 15:30:00', 'YYYY-MM-DD HH24:MI:SS'));
+
+INSERT INTO wallet_transaction (wallet_id, transaction_type, amount, transaction_date)
+VALUES (1, 'EXPENSE', 500.00, TO_TIMESTAMP('2025-02-04 18:00:00', 'YYYY-MM-DD HH24:MI:SS'));
+
+-- Inserindo transações para a Carteira de Investimentos (wallet_id = 2)
+INSERT INTO wallet_transaction (wallet_id, transaction_type, amount, transaction_date)
+VALUES (2, 'INCOME', 300.00, TO_TIMESTAMP('2025-02-03 08:45:00', 'YYYY-MM-DD HH24:MI:SS'));
+
+INSERT INTO wallet_transaction (wallet_id, transaction_type, amount, transaction_date)
+VALUES (2, 'EXPENSE', 100.00, TO_TIMESTAMP('2025-02-06 12:15:00', 'YYYY-MM-DD HH24:MI:SS'));
+
+INSERT INTO wallet_transaction (wallet_id, transaction_type, amount, transaction_date)
+VALUES (2, 'EXPENSE', 50.00, TO_TIMESTAMP('2025-02-02 09:00:00', 'YYYY-MM-DD HH24:MI:SS'));
+
 COMMIT;

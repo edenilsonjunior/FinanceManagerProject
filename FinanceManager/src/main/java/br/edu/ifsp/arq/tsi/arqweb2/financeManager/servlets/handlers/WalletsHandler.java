@@ -16,12 +16,13 @@ public class WalletsHandler implements IHandler{
     public Object handle(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         return switch (request.getParameter("action")) {
+            case "wallets" -> walletsService.handleHistory(request, response);
             case "create" -> walletsService.handleCreate(request, response);
             case "create-transaction" -> walletsService.handleCreateTransaction(request, response);
+            case "details" -> walletsService.handleDetails(request, response);
             case "update" -> walletsService.handleUpdate(request, response);
             case "update-view" -> walletsService.handleUpdateView(request, response);
             case "delete" -> walletsService.handleDelete(request, response);
-            case "wallets" -> walletsService.handleWalletsView(request, response);
             default -> throw new IllegalArgumentException("Ação inválida: " + request.getParameter("action"));
         };
     }
