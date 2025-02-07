@@ -155,7 +155,7 @@ public class FinancialRecordDao implements IFinancialRecordDao {
         List<FinancialRecordDto> transactionHistory = new ArrayList<>();
 
         try (var con = dataSource.getConnection();
-             CallableStatement cs = con.prepareCall(FinancialRecordQueries.GET_FINANCIAL_SUMMARY_AND_HISTORY)) {
+             CallableStatement cs = con.prepareCall(FinancialRecordQueries.GET_FINANCIAL_SUMMARY_AND_HISTORY_PROCEDURE)) {
 
             cs.setLong(1, userId);
             cs.registerOutParameter(2, java.sql.Types.REF_CURSOR);
