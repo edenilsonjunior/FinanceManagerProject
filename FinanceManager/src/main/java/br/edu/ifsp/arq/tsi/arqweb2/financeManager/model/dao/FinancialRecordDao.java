@@ -11,7 +11,7 @@ import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.financialRecord.F
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.financialRecord.TransactionTypeEnum;
 
 import javax.sql.DataSource;
-import java.sql.PreparedStatement;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -152,32 +152,37 @@ public class FinancialRecordDao implements IFinancialRecordDao {
 
     @Override
     public List<FinancialRecordDto> findFinancialRecordHistoryByUserId(long userId){
-        var list = new ArrayList<FinancialRecordDto>();
+        List<FinancialRecordDto> transactionHistory = new ArrayList<>();
 
         try (var con = dataSource.getConnection();
-             var ps = con.prepareStatement(FinancialRecordQueries.SELECT_HISTORY_BY_USER_ID)) {
+             CallableStatement cs = con.prepareCall(FinancialRecordQueries.GET_FINANCIAL_SUMMARY_AND_HISTORY)) {
 
-            ps.setLong(1, userId);
-            var rs = ps.executeQuery();
-            while (rs.next()) {
-               var fr = new FinancialRecordDto(
+            cs.setLong(1, userId);
+            cs.registerOutParameter(2, java.sql.Types.REF_CURSOR);
+            cs.execute();
+
+            try (ResultSet rs = (ResultSet) cs.getObject(2)) {
+                while (rs.next()) {
+                    FinancialRecordDto record = new FinancialRecordDto(
                         rs.getLong("id"),
                         rs.getString("category_name"),
                         rs.getDouble("amount"),
                         rs.getString("transaction_type"),
-                        rs.getDate("transaction_date").toLocalDate(),
+                        rs.getTimestamp("transaction_date").toLocalDateTime().toLocalDate(),
                         rs.getString("description")
-                );
+                    );
 
-               if(fr.getCategoryName() == null)
-                   fr.setCategoryName("");
+                if(record.getCategoryName() == null)
+                   record.setCategoryName("");
 
-                list.add(fr);
+                transactionHistory.add(record);
+                }
+                return transactionHistory;
             }
-            return list;
         } catch (SQLException sqlException) {
             throw new RuntimeException("Erro SQL: ", sqlException);
         }
+
     }
 
     @Override

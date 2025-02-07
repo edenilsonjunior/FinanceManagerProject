@@ -83,6 +83,8 @@ public interface FinancialRecordQueries {
 
     String GET_FINANCIAL_OVERVIEW_BY_USER_PROCEDURE = "{call get_financial_overview_by_user(?, ?, ?, ?)}";
 
+    String GET_FINANCIAL_SUMMARY_AND_HISTORY = "{ call get_financial_summary_and_history(?, ?) }";
+
     String SELECT_MONTHLY_BALANCE_BY_USER_ID = """
         SELECT
             TO_CHAR(transaction_date, 'MM/YYYY') AS month_year,
