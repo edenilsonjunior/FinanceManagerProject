@@ -8,7 +8,7 @@ CREATE OR REPLACE PACKAGE pkg_finance AS
 
     PROCEDURE get_financial_overview_by_user (p_user_id IN NUMBER, p_total_income OUT NUMBER, p_total_expense OUT NUMBER, p_current_balance OUT NUMBER);
 
-    PROCEDURE get_financial_overview_by_user_monthly (p_user_id IN NUMBER, p_total_income OUT NUMBER, p_total_expense OUT NUMBER, p_current_balance OUT NUMBER);
+    PROCEDURE get_financial_overview_by_user_monthly ( p_user_id IN NUMBER, p_result OUT SYS_REFCURSOR);
 
     PROCEDURE get_financial_summary_and_history (p_user_id IN NUMBER, p_cursor OUT SYS_REFCURSOR);
 
