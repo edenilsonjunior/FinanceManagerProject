@@ -1,3 +1,5 @@
+-- Conectado como personal_finance_system
+
 -- Inserção de dados
 INSERT INTO tb_users (full_name, email, password, birth_date) 
 VALUES ('John Doe', 'john.doe@example.com', '81DC9BDB52D04DC20036DBD8313ED055', TO_DATE('1985-07-12', 'YYYY-MM-DD'));
