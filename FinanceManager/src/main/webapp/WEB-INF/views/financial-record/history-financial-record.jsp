@@ -27,7 +27,7 @@
         <h1 class="mx-2 my-b text-header">Histórico de Registros Financeiros</h1>
         
         <div class="mx-2 mt-4">
-            <table id="financial-records-table" class="table table-striped table-hover overflow-x-auto">
+            <table id="financial-records-table" class="table table-striped table-hover overflow-x-scroll">
                 <thead>
                     <tr class="text-center">
                         <th>Descrição</th>

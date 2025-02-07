@@ -35,19 +35,19 @@
 
         <div id="overview" class="row justify-content-center mb-3">
 
-            <div class="card-overview saldo mx-3 my-3">
+            <div class="card-overview saldo mx-3 mt-3">
                 <div class="icon">🏦</div>
                 <h5>Saldo Atual</h5>
                 <p id="current-balance">R$ 0,00</p>
             </div>
 
-            <div class="card-overview receitas mx-3 my-3">
+            <div class="card-overview receitas mx-3 mt-3">
                 <div class="icon">⬆️</div>
                 <h5>Receitas</h5>
                 <p id="total-income">R$ 0,00</p>
             </div>
 
-            <div class="card-overview despesas mx-3 my-3">
+            <div class="card-overview despesas mx-3 mt-3">
                 <div class="icon">⬇️</div>
                 <h5>Despesas</h5>
                 <p id="total-expense">R$ 0,00</p>
@@ -57,7 +57,7 @@
 
         <div class="row">
 
-            <div class="col-6 ">
+            <div class="col-12 col-md-6 mt-3">
                 <div class="col-12 d-flex flex-column align-items-start">
                     <h5 class="mb-3">Despesas por categoria</h5>
                     <div class="card shadow-sm p-3 w-100" style="border-radius: 20px; height: 300px;">
@@ -72,7 +72,7 @@
                 </div>
             </div>
 
-            <div class="col-6">
+            <div class="col-12 col-md-6 mt-3">
                 <div class="col-12 d-flex flex-column align-items-start">
                     <h5 class="mb-3">Balanço Mensal</h5>
                     <div class="card shadow-sm p-3 w-100" style="border-radius: 20px; height: 300px;">

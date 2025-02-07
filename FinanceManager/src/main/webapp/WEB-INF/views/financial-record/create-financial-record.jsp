@@ -55,15 +55,17 @@
             </div>
     
             <!--Amount-->
-            <div class="form-field">
+            <div class="form-field form-floating">
                 <input placeholder="Valor (R$)" type="number" step="0.01" name="amount" id="amount" required="required"
                     value="" class="form-control">
+                <label for="amount">Valor (R$)</label>
             </div>
     
             <!--Description-->
-            <div class="form-field">
+            <div class="form-field form-floating">
                 <input type="text" name="description" id="description" placeholder="Descrição" required="required"
                     class="form-control">
+                <label for="description">Descrição</label>
             </div>
     
             <!--Transaction Type (hydden, from the previous page)-->

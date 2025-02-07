@@ -21,7 +21,7 @@
 <body>
 
     <navbar-header theme="secondary" username="${sessionScope.user.fullName}"></navbar-header>
-    
+
     <div class="container-form">
         <form action="controller" method="post" class="form">
 
@@ -30,29 +30,28 @@
             <input type="hidden" name="context" value="categories">
             <input type="hidden" name="action" value="create">
 
-		<c:if test="${error != null}">
-			<div class="alert alert-danger alert-dismissible fade show"
-				 role="alert">
-					${error}
-				<button type="button" class="btn-close" data-bs-dismiss="alert"
-						aria-label="Close"></button>
-			</div>
-		</c:if>
+            <c:if test="${error != null}">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    ${error}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </c:if>
 
-        <div class="form-field">
+            <div class="form-field form-floating">
                 <input type="text" name="name" id="name" placeholder="Categoria" required="required"
                     class="form-control">
-        </div>
+                <label for="name">Categoria</label>
+            </div>
 
-        <div class="form-submit">
-            <button type="submit">Criar Categoria</button>
-        </div>
+            <div class="form-submit">
+                <button type="submit">Criar Categoria</button>
+            </div>
         </form>
     </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <script src="${pageContext.request.contextPath}/components/navbar/navbar.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="${pageContext.request.contextPath}/components/navbar/navbar.js"></script>
 </body>
 
 </html>

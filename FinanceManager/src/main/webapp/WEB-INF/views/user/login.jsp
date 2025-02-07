@@ -41,13 +41,16 @@
 
             <div class="form-header">Login</div>
 
-            <div class="form-field">
+            <div class="form-field form-floating">
                 <input type="email" name="email" id="email" placeholder="E-mail" required="required"
                     class="form-control">
+                <label for="email">Email</label>
             </div>
-            <div class="form-field">
+
+            <div class="form-field form-floating">
                 <input type="password" name="password" id="password" placeholder="Senha" required="required"
                     class="form-control">
+                <label for="password">Senha</label>
             </div>
 
             <div class="form-submit">

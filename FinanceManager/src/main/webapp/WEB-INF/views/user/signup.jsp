@@ -14,7 +14,7 @@
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/styles.css">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/forms.css">
-	<title>IFinance | SignUp</title>
+	<title>IFinance | Cadastrar</title>
 </head>
 
 <body>
@@ -37,11 +37,12 @@
 				</div>
 			</c:if>
 
-			<div class="form-header">SignUp</div>
+			<div class="form-header">Cadastrar</div>
 
-			<div class="form-field">
+			<div class="form-field form-floating">
 				<input type="text" name="full-name" id="full-name" placeholder="Nome" required="required"
 					class="form-control">
+				<label for="full-name">Nome</label>
 				<span id="full-name-error" class="text-danger"></span>
 			</div>
 
@@ -50,26 +51,33 @@
 				<span id="birth-date-error" class="text-danger"></span>
 			</div>
 
-			<div class="form-field">
+			<div class="form-field form-floating">
 				<input type="email" name="email" id="email" placeholder="E-mail" required="required"
 					class="form-control">
+				<label for="email">Email</label>
 				<span id="email-error" class="text-danger"></span>
 			</div>
 
-			<div class="form-field">
+			<div class="form-field form-floating">
 				<input type="password" name="password" id="password" placeholder="Senha" required="required"
 					class="form-control">
+				<label for="password">Senha</label>
 				<span id="password-error" class="text-danger"></span>
 			</div>
 
-			<div class="form-field">
+			<div class="form-field form-floating">
 				<input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirmação de Senha"
 					required="required" class="form-control">
+				<label for="confirmPassword">Confirmação de Senha</label>
 			</div>
 
 			<div class="form-submit">
 				<button type="submit">Cadastrar</button>
 			</div>
+
+			<div id="form-redirect">
+                <a href="login">Já possui cadastro?</a>
+            </div>
 
 	</div>
 	</div>
