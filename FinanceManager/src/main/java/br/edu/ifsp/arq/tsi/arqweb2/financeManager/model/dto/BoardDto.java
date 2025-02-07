@@ -5,6 +5,6 @@ import java.util.Map;
 
 public record BoardDto(
         Map<String, Double> overview,
-        Map<String, Double> monthlyBalance,
+        List<GetMonthBalanceDto> monthlyBalance,
         List<CategoryDto> categories
 ) { }

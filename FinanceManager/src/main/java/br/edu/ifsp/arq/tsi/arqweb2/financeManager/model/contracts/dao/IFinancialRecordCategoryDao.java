@@ -11,6 +11,6 @@ public interface IFinancialRecordCategoryDao {
     FinancialRecordCategory create(FinancialRecordCategory financialRecordCategory);
     Optional<FinancialRecordCategory> findById(long id);
     List<GetCategoryByUserDto> findByUserId(long userId) throws Exception;
-    List<CategoryDto> getCategoryExpensesForCurrentMonthByUserId(long userId);
+    List<CategoryDto> getCategoryExpensesByUserId(long userId);
     boolean existsByNameAndUserId(String name, long userId);
 }

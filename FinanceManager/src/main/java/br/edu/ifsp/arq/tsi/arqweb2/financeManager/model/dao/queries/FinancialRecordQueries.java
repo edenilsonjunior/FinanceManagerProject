@@ -83,14 +83,14 @@ public interface FinancialRecordQueries {
 
     String SELECT_MONTHLY_BALANCE_BY_USER_ID = """
         SELECT
+            TO_CHAR(transaction_date, 'MM/YYYY') AS month_year,
             SUM(CASE WHEN transaction_type = 'INCOME' THEN amount ELSE 0 END) AS total_income,
             SUM(CASE WHEN transaction_type = 'EXPENSE' THEN amount ELSE 0 END) AS total_expense,
             SUM(CASE WHEN transaction_type = 'INCOME' THEN amount ELSE -amount END) AS current_balance
         FROM financial_record
         WHERE user_id = ?
-              AND EXTRACT(MONTH FROM transaction_date) = EXTRACT(MONTH FROM CURRENT_DATE)
-              AND EXTRACT(YEAR FROM transaction_date) = EXTRACT(YEAR FROM CURRENT_DATE)
-        GROUP BY user_id
+        GROUP BY TO_CHAR(transaction_date, 'MM/YYYY')
+        ORDER BY TO_DATE(TO_CHAR(transaction_date, 'MM/YYYY'), 'MM/YYYY') DESC
         """;
 
     String SELECT_HISTORY_BY_USER_ID = """

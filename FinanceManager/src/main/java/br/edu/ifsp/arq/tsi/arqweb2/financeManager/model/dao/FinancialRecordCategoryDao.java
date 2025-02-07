@@ -102,12 +102,12 @@ public class FinancialRecordCategoryDao implements IFinancialRecordCategoryDao {
     }
 
     @Override
-    public List<CategoryDto> getCategoryExpensesForCurrentMonthByUserId(long userId){
+    public List<CategoryDto> getCategoryExpensesByUserId(long userId){
 
         var list = new ArrayList<CategoryDto>();
 
         try (var con = dataSource.getConnection();
-             var ps = con.prepareStatement(FinancialRecordCategoryQueries.GET_CATEGORY_EXPENSES_FOR_CURRENT_MONTH_BY_USER_ID)) {
+             var ps = con.prepareStatement(FinancialRecordCategoryQueries.GET_CATEGORY_EXPENSES_BY_USER_ID)) {
 
             ps.setLong(1, userId);
 

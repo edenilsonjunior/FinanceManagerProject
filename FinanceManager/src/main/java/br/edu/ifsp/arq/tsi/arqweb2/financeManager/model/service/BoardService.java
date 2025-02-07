@@ -25,14 +25,14 @@ public class BoardService implements IBoardService {
     @Override
     public JsonElement handlePreview(HttpServletRequest request, HttpServletResponse response) {
 
-       HttpSession session = request.getSession(false);
+        HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute("user");
 
-        var content = new BoardDto(
-                financialRecordDao.getOverviewByUserId(user.getId()),
-                financialRecordDao.getMonthlyBalanceByUserId(user.getId()),
-                categoryDao.getCategoryExpensesForCurrentMonthByUserId(user.getId())
-        );
+        var overview = financialRecordDao.getOverviewByUserId(user.getId());
+        var monthlyBalance = financialRecordDao.getBalanceByUserGroupByMonth(user.getId());
+        var categoryExpenses = categoryDao.getCategoryExpensesByUserId(user.getId());
+
+        var content = new BoardDto(overview, monthlyBalance, categoryExpenses);
 
         return Utils.toJson(content);
     }
