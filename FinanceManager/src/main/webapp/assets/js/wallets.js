@@ -1,6 +1,6 @@
 "use strict";
 
-import { submitGet } from './global.js';
+import { submitGet, contextPath } from './global.js';
 
 const tableBody = document.getElementById('wallets-body');
 const noRecordsMessage = document.getElementById('no-records-message');
@@ -50,7 +50,7 @@ const loadData = async () => {
 
     } catch (error) {
         console.error('Erro:', error);
-        alert('Não foi possível carregar os registros financeiros.');
+        window.location.href = `${contextPath}/create-wallet`;
     }
 };
 
@@ -96,7 +96,7 @@ const loadWalletDetails = async (walletId) => {
         });
         
         document.getElementById("delete-wallet").addEventListener("click", function() {
-            window.location.href = `/controller?context=wallets&action=delete&wallet-id=${walletId}`;
+            window.location.href = `${contextPath}/controller?context=wallets&action=delete&wallet-id=${walletId}`;
         });
 
         detailsModal.show();

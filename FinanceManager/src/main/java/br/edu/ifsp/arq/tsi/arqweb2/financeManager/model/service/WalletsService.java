@@ -84,14 +84,18 @@ public class WalletsService implements IWalletsService {
 
         var user = Utils.getUser(request);
 
-        var walletId = Long.parseLong(request.getParameter("walletId"));
-        var amount = Double.parseDouble(request.getParameter("amount"));
+        var walletField = request.getParameter("wallet-id");
+        var amount = request.getParameter("goal-amount");
+
         var transactionType = TransactionTypeEnum.valueOf(request.getParameter("transactionType"));
+
+        var walletId = Long.parseLong(walletField);
+        var goal = Double.parseDouble(amount);
 
         var wallet = walletDao.getWalletByIdAndUserId(walletId, user.getId());
 
         var transaction = new WalletTransaction();
-        transaction.setAmount(amount);
+        transaction.setAmount(goal);
         transaction.setTransactionType(transactionType);
 
         if (walletDao.createTransaction(wallet.getId(), transaction) == null) {

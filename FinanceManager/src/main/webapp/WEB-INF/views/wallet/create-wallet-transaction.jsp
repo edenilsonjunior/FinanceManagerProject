@@ -23,9 +23,9 @@
     <navbar-header theme="secondary" username="${sessionScope.user.fullName}"></navbar-header>
 
     <div class="container-form">
-        <form action="controller" method="post" class="form">
+        <form action="controller" method="post" class="form" id="form">
 
-            <div class="form-header">Nova Movimentação</div>
+            <div class="form-header">Movimentação</div>
 
             <input type="hidden" name="context" value="wallets">
             <input type="hidden" name="action" value="create-transaction">
@@ -50,6 +50,8 @@
                 <label for="goal-amount">Valor (R$)</label>
             </div>
 
+            <input type="hidden" id="transactionType" name="transactionType" value="${transactionType}" />
+
             <div class="form-submit">
                 <button type="submit">Criar movimentação</button>
             </div>
@@ -59,6 +61,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="${pageContext.request.contextPath}/components/navbar/navbar.js"></script>
+    <script src="${pageContext.request.contextPath}/assets/js/create-wallet-transaction.js"></script>
 </body>
 
 </html>

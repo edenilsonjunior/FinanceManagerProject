@@ -6,7 +6,7 @@ public interface UserQueries {
         INSERT INTO TB_USERS
         (id, full_name, email, password, birth_date)
         VALUES
-        (user_seq.NEXTVAL, ?, ?, ?, ?)
+        (tb_users_seq.NEXTVAL, ?, ?, ?, ?)
         """;
 
     String SELECT = """

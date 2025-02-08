@@ -64,7 +64,7 @@ public class UserDao implements IUserDao {
                 return Optional.of(user);
             }
 
-            throw new SQLException("Usuário não encontrado");
+            return Optional.empty();
 
         } catch (SQLException sqlException) {
             throw new RuntimeException("Erro durante a consulta no BD", sqlException);

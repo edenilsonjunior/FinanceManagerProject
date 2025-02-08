@@ -46,7 +46,7 @@
             <div class="form-field form-floating">
                 <input placeholder="Meta (R$)" type="number" step="0.01" name="goal-amount" id="goal-amount" required="required"
                     value="" class="form-control">
-                <label for="goal-amount">Valor (R$)</label>
+                <label for="goal-amount">Meta (R$)</label>
             </div>
 
             <div class="form-field form-floating">

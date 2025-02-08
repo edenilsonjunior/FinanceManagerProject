@@ -105,7 +105,13 @@ const loadCollapsibleNavbar = () => {
         let hrefValue = link.getAttribute("href");
         let text = link.querySelector(".nav-list-text").textContent;
 
-        if (hrefValue === pathValue || (text === "Dashboard" && pathValue === "index.jsp") || (text === "Histórico" && pathValue === "update-financial-record")) {
+        if (hrefValue === pathValue ||
+            (text === "Dashboard" && pathValue === "index.jsp") ||
+            (text === "Histórico" && pathValue === "update-financial-record") ||
+            (text === "Carteiras" && pathValue === "create-wallet") ||
+            (text === "Carteiras" && pathValue === "update-wallet") ||
+            (text === "Carteiras" && pathValue === "create-wallet-transaction")
+        ) {
             link.classList.add('active');
         }
         else {

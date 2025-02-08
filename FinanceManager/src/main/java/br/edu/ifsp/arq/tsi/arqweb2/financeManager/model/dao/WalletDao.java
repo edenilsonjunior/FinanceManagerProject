@@ -89,17 +89,30 @@ public class WalletDao implements IWalletDao {
 
     @Override
     public boolean delete(long walletId) {
+        try (var con = dataSource.getConnection()) {
+            con.setAutoCommit(false);
 
-        try (var con = dataSource.getConnection();
-             var ps = con.prepareStatement(WalletsQueries.DELETE)) {
+            try (var deleteTransactionsPs = con.prepareStatement(WalletsQueries.DELETE_TRANSACTIONS);
+                 var deleteWalletPs = con.prepareStatement(WalletsQueries.DELETE)) {
 
-            ps.setLong(1, walletId);
+                deleteTransactionsPs.setLong(1, walletId);
+                deleteTransactionsPs.executeUpdate();
 
-            return ps.executeUpdate() > 0;
+                deleteWalletPs.setLong(1, walletId);
+                boolean deleted = deleteWalletPs.executeUpdate() > 0;
+
+                con.commit();
+
+                return deleted;
+            } catch (SQLException sqlException) {
+                con.rollback();
+                throw new RuntimeException("Erro ao excluir carteira e transações", sqlException);
+            }
         } catch (SQLException sqlException) {
-            throw new RuntimeException("Erro SQL: ", sqlException);
+            throw new RuntimeException("Erro ao conectar ao banco", sqlException);
         }
     }
+
 
     @Override
     public List<Wallet> getWalletsByUserId(Long userId) {
@@ -141,7 +154,7 @@ public class WalletDao implements IWalletDao {
                 transaction.setId(rs.getLong("id"));
                 transaction.setTransactionType(TransactionTypeEnum.valueOf(rs.getString("transaction_type")));
                 transaction.setAmount(rs.getDouble("amount"));
-                transaction.setTransactionDate(rs.getDate("transaction_date").toLocalDate());
+                transaction.setTransactionDate(rs.getTimestamp("transaction_date").toLocalDateTime());
 
                 results.add(transaction);
             }
@@ -177,21 +190,25 @@ public class WalletDao implements IWalletDao {
     public WalletHistoryOverview getWalletOverviewByUserId(Long userId) {
 
         try (var con = dataSource.getConnection();
-             var ps = con.prepareStatement(WalletsQueries.SELECT_OVERVIEW_BY_USER_ID)) {
+             var cs = con.prepareCall(WalletsQueries.SELECT_OVERVIEW_BY_USER_ID)) {
 
-            ps.setLong(1, userId);
+            cs.registerOutParameter(1, java.sql.Types.REF_CURSOR);
 
-            var rs = ps.executeQuery();
+            cs.setLong(2, userId);
 
-            if (rs.next()) {
-                var overview = new WalletHistoryOverview();
-                overview.setTotalBalance(rs.getDouble("total_balance"));
-                overview.setMonthlyTransactionsCount(rs.getInt("transactions_this_month"));
-                return overview;
+            cs.execute();
+
+            try (var rs = (ResultSet) cs.getObject(1)) {
+                if (rs.next()) {
+                    var overview = new WalletHistoryOverview();
+                    overview.setTotalBalance(rs.getDouble("total_balance"));
+                    overview.setMonthlyTransactionsCount(rs.getInt("transactions_this_month"));
+                    return overview;
+                }
             }
 
         } catch (SQLException sqlException) {
-            throw new RuntimeException("Erro SQL: ", sqlException);
+            throw new RuntimeException("Erro ao obter resumo da carteira: ", sqlException);
         }
 
         return null;
@@ -206,7 +223,7 @@ public class WalletDao implements IWalletDao {
         wallet.setGoalAmount(rs.getDouble("goal_amount"));
         wallet.setCurrentBalance(rs.getDouble("current_balance"));
         wallet.setDescription(rs.getString("description"));
-        wallet.setCreatedAt(rs.getDate("created_at").toLocalDate());
+        wallet.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
 
         return wallet;
     }

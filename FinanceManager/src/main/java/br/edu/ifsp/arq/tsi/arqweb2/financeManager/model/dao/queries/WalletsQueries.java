@@ -3,13 +3,13 @@ package br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao.queries;
 public interface WalletsQueries {
 
     String CREATE = """
-        INSERT INTO wallet (user_id, name, goal_amount, current_balance, description, created_at)
-        VALUES (?, ?, ?, ?, ?, NOW())
+        INSERT INTO wallet (id, user_id, name, goal_amount, current_balance, description, created_at)
+        VALUES (wallet_seq.NEXTVAL, ?, ?, ?, 0, ?, CURRENT_TIMESTAMP)
     """;
 
     String CREATE_TRANSACTION = """
         INSERT INTO WALLET_TRANSACTION(WALLET_ID, TRANSACTION_TYPE, AMOUNT, TRANSACTION_DATE)
-        VALUES (?, ?, ?, NOW())
+        VALUES (?, ?, ?, CURRENT_TIMESTAMP)
     """;
 
     String UPDATE = """
@@ -24,6 +24,11 @@ public interface WalletsQueries {
         DELETE FROM WALLET
         WHERE id = ?
         """;
+
+    String DELETE_TRANSACTIONS = """
+        DELETE FROM WALLET_TRANSACTION
+        WHERE WALLET_ID = ?
+    """;
 
     String SELECT_BY_USER_ID = """
         SELECT W.id
@@ -43,8 +48,8 @@ public interface WalletsQueries {
                ,W.name
                ,W.goal_amount
                ,W.current_balance
-               ,W.description
                ,W.created_at
+               ,W.description
         FROM WALLET W
         WHERE W.id = ? AND w.user_id = ?
     """;
@@ -55,20 +60,9 @@ public interface WalletsQueries {
                ,transaction_type
                ,amount
                ,transaction_date
-               ,description
         FROM wallet_transaction
         WHERE wallet_id = ?
     """;
 
-    String SELECT_OVERVIEW_BY_USER_ID = """
-        SELECT
-            COALESCE(SUM(w.current_balance), 0) AS total_balance,
-            COALESCE(COUNT(wt.id), 0) AS transactions_this_month
-        FROM wallet w
-        LEFT JOIN wallet_transaction wt
-            ON w.id = wt.wallet_id
-            AND EXTRACT(YEAR FROM wt.transaction_date) = EXTRACT(YEAR FROM SYSDATE)
-            AND EXTRACT(MONTH FROM wt.transaction_date) = EXTRACT(MONTH FROM SYSDATE)
-        WHERE w.user_id = ?
-    """;
+    String SELECT_OVERVIEW_BY_USER_ID = "{call ? := pkg_finance.calculate_wallet_overview(?)}";
 }

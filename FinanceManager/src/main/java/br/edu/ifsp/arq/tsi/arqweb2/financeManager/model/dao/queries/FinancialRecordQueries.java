@@ -49,70 +49,10 @@ public interface FinancialRecordQueries {
         WHERE fr.id = ?
         """;
 
-
-    String SELECT_ALL_CATEGORY = """
-        SELECT id,
-               name
-        FROM category
-        """;
-
-    String SELECT_CATEGORY_ID_BY_NAME = """
-        SELECT id,
-               name
-        FROM category
-        WHERE name = ?
-        """;
-
-    String SELECT_CATEGORY_BY_ID = """
-        SELECT id,
-               name
-        FROM category
-        WHERE id = ?
-        """;
-
-    String SELECT_OVERVIEW_BY_USER_ID = """
-        SELECT
-            user_id,
-            SUM(CASE WHEN transaction_type = 'INCOME' THEN amount ELSE 0 END) AS total_income,
-            SUM(CASE WHEN transaction_type = 'EXPENSE' THEN amount ELSE 0 END) AS total_expense,
-            SUM(CASE WHEN transaction_type = 'INCOME' THEN amount ELSE -amount END) AS current_balance
-        FROM financial_record
-        WHERE user_id = ?
-        GROUP BY user_id
-        """;
-
     String GET_FINANCIAL_OVERVIEW_BY_USER_PROCEDURE = "{call pkg_finance.get_financial_overview_by_user(?, ?, ?, ?)}";
 
-    String GET_FINANCIAL_SUMMARY_AND_HISTORY_PROCEDURE = "{ call get_financial_summary_and_history(?, ?) }";
-
-    String SELECT_MONTHLY_BALANCE_BY_USER_ID = """
-        SELECT
-            TO_CHAR(transaction_date, 'MM/YYYY') AS month_year,
-            SUM(CASE WHEN transaction_type = 'INCOME' THEN amount ELSE 0 END) AS total_income,
-            SUM(CASE WHEN transaction_type = 'EXPENSE' THEN amount ELSE 0 END) AS total_expense,
-            SUM(CASE WHEN transaction_type = 'INCOME' THEN amount ELSE -amount END) AS current_balance
-        FROM financial_record
-        WHERE user_id = ?
-        GROUP BY TO_CHAR(transaction_date, 'MM/YYYY')
-        ORDER BY TO_DATE(TO_CHAR(transaction_date, 'MM/YYYY'), 'MM/YYYY') DESC
-        """;
+    String GET_FINANCIAL_SUMMARY_AND_HISTORY_PROCEDURE = "{ call pkg_finance.get_financial_summary_and_history(?, ?) }";
 
     String GET_MONTHLY_BALANCE_BY_USER_ID_PROCEDURE = "{call pkg_finance.get_financial_overview_by_user_monthly(?, ?)}";
 
-    String SELECT_HISTORY_BY_USER_ID = """
-        SELECT
-            f.id,
-            c.name as category_name,
-            f.amount,
-            f.transaction_type,
-            f.transaction_date,
-            f.description
-        FROM financial_record f
-        LEFT JOIN category c
-        ON f.category_id = c.id
-        JOIN TB_USERS u
-        ON f.user_id = u.id
-        WHERE u.id = ?
-        ORDER BY f.transaction_date DESC
-        """;
 }

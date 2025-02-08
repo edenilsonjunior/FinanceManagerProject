@@ -98,11 +98,11 @@ VALUES (2, 2, 150.00, 'EXPENSE', 'Debt repayment', TO_TIMESTAMP('2025-02-10', 'Y
 
 
 
-INSERT INTO wallet (id, user_id, name, goal_amount, current_balance, description, created_at)
-VALUES (1, 1, 'Carteira Principal', 10000.00, 0.00, 'Carteira principal do usuário', CURRENT_TIMESTAMP);
+INSERT INTO wallet (user_id, name, goal_amount, current_balance, description, created_at)
+VALUES (1, 'Carteira Principal', 10000.00, 0.00, 'Carteira principal do usuário', CURRENT_TIMESTAMP);
 
-INSERT INTO wallet (id, user_id, name, goal_amount, current_balance, description, created_at)
-VALUES (2, 1, 'Carteira de Investimentos', 20000.00, 0.00, 'Carteira destinada a investimentos', CURRENT_TIMESTAMP);
+INSERT INTO wallet (user_id, name, goal_amount, current_balance, description, created_at)
+VALUES (1, 'Carteira de Investimentos', 20000.00, 0.00, 'Carteira destinada a investimentos', CURRENT_TIMESTAMP);
 
 INSERT INTO wallet_transaction (wallet_id, transaction_type, amount, transaction_date)
 VALUES (1, 'INCOME', 1500.00, TO_TIMESTAMP('2025-02-01 10:00:00', 'YYYY-MM-DD HH24:MI:SS'));

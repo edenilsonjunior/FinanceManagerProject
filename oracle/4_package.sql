@@ -6,6 +6,8 @@ CREATE OR REPLACE PACKAGE pkg_finance AS
 
     FUNCTION calculate_financial_summary (p_user_id IN NUMBER, p_start_date IN DATE DEFAULT NULL, p_end_date IN DATE DEFAULT NULL) RETURN financial_summary_rec;
 
+    FUNCTION calculate_wallet_overview(p_user_id IN NUMBER) RETURN SYS_REFCURSOR;
+
     PROCEDURE get_financial_overview_by_user (p_user_id IN NUMBER, p_total_income OUT NUMBER, p_total_expense OUT NUMBER, p_current_balance OUT NUMBER);
 
     PROCEDURE get_financial_overview_by_user_monthly ( p_user_id IN NUMBER, p_result OUT SYS_REFCURSOR);
@@ -41,6 +43,36 @@ CREATE OR REPLACE PACKAGE BODY pkg_finance AS
             RETURN financial_summary_rec(NULL, NULL, NULL);
     END calculate_financial_summary;
 
+
+    FUNCTION calculate_wallet_overview(p_user_id IN NUMBER)
+    RETURN SYS_REFCURSOR
+    IS
+        total_balance NUMBER;
+        transactions_this_month NUMBER;
+        cur SYS_REFCURSOR;
+    BEGIN
+        SELECT COALESCE(SUM(w.current_balance), 0)
+        INTO total_balance
+        FROM wallet w
+        WHERE w.user_id = p_user_id;
+
+        SELECT COALESCE(COUNT(wt.id), 0)
+        INTO transactions_this_month
+        FROM wallet w
+        LEFT JOIN wallet_transaction wt
+            ON w.id = wt.wallet_id
+            AND EXTRACT(YEAR FROM wt.transaction_date) = EXTRACT(YEAR FROM SYSDATE)
+            AND EXTRACT(MONTH FROM wt.transaction_date) = EXTRACT(MONTH FROM SYSDATE)
+        WHERE w.user_id = p_user_id;
+
+        OPEN cur FOR
+            SELECT total_balance AS total_balance,
+                transactions_this_month AS transactions_this_month
+            FROM DUAL;
+
+        RETURN cur;
+    END calculate_wallet_overview;
+    
 
     -- Recuperar o resumo financeiro do usuario
     PROCEDURE get_financial_overview_by_user (

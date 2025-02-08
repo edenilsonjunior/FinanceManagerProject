@@ -3,6 +3,7 @@ package br.edu.ifsp.arq.tsi.arqweb2.financeManager.utils;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.user.User;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -16,6 +17,7 @@ public class Utils {
     static {
         gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
                 .create();
     }
 

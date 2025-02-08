@@ -47,6 +47,10 @@
             </div>
         </div>
 
+        <div>
+           <a href="create-wallet"><button class="btn btn-primary m-2" style="background-color: #6f51f0;">Criar Carteira +</button></a>
+        </div>
+
         <div class="mx-2 mt-4">
             <table id="wallets-table" class="table table-striped table-hover overflow-x-scroll">
                 <thead>
@@ -71,7 +75,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalTitle"></h5>
+                    <h5 class="modal-title fw-bold" id="modalTitle"></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="modalBody"></div>
