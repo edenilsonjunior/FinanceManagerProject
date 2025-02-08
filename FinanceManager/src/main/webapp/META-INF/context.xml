@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context crossContext="true">
-    <Resource name="jdbc/personal_finance_system_DB" auth="Container"
+
+    <!-- Recurso Oracle -->
+    <Resource name="jdbc/personal_finance_system_Oracle_DB" auth="Container"
               type="javax.sql.DataSource"
-              maxTotal = "100" minIdle="10" maxIdle="30" maxWaitMillis="10000"
-              username="root" password="admin123"
-              driverClassName="com.mysql.cj.jdbc.Driver"
-              url="jdbc:mysql://localhost:3306/personal_finance_system" />
+              maxTotal="100" minIdle="10" maxIdle="30" maxWaitMillis="10000"
+              username="personal_finance_system" password="finance123"
+              driverClassName="oracle.jdbc.OracleDriver"
+              url="jdbc:oracle:thin:@//localhost:1521/xe" />
+
 </Context>

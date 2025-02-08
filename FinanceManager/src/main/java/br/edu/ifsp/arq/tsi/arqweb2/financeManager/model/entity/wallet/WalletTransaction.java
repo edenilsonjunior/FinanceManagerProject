@@ -1,8 +1,10 @@
 package br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.wallet;
 
+import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.financialRecord.TransactionTypeEnum;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -12,9 +14,7 @@ import java.time.LocalDate;
 public class WalletTransaction {
 
     private long id;
-    private String transactionType;
-    private LocalDate transactionDate;
-    private String description;
+    private LocalDateTime transactionDate;
     private double amount;
-
+    private TransactionTypeEnum transactionType;
 }

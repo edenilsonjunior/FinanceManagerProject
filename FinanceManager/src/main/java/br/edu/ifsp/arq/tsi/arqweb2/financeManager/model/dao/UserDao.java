@@ -1,16 +1,18 @@
 package br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao;
 
+import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.contracts.dao.IUserDao;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.dao.queries.UserQueries;
 import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.user.User;
 
 import javax.sql.DataSource;
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Optional;
 
-public class UserDao {
+public class UserDao implements IUserDao {
 
     private final DataSource dataSource;
 
@@ -18,52 +20,30 @@ public class UserDao {
         this.dataSource = dataSource;
     }
 
+    @Override
     public void create(User user) {
-
         try (var con = dataSource.getConnection();
-             var ps = con.prepareStatement(UserQueries.CREATE, PreparedStatement.RETURN_GENERATED_KEYS)) {
+             var ps = con.prepareStatement(UserQueries.CREATE, new String[]{"id"})) {
 
             ps.setString(1, user.getFullName());
             ps.setString(2, user.getEmail());
             ps.setString(3, user.getPassword());
             ps.setDate(4, Date.valueOf(user.getBirthDate()));
             ps.executeUpdate();
-            var rs = ps.getGeneratedKeys();
-            if (rs.next()) {
-                user.setId(rs.getLong(1));
+
+            // Recuperar a chave gerada no Oracle após o INSERT
+            try (var rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    user.setId(rs.getLong(1));
+                }
             }
 
         } catch (SQLException sqlException) {
             throw new RuntimeException("Erro durante a criacao no BD", sqlException);
         }
-
     }
 
-    public Optional<User> findUserByUserId(long userId) {
-
-        User user = new User();
-
-        try (var con = dataSource.getConnection();
-             var ps = con.prepareStatement(UserQueries.SELECT)) {
-
-            ps.setLong(1, userId);
-
-            var rs = ps.executeQuery();
-            if (rs.next()) {
-                user.setId(rs.getLong("id"));
-                user.setFullName(rs.getString("full_name"));
-                user.setEmail(rs.getString("email"));
-                user.setPassword(rs.getString("password"));
-                user.setBirthDate(LocalDate.parse(rs.getDate("birth_date").toString()));
-                user.setCreatedAt(LocalDate.parse(rs.getDate("created_at").toString()));
-            }
-            return Optional.of(user);
-        } catch (SQLException sqlException) {
-            throw new RuntimeException("Erro durante a consulta no BD", sqlException);
-        }
-
-    }
-
+    @Override
     public Optional<User> findUserByEmail(String email) {
 
         try (var con = dataSource.getConnection();
@@ -78,8 +58,36 @@ public class UserDao {
                 user.setFullName(rs.getString("full_name"));
                 user.setEmail(rs.getString("email"));
                 user.setPassword(rs.getString("password"));
-                user.setBirthDate(LocalDate.parse(rs.getDate("birth_date").toString()));
-                user.setCreatedAt(LocalDate.parse(rs.getDate("created_at").toString()));
+                user.setBirthDate(rs.getDate("birth_date").toLocalDate());
+                user.setCreatedAt(rs.getDate("created_at").toLocalDate());
+
+                return Optional.of(user);
+            }
+
+            return Optional.empty();
+
+        } catch (SQLException sqlException) {
+            throw new RuntimeException("Erro durante a consulta no BD", sqlException);
+        }
+    }
+
+    @Override
+    public Optional<User> findById(long id) {
+
+        try (var con = dataSource.getConnection();
+             var ps = con.prepareStatement(UserQueries.SELECT)) {
+
+            ps.setLong(1, id);
+
+            var rs = ps.executeQuery();
+            if (rs.next()) {
+                var user = new User();
+                user.setId(rs.getLong("id"));
+                user.setFullName(rs.getString("full_name"));
+                user.setEmail(rs.getString("email"));
+                user.setPassword(rs.getString("password"));
+                user.setBirthDate(rs.getDate("birth_date").toLocalDate());
+                user.setCreatedAt(rs.getDate("created_at").toLocalDate());
 
                 return Optional.of(user);
             }
@@ -88,5 +96,21 @@ public class UserDao {
         }
 
         return Optional.empty();
+    }
+
+    @Override
+    public boolean existsUserByEmail(String email) {
+        try (var con = dataSource.getConnection();
+             var ps = con.prepareStatement(UserQueries.SELECT_BY_EMAIL)) {
+
+            ps.setString(1, email);
+
+            try (var rs = ps.executeQuery()) {
+                return rs.next();
+            }
+
+        } catch (SQLException sqlException) {
+            throw new RuntimeException("Erro durante a consulta no BD", sqlException);
+        }
     }
 }

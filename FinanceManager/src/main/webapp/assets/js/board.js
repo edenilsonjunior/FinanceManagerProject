@@ -63,15 +63,25 @@ const loadExpenseStatisticsByCategory = (data) => {
     h6Element.textContent = `R$ ${categories.reduce((acc, c) => acc + c.amount, 0).toFixed(2)}`;
 }
 
-const loadMonthlyBalance = (data) => {
-    var monthlyBalance = data.monthlyBalance;
+let monthlyBalanceChart; 
 
-    const totalIncome = monthlyBalance.totalIncome;
-    const totalExpense = monthlyBalance.totalExpense;
-    const currentBalance = monthlyBalance.currentBalance;
+const loadMonthlyBalance = (data) => {
+
+    const balanceDropdown = document.getElementById('balance-dropdown');
+
+    const selectedMonthYear = balanceDropdown.value;
+
+    const selectedBalance = data.monthlyBalance.find(item => item.monthYear === selectedMonthYear);
+
+    const { totalIncome, totalExpense, currentBalance } = selectedBalance;
 
     const barCtx = document.getElementById('monthly-balance').getContext('2d');
-    new Chart(barCtx, {
+
+    if (monthlyBalanceChart) {
+        monthlyBalanceChart.destroy();
+    }
+
+    monthlyBalanceChart = new Chart(barCtx, {
         type: 'bar',
         data: {
             labels: ['Saldo Atual', 'Receitas', 'Despesas'],
@@ -109,10 +119,40 @@ const loadMonthlyBalance = (data) => {
     });
 }
 
+const loadNotification = async () => {
+
+    var data = await submitGet('/controller?context=index&action=notification');
+
+    if (data.success) {
+        const successMessageElement = document.getElementById('success-message');
+        successMessageElement.textContent = data.success;
+        successMessageElement.style.display = 'block';
+    }
+    else if (data.error) {
+        document.getElementById('error-message').innerText = data.error;
+        document.getElementById('error-message').style.display = 'block';
+    }
+}
+
+const populateBalanceDropdown = (monthlyBalance) => {
+    const balanceDropdown = document.getElementById('balance-dropdown');
+
+    monthlyBalance.sort((a, b) => {
+        const [monthA, yearA] = a.monthYear.split('/').map(Number);
+        const [monthB, yearB] = b.monthYear.split('/').map(Number);
+        return yearB - yearA || monthB - monthA;
+    });
+
+    balanceDropdown.innerHTML = monthlyBalance.map(item => 
+        `<option value="${item.monthYear}">${item.monthYear}</option>`
+    ).join('');
+
+    balanceDropdown.addEventListener('change', () => loadMonthlyBalance({ monthlyBalance }));
+};
+
 const loadData = async () => {
 
-    var data = await submitGet('/board');
-
+    var data = await submitGet('/controller?context=board&action=preview');
 
     loadOverview(data);
     
@@ -130,7 +170,11 @@ const loadData = async () => {
         loadExpenseStatisticsByCategory(data);
     }
 
+    populateBalanceDropdown(data.monthlyBalance);
+
     loadMonthlyBalance(data);
+
+    await loadNotification();
 }
 
 document.addEventListener("DOMContentLoaded", loadData);

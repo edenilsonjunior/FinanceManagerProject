@@ -1,8 +1,10 @@
 package br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.wallet;
 
+import br.edu.ifsp.arq.tsi.arqweb2.financeManager.model.entity.user.User;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -13,9 +15,10 @@ import java.util.List;
 public class Wallet {
 
     private long id;
+    private User user;
     private String name;
     private String description;
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
     private double goalAmount;
     private double currentBalance;
     private List<WalletTransaction> transactions;

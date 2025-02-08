@@ -1,81 +1,67 @@
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap");
 
-
+:root {
+	--header-height: 3rem;
+	--first-color: #6f51f0;
+    --second-color: #F7F6FB;
+	--first-color-light: #AFA5D9;
+	--z-fixed: 100;
+}
 
 body {
-    font-family: 'Nunito', sans-serif;
-    background-color: #6f51f0;
+    background-color: var(--first-color);
+}
+
+.container-form {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    margin: 0;
+    width: 100%;
+    margin-top: 2rem;
 }
 
-/* Header styles */
-.forms-page-header {
-    display: flex;
-    align-items: center;
-    position: absolute;
-    top: 20px; 
-    left: 20px; 
-    z-index: 1000; 
-}
-
-.forms-page-header i {
-    font-size: 40px;  
-    color: white;
-    margin-right: 10px; 
-}
-
-.forms-page-header h1 {
-    font-size: 32px;
-    font-weight: bold;
-    color: white;
-    margin: 0; 
-}
-
-/* Form container */
 .form {
-    background-color: transparent;
+    background-color: var(--second-color);
     box-shadow: 0 10px 100px rgba(0, 0, 0, 0.4);
     padding: 40px;
     width: 100%;
     max-width: 400px;
 }
 
-/* Form header */
 .form-header {
     text-align: center;
-    font-size: 50px;
+    font-size: 40px;
     font-weight: bold;
-    color: white; 
+    color: var(--first-color);
     margin-bottom: 20px;
-    }
+}
 
-/* Form field styles */
+.text-header {
+    text-align: start;
+    font-size: 40px;
+    font-weight: 300;
+}
+
 .form-field {
     position: relative;
     margin-bottom: 20px;
 }
 
-
-/* Input field styling */
 .form-field input {
     width: 100%;
     padding: 10px;
     margin-top: 8px;
-    border: 1px solid #ccc;;
+    border: 1px solid var(--first-color);
     outline: none;
 
     background-color: transparent; 
     font-size: 16px;
     transition: border-color 0.3s, margin-top 0.3s;
-    color: white;
+    color: black;
 }
 
 .form-field input::placeholder {
-    color: #ccc; 
+    color: var(--first-color); 
     opacity: 1;
 }
 
@@ -84,16 +70,15 @@ body {
     margin-top: 16px; 
 }
 
-
 .form-submit button {
     width: 100%;
     padding: 12px;
-    background-color: white; 
-    color: black;
+    background-color: var(--first-color);
+    color: var(--second-color);
     border: none;
     font-size: 16px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: 0.3s;
 }
 
 .form-submit button:hover {
@@ -116,23 +101,20 @@ body {
     color: #721c24;
 }
 
-
-
-
 .form-field select {
     background-color: transparent;
-    color: black;
-    border: 1px solid #ccc;
+    color: var(--first-color);
+    border: 1px solid var(--first-color);
     padding: 10px;
+    margin-top: 8px;
     border-radius: 4px;
     font-size: 16px;
 }
 
-
 .form-field label {
     font-size: 16px;
     font-weight: 600;
-    color: white; 
+    color: var(--first-color); 
     display: block;
     font-weight: bold;
 }
@@ -162,19 +144,18 @@ body {
 }
 
 a {
-    color: #ccc;
+    color: var(--second-color);
     text-decoration: none;
 }
 
-/* Custom Switch Style */
 .form-check-label {
     font-size: 16px;
     font-weight: bold;
-    color: white;
+    color: var(--first-color);
 }
 .form-check-input {
-    background-color: #ccc;
-    border: 1px solid #ccc;
+    background-color: var(--second-color);
+    border: 1px solid var(--first-color);
     appearance: none;
     outline: none;
     cursor: pointer;
@@ -182,6 +163,19 @@ a {
 }
 
 .form-check-input:checked {
-    background-color: red;
-    border-color: red;
+    background-color: var(--first-color);;
+    border-color: var(--first-color);;
+}
+
+#form-redirect a {
+    color: var(--first-color);
+}
+
+input[type="date" i] {
+    color: var(--first-color);
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    filter: invert(35%) sepia(88%) saturate(746%) hue-rotate(226deg) brightness(93%) contrast(94%);
 }
